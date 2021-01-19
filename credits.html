@@ -1,0 +1,764 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Jeenius</title>
+    <meta name="theme-color" content="#000000">
+    <meta http-equiv="content-type" content="text/html; charset=windows-1252">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="https://kit.fontawesome.com/f028f07279.js" crossorigin="anonymous"></script>
+     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Thasadith|Ubuntu|Noto%20Serif%20SC|Alegreya|Vollkorn%20SC">
+    <style>
+        a{
+            color:white;
+        }
+        a:visited{
+            color:white;
+        }
+        html{
+            overflow:hidden;
+        }
+    body{margin:0;
+         line-height:1.5;
+         background-color:black;
+         color:white;}
+    /* * {box-sizing;} */
+    	#headerbar{
+    	    font-size:20vh;
+    	    display:flex;
+    	    align-items: center;
+    	    /* //display-style:block; */
+             height:8.5vh;
+             width:100%;
+             padding:0;
+             margin:0;
+             z-index:99;
+             box-shadow:0 0px 8px 4px rgba(255,255,255,0.4);
+             background-color:rgba(0,0,0,0.6);
+             font-family:"Times New Roman";
+             position: fixed;
+             top:0;
+             }
+        span.menu{
+            width:14vw;
+            color:white;
+            font-size:6.2vh;
+            height:8.5vh;
+            display: flex;
+            align-items: center;
+            justify-content:center;
+            flex-direction:column;
+            }
+        div.menuicon{
+  width: 35px;
+  height: 4px;
+  background-color: white;
+  margin: 4px 0px;
+            }
+      /* The Overlay (background) */
+      .overlay {
+      /* Height & width depends on how you want to reveal the overlay (see JS below) */   
+      height: 100%;
+      width: 0;
+      position: fixed; /* Stay in place */
+      z-index: 99; /* Sit on top */
+      left: 0;
+      top: 0;
+      background-color: rgb(0,0,0); /* Black fallback color */
+      background-color: rgba(0,0,0, 0.9); /* Black w/opacity */
+      overflow-x: hidden; /* Disable horizontal scroll */
+      transition: 0.5s; /* 0.5 second transition effect to slide in or slide down the overlay (height or width, depending on reveal) */
+      }
+      
+      /* Position the content inside the overlay */
+      .overlay-content {
+      position: relative;
+      top: 12%; /* 25% from the top */
+      width: 100%; /* 100% width */
+      text-align: left; /* Centered text/links */
+      margin-top: 10px; /* 30px top margin to avoid conflict with the close button on smaller screens */
+      }
+      
+      /* The navigation links inside the overlay */
+      .overlay a {
+      padding: 6px;
+      text-decoration: none;
+      font-size: 30px;
+      color: #818181;
+      display: block; /* Display block instead of inline */
+      transition: 0.3s; /* Transition effects on hover (color) */
+      }
+      
+      /* When you mouse over the navigation links, change their color */
+      .overlay a:hover, .overlay a:focus {
+      color: #f1f1f1;
+      }
+      
+      /* Position the close button (top right corner) */
+      .overlay .closebtn {
+      position: absolute;
+      top: 5px;
+      right: 25px;
+      font-size: 55px;
+      }
+      
+      /* When the height of the screen is less than 450 pixels, change the font-size of the links and position the close button again, so they don't overlap */
+      @media screen and (max-height: 450px) {
+      .overlay a {font-size: 20px}
+      .overlay .closebtn {
+      font-size: 40px;
+      top: 15px;
+      right: 35px;
+      }
+      }
+      
+   #home {font-family:"Palatino Linotype", Palatino, serif;
+   margin:3px;
+   border:2px solid #ad1caf;
+   border-radius:10px;
+   }
+   
+   li{display: block; width: 70%;
+   margin:auto;
+   background-color: #afafaf;
+   }
+   
+   @media screen and(max-height: 40px){
+   #headerbar{ height: 10vh;
+   font-size: 10px;}}
+  
+.navbar {
+  background-color: #333;
+  overflow: hidden;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+}
+
+/* Style the links inside the navigation bar */
+.navbar a {
+  display: inline-block;
+  color: #f2f2f2;
+  text-align: center;
+  padding: 8px 6vw;
+  text-decoration: none;
+  font-size: 2.6vw;
+margin:auto;
+}
+
+/* Change the color of links on hover */
+.navbar a:hover {
+  background-color: #ddd;
+  color: black;
+}
+
+/* Add a color to the active/current link */
+.navbar a:active{
+background-color: #fff;
+  color: black;
+}
+div.credits{
+    text-align:center;
+}
+
+table{
+    font-family:"Palatino Linotype", Palatino, serif;
+    text-align:center;
+}
+
+.row {
+  display: flex;
+  font-family:"Times New Roman", Times, serif;
+}
+
+/* Create two equal columns that sits next to each other */
+.column {
+  flex: 50%;
+  align-items:center;
+  justify-content: center; 
+  flex-direction:column;
+  padding: 10px;
+}
+
+/* h1{//font-family: "Courier New", Courier, monospace;
+} */
+.design{
+    font-family: "Courier New", Courier, monospace;
+}   
+p.design{
+    font-family:'Thasadith',serif;
+    font-size:30px;
+}
+.col2 {
+    border-left: 2px solid magenta;
+    font-size:20px;
+}
+@media only screen and (max-width: 500px) {
+  p.design{
+    font-family:'Thasadith',serif;
+    font-size:28px;
+}
+.col2 {
+    border-left: 2px solid magenta;
+    font-size:17px;
+}
+}
+
+.col1{
+    font-family:"Noto Serif SC",serif !important;
+    font-size:3em;
+}
+.sep{
+    height:50px;
+}
+
+#intro{
+    text-align:center;
+    font-family:Verdana, Geneva, sans-serif;
+    font-size:20px;
+}
+#sharew {
+  display:none;
+  text-align:center;
+  }
+
+  .jee{
+      font-size:30px;
+      font-family:"Palatino Linotype", "Book Antiqua", Palatino, serif;
+  }
+  #intro1, #intro2, #intro3, #intro4, #intro5, #intro6, #intro7, #intro8, #intro9, #endcredits, #productions, #thank, #t1, #t2, #t3{
+      display:none;
+      text-align:center;
+  }
+ #intro7, #intro8, #intro9{
+     color:magenta;
+     font-family:'Alegreya',;
+ }
+ #productions{
+     color:magenta; font-size:38px;
+     opacity:0;
+ }
+
+ /*#themarq{
+     display:block;
+     max-height:100%;
+     //overflow:auto;
+ }*/
+ .rainbow2 {
+    background-image: -webkit-linear-gradient(left, #E0F8F7, #585858, #fff); /* For Chrome and Safari */
+    background-image:    -moz-linear-gradient(left, #E0F8F7, #585858, #fff); /* For old Fx (3.6 to 15) */
+    background-image:     -ms-linear-gradient(left, #E0F8F7, #585858, #fff); /* For pre-releases of IE 10*/
+    background-image:      -o-linear-gradient(left, #E0F8F7, #585858, #fff); /* For old Opera (11.1 to 12.0) */
+    background-image:         linear-gradient(to right, #E0F8F7, #585858, #fff); /* Standard syntax; must be last */
+    color:transparent;
+    -webkit-background-clip: text;
+    background-clip: text;
+}
+.rainbow {
+
+  background-image: -webkit-gradient( linear, left top, right top, color-stop(0, #f22), color-stop(0.15, #f2f), color-stop(0.3, #22f), color-stop(0.45, #2ff), color-stop(0.6, #2f2),color-stop(0.75, #2f2), color-stop(0.9, #ff2), color-stop(1, #f22) );
+  background-image: gradient( linear, left top, right top, color-stop(0, #f22), color-stop(0.15, #f2f), color-stop(0.3, #22f), color-stop(0.45, #2ff), color-stop(0.6, #2f2),color-stop(0.75, #2f2), color-stop(0.9, #ff2), color-stop(1, #f22) );
+  color:transparent;
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+ /* Google Fonts */
+@import url(https://fonts.googleapis.com/css?family=Anonymous+Pro);
+
+/* Global */
+html{
+  min-height: 100%;
+  /* //overflow: auto; */
+}
+div.typethis{
+  /* //height: calc(100vh - 8em); */
+  padding: 4em;
+  color: rgba(255,255,255,.75);
+  font-family: 'Anonymous Pro', monospace;  
+  /* //background-color: rgb(25,25,25);   */
+}
+.line-1{
+    position: relative;
+    bottom: 20%;  
+    width: 24em;
+    margin: 0 auto;
+    /* //border-right: 2px solid rgba(255,255,255,.75); */
+    font-size: 100%;
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    transform: translateY(-50%);    
+}
+
+/* Animation */
+.anim-typewriter{
+  animation: typewriter 4s steps(44) 1s 1 normal both,
+             blinkTextCursor 500ms steps(44) infinite normal;
+}
+@keyframes typewriter{
+  from{width: 0;}
+  to{width: 90%;}
+}
+@keyframes blinkTextCursor{
+  from{border-right-color: rgba(255,255,255,.75);}
+  to{border-right-color: transparent;}
+}
+.scroll-up{
+ position: absolute;
+ width: 100%;
+ height: 100%;
+ margin: 0;
+ line-height: 1.3;
+ text-align: center;
+ /* Starting position */
+ -moz-transform:translateY(100%);
+ -webkit-transform:translateY(100%);	
+ transform:translateY(100%);
+ /* Apply animation to this element */	
+ -moz-animation: scroll-up 28s 23s linear;
+ -webkit-animation: scroll-up 28s 23s linear;
+ animation: scroll-up 28s 23s linear;
+}
+/* Move it (define the animation) */
+@-moz-keyframes scroll-up {
+ 0%   { -moz-transform: translateY(100%); }
+ 100% { -moz-transform: translateY(-280%); }
+}
+@-webkit-keyframes scroll-up {
+ 0%   { -webkit-transform: translateY(100%); }
+ 100% { -webkit-transform: translateY(-280%); }
+}
+@keyframes scroll-up{
+    0% {
+    transform: translate(0, 0);
+  }
+  100% {
+    transform: translate(0, -280%);
+  }
+}
+@keyframes scroll-up {
+ 0%   { 
+ -moz-transform: translateY(100%); /* Browser bug fix */
+ -webkit-transform: translateY(100%); /* Browser bug fix */
+ transform: translateY(100%); 		
+ }
+ 100% { 
+ -moz-transform: translateY(-280%); /* Browser bug fix */
+ -webkit-transform: translateY(-280%); /* Browser bug fix */
+ transform: translateY(-280%); 
+ }
+}
+
+ .share{
+            color:rgba(255,255,255,1);
+            font-size:1.9em;
+            margin:-10px 10px;
+            text-decoration:none;
+            transition:0.4s;
+        }
+        a.share:visited{
+            color:rgba(255,255,255,1);
+        }
+        a.share:hover{
+            color:magenta;
+        }
+        a.feedback{
+            font-size:1.4em; color:#33e3e5;
+        }
+        .show{
+            animation:showthis 1s 0s linear;
+        }
+        .hide{
+             animation:hidethis 1s 0s linear forwards;
+        }
+        @keyframes showthis{
+            from{opacity:0;}
+            to{opacity:1;}
+        }
+        @keyframes hidethis{
+            from{opacity:1;}
+            to{opacity:0;}
+        }
+        #themarq{
+            display:block;
+        }
+        #replay{
+            display:none;
+        }
+        .normal{
+            color:rgba(255,255,255,0.7);
+        }
+ </style>
+
+
+   </head>
+  <body onload="introfunc();">
+  <script>
+      function introfunc(){
+          setTimeout(function(){ document.getElementById("themarq").style.display="none"; }, 70000);
+          setTimeout(function(){ document.getElementById("intro1").style.display="block";document.getElementById("intro1").classList.add("show"); }, 500);
+
+          setTimeout(function(){ document.getElementById("intro1").style.display="none"; document.getElementById("intro0").classList.add("hide"); }, 5000);
+          setTimeout(function(){ document.getElementById("intro2").style.display="block"; }, 5000);
+
+          setTimeout(function(){ document.getElementById("intro0").style.display="none"; }, 5700);
+          setTimeout(function(){ document.getElementById("intro3").style.display="block"; }, 6000);
+
+          setTimeout(function(){ document.getElementById("intro2").style.display="none"; }, 9000);
+          setTimeout(function(){ document.getElementById("intro3").style.display="none"; }, 9000);
+          setTimeout(function(){ document.getElementById("intro4").style.display="block"; }, 9000);
+
+          setTimeout(function(){ document.getElementById("intro4").style.display="none"; }, 11000);
+          setTimeout(function(){ document.getElementById("intro5").style.display="block"; }, 11000);
+
+          setTimeout(function(){ document.getElementById("intro5").style.display="none"; }, 13000);
+          setTimeout(function(){ document.getElementById("intro6").style.display="block"; }, 13000);
+
+          //setTimeout(function(){ document.getElementById("intro6").style.display="none"; }, 16000);
+          setTimeout(function(){ document.getElementById("intro7").style.display="block";document.getElementById("intro7").classList.add("show"); }, 14000);
+
+          //setTimeout(function(){ document.getElementById("intro7").style.display="none"; }, 17500);
+          setTimeout(function(){ document.getElementById("intro8").style.display="block";document.getElementById("intro8").classList.add("show"); }, 15500);
+
+          //setTimeout(function(){ document.getElementById("intro8").style.display="none"; }, 20000);
+          setTimeout(function(){ document.getElementById("intro9").style.display="block";document.getElementById("intro9").classList.add("show"); }, 18000);
+          setTimeout(function(){ document.getElementById("intro9").style.display="none"; }, 23000);
+          setTimeout(function(){ document.getElementById("intro6").style.display="none"; }, 23000);
+          setTimeout(function(){ document.getElementById("intro7").style.display="none"; }, 23000);
+          setTimeout(function(){ document.getElementById("intro8").style.display="none"; }, 23000);
+          setTimeout(function(){ document.getElementById("spacehide").style.display="none"; }, 23000);
+          setTimeout(function(){document.getElementById("themarq").style.display="block";},23010)
+
+          setTimeout(function(){document.getElementById("thank").style.display="block"; document.getElementById("thank").classList.add("show");},54000);
+          setTimeout(function(){document.getElementById("t1").style.display="block"; document.getElementById("t1").classList.add("show");},55000);
+          setTimeout(function(){document.getElementById("t2").style.display="block"; document.getElementById("t2").classList.add("show");},56000);
+          setTimeout(function(){document.getElementById("t3").style.display="block"; document.getElementById("t3").classList.add("show");},57000);
+
+          setTimeout(function(){ document.getElementById("thank").style.display="none";//continued function...
+          document.getElementById("t1").style.display="none";
+          document.getElementById("t2").style.display="none";
+          document.getElementById("t3").style.display="none";
+          document.getElementById("endcredits").style.display="block";document.getElementById("endcredits").classList.add("show"); }, 66000);
+
+          //setTimeout(function(){ document.getElementById("intro9").style.display="none"; }, 76000);
+          setTimeout(function(){ document.getElementById("endcredits").style.display="none"; }, 70000);
+          setTimeout(function(){ document.getElementById("productions").style.display="block";document.getElementById("productions").classList.add("show"); }, 70000);
+
+          /*setTimeout(function(){ document.getElementById("productions").style.opacity=0.1; }, 58080);
+          setTimeout(function(){ document.getElementById("productions").style.opacity=0.2; }, 58160);
+          setTimeout(function(){ document.getElementById("productions").style.opacity=0.3; }, 58240);
+          setTimeout(function(){ document.getElementById("productions").style.opacity=0.4; }, 58320);
+          setTimeout(function(){ document.getElementById("productions").style.opacity=0.5; }, 58400);
+          setTimeout(function(){ document.getElementById("productions").style.opacity=0.6; }, 58480);
+          setTimeout(function(){ document.getElementById("productions").style.opacity=0.7; }, 58560);
+          setTimeout(function(){ document.getElementById("productions").style.opacity=0.8; }, 58720);
+          setTimeout(function(){ document.getElementById("productions").style.opacity=0.9; }, 58800);
+          setTimeout(function(){ document.getElementById("productions").style.opacity=1.0; }, 58880);*/
+/*
+          setTimeout(function(){ document.getElementById("sharew").style.opacity="0.1"; }, 77080);
+          setTimeout(function(){ document.getElementById("sharew").style.opacity="0.2"; }, 77160);
+          setTimeout(function(){ document.getElementById("sharew").style.opacity="0.3"; }, 77240);
+          setTimeout(function(){ document.getElementById("sharew").style.opacity="0.4"; }, 77320);
+          setTimeout(function(){ document.getElementById("sharew").style.opacity="0.5"; }, 77400);
+          setTimeout(function(){ document.getElementById("sharew").style.opacity="0.6"; }, 77480);
+          setTimeout(function(){ document.getElementById("sharew").style.opacity="0.7"; }, 77560);
+          setTimeout(function(){ document.getElementById("sharew").style.opacity="0.8"; }, 77720);
+          setTimeout(function(){ document.getElementById("sharew").style.opacity="0.9"; }, 77800);
+          setTimeout(function(){ document.getElementById("sharew").style.opacity="1.0"; }, 77880);*/
+          
+          setTimeout(function(){ document.getElementById("sharew").style.display="block";document.getElementById("sharew").classList.add("show"); }, 70000);
+          setTimeout(function(){ document.getElementById("sharew").classList.add("hide"); }, 82000);
+          setTimeout(function(){document.getElementById("productions").classList.add("hide"); }, 82000);
+           setTimeout(function(){ document.getElementById("sharew").style.display="none"; document.getElementById("spacehide").style.display="block"; }, 82000);
+          setTimeout(function(){document.getElementById("productions").style.display="none";document.getElementById("replay").style.display="block"; }, 82000);
+          
+
+          /*setTimeout(function(){ document.getElementById("intro").innerHTML="<br> <br><br><br>A site for special things,"}, 5000);
+          setTimeout(function(){ document.getElementById("intro").innerHTML="<br> <br><br><br>Wishes to"}, 8000);
+          setTimeout(function(){ document.getElementById("intro").innerHTML="<br> <br><br><br>Thank"}, 11000);
+          setTimeout(function(){ document.getElementById("intro").innerHTML="<br> <br><br><br>Those"}, 13000);
+          setTimeout(function(){ document.getElementById("intro").innerHTML="<br> <br><br><br><span style= \"color:magenta; \">Who have helped it make better.</span>"}, 16000);
+          setTimeout(function(){ document.getElementById("intro").style.display="none"}, 21000);
+          setTimeout(function(){ document.getElementById("sharew").style.display="block"; }, 40000);*/
+      }
+    </script>
+  <iframe src="/silence1sec.mp3" allow="autoplay" id="audio" style="display:none;"></iframe>
+  
+ <div id="headerbar" class="headerbar">
+  
+  <span class="menu" id="modalbutton" onclick="getbookmarklist();" style="background-color: black; color: magenta; font-size: 3vh; width: auto; margin-left: 2vw;">Book-<div style=" margin-top:-6px; "></div>marks</span>
+<span style="text-align:center; color:white; font-size: 8vh; margin:auto; diaplay-style: inline-block;"> Jeenius</span>
+<span class="menu" onclick="nav();"><div class="menuicon"></div><div class="menuicon"></div><div class="menuicon"></div></span>
+</div>
+
+<div id="overlaynav" class="overlay">
+
+  <!-- Button to close the overlay navigation -->
+  <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+
+  <!-- Overlay content -->
+  <div class="overlay-content">
+    <a href="https://jeenius.ga">Home</a>
+    <a href="https://jeenius.ga/daily/chemistryq.php">Questions</a>
+    <a href="http://jeenius.epizy.com/subjects.physics.php">Physics</a>
+    <a href="http://jeenius.epizy.com/subjects.chemistry.php">Chemistry</a>
+    <a href="http://jeenius.epizy.com/subjects.math.php">Maths</a>
+  </div>
+<script>
+function openhome(){
+document.getElementById("overlaynav").style.width = "0%";
+document.getElementById("home").style.display="block";
+document.getElementById("daily").style.display="none";
+document.getElementById("physicsdaily").style.display="none";
+}
+function daily(){
+document.getElementById("overlaynav").style.width = "0%";
+document.getElementById("home").style.display="none";
+document.getElementById("daily").style.display="block";
+document.getElementById("develop").style.display="none";
+}
+</script>
+</div>
+<script type="text/javascript">
+/* Open when someone clicks on the span element */
+function nav() {
+  document.getElementById("overlaynav").style.width = "70%";
+}
+
+/* Close when someone clicks on the "x" symbol inside the overlay */
+function closeNav() {
+  document.getElementById("overlaynav").style.width = "0%";
+};
+
+/*var modal = document.getElementById('overlaynav');
+
+// When the user clicks anywhere outside of the modal, close it
+window.onclick = function(event) {
+  if (event.target == modal) {
+    modal.style.width="0%";
+  }
+}*/
+
+</script>
+<div style="height:12vh;"></div>
+<!-- Actual Content-->
+<div id="spacehide" style="height:60px;"></div>
+<div id="replay" style="font-size:2em; width:100%;" class="center-align">
+    <a class="rainbow center-align" style="text-decoration:underline white;" href="/credits.html">Replay</a>
+</div>
+<div id="intro1" class="jee rainbow" style="font-size:50px;font-family:'Vollkorn SC',serif;">Jeenius</div>
+<div class="typethis" id="intro0" style="display:block;">
+<p  class="line-1 anim-typewriter rainbow2">Designed By Akshat</p>
+</div>
+<div id="intro2" class="jee" style="font-size:30px;">Wishes to</div>
+<div id="intro3" class="jee">Thank</div>
+<div id="intro4" class="jee" style="font-size:30px;">Those</div>
+<div id="intro5" class="jee">Who have Helped</div>
+<div id="fade"><div id="intro6" class="jee">In Making Jeenius</div>
+<div id="intro7" class="jee">A Clever,</div>
+<div id="intro8" class="jee">Better</div>
+<div id="intro9" class="jee">Genius.</div>
+</div>
+<audio id="player" autoplay loop>
+     <source src="/The_Abode_of_Snow[1].mp3" type="audio/mp3">
+ </audio>
+ <!--
+<div id="themarqfake" style="overflow:hidden;position:absolute;display:block;">-->
+<!--<marquee behaviour="scroll" direction="up" scrolldelay=120>-->
+    <!--<div id="themarq" class="scroll-up" style="display:block;">
+<div class="credits">
+    <h1> Jeenius </h1>
+    <div class="design">Designed By Akshat</div>
+    <br><br><br>
+<div class="row">
+  <div class="column col1">
+      <br>
+      <br>
+      <br>
+    <p class="design">Jeenius thanks you for...</p>
+  </div>
+  <div class="column col2">
+    <p>Sahil Mahajan</p>
+    <p>Kartik Gokhale</p>
+    <p>Aditya Anand Kulkarni</p>
+    <p>Anushka Kokate</p>
+    <p>Shardul Kurdukar</p> 
+  </div>
+</div>
+<div class="sep"></div>
+<!--
+<div class="design" style="font-size:20px;"> Helped me:</div>
+-->
+<!--
+<div class="row">
+  <div class="column col1">
+    <p class="design">The name</p>
+  </div>
+  <div class="column col2">
+   <p> Aditya Anand Kulkarni</p> 
+  </div>
+</div>
+<div class="sep"></div>
+<div class="row">
+  <div class="column col1">
+    <p class="design">Motivation for form validation</p>
+  </div>
+  <div class="column col2">
+   <p> The LOL guy</p> 
+   <p> Shardul Kurdukar</p>
+  </div>
+</div>
+<div class="sep"></div>
+<div class="row">
+  <div class="column col1">
+      <br>
+      <br>
+      <br>
+      <br>
+    <p class="design">Beta Testers</p>
+  </div>
+  <div class="column col2">
+   <p>Sahil Mahajan</p>
+   <P>Kartik Gokhale</P>
+   <p>Anushka Kokate</p>
+   <p>Shardul Kurdukar</p>
+   <p>Chinmay Pimpalkhare</p>
+   <p>Aum Samuel</p>
+   <p>Aditya Vaichalkar</p> 
+  </div>
+</div>
+<div class="sep"></div>
+
+<div class="row">
+  <div class="column col1">
+      <br><br><br><br>
+    <p class="design">Other people who may have visited Jeenius</p>
+  </div>
+  <div class="column col2">
+   <p>Pranav Mandlik</p>
+   <p>Parth Patel</p>
+   <p>Srijan Srivastava</p>
+   <p>Anish Kulkarni</p>
+   <p>Anish Bhandari</p>
+   <p>Sanika Gumaste</p>
+   <p>Sanika Ghanekar</p>
+   <p>Venkatesh Pai</p>
+   <p>Chinmay Bandekar</p>
+   <p>Sumedh Ghude</p>
+  </div>
+</div>
+</div><!--
+</marquee>-->
+<!--</div>-->
+<!--
+</div>
+ was the old one which does not work-->
+ <div class="scroll-up" id="themarq">
+     <h1> Jeenius </h1>
+    <div class="design">Designed By Akshat</div>
+    <br><br><br>
+<div class="row">
+  <div class="column col1 valign-wrapper">
+    <p class="design">Jeenius thanks you for...</p>
+  </div>
+  <div class="column col2 valign-wrapper">
+    <p>Sahil Mahajan</p>
+    <p>Kartik Gokhale</p>
+    <p>Aditya Anand Kulkarni</p>
+    <p>Anushka Kokate</p>
+    <p>Shardul Kurdukar</p> 
+  </div>
+</div>
+<div class="sep"></div>
+<!--
+<div class="design" style="font-size:20px;"> Helped me:</div>
+-->
+<div class="row">
+  <div class="column col1 valign-wrapper">
+    <p class="design">The name</p>
+  </div>
+  <div class="column col2 valign-wrapper">
+   <p> Aditya Anand Kulkarni</p> 
+  </div>
+</div>
+<div class="sep"></div>
+<div class="row">
+  <div class="column col1 valign-wrapper">
+    <p class="design">Motivation for form validation</p>
+  </div>
+  <div class="column col2 valign-wrapper">
+   <p> The LOL guy</p> 
+   <p> Shardul Kurdukar</p>
+  </div>
+</div>
+<div class="sep"></div>
+<div class="row">
+  <div class="column col1 valign-wrapper">
+    <p class="design">Beta Testers</p>
+  </div>
+  <div class="column col2 valign-wrapper">
+   <p>Sahil Mahajan</p>
+   <P>Kartik Gokhale</P>
+   <p>Anushka Kokate</p>
+   <p>Shardul Kurdukar</p>
+   <p>Chinmay Pimpalkhare</p>
+   <p>Aum Samuel</p>
+   <p>Aditya Vaichalkar</p> 
+  </div>
+</div>
+<div class="sep"></div>
+
+<div class="row">
+  <div class="column col1 valign-wrapper">
+    <p class="design">Other people who may have visited Jeenius</p>
+  </div>
+  <div class="column col2 valign-wrapper">
+   <p>Pranav Mandlik</p>
+   <p>Parth Patel</p>
+   <p>Srijan Srivastava</p>
+   <p>Anish Kulkarni</p>
+   <p>Anish Bhandari</p>
+   <p>Sanika Gumaste</p>
+   <p>Sanika Ghanekar</p>
+   <p>Venkatesh Pai</p>
+   <p>Chinmay Bandekar</p>
+   <p>Sumedh Ghude</p>
+  </div>
+</div>
+<div style="height:30px;"></div>
+ </div>
+<div class="design" id="thank" style="margin-top:50px;"> Special thanks to
+<div id="t1" style="color:magenta; font-size:15px;">Sahil Mahajan<br><span class="normal">For visiting frequently</span></div><br>
+<div id="t2" style="color:magenta; font-size:15px;">Kartik Gokhale <br><span class="normal"> For providing valuable suggestions</span></div><br>
+<div id="t3" style="color:magenta; font-size:15px;">Chinmay Pimpalkhare<br><span class="normal"> For submitting questions</span></div>
+</div>
+ <div id="endcredits" class="design"><br><br><br><br>Background Score by <span style="color:magenta;">Bonnie Grace</span></div>
+ <div id="productions"><br><br>A Jeenius product</div>
+ <div id="sharew" class="design"><div style="text-align:center; padding:10px;"><div style="font-size:1.8em; font-family:'Vollkorn SC',serif;">Share</div>
+<a class="share" href="whatsapp://send?text=https%3A%2F%2Fjeenius.ga%20Try+Jeenius%3A+A+platform+where+content+is+by+the+JEE+community%2C+and+is+developed+by+a+student%21" data-action="share/whatsapp/share"><i class="fab fa-whatsapp"></i></a>
+
+<a class="share" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fjeenius.ga%20Try+Jeenius%3A+A+platform+where+content+is+by+the+JEE+community%2C+and+is+developed+by+a+student%21" target="_blank" rel="noopener"><i class="fab fa-facebook-square"></i></a>
+
+<a class="share" href="https://twitter.com/intent/tweet?text=Try+Jeenius%3A+A%2Ba+platform+where+content+%28questions+and+other+things%29+is+by+the+JEE+community%2C+developed+by+a+student%21%20https%3A%2F%2Fjeenius.ga" target="_blank" rel="noopener"><i class="fab fa-twitter-square"></i></a>
+
+<a class="share" href="https://www.linkedin.com/shareArticle?mini=true&url=https%3A//jeenius.ga&title=Jeenius&summary=Try%20Jeenius%3A%20A%20platform%20where%20content%20is%20by%20the%20JEE%20community,%20and%20is%20developed%20by%20a%20student!&source="target="_blank" rel="noopener"><i class="fab fa-linkedin"></i></a>
+
+<a class="share" href="https://telegram.me/share/url?url=https%3A%2F%2Fjeenius.ga&text=Try%20Jeenius%3A%20A%20platform%20where%20content%20is%20by%20the%20JEE%20community,%20and%20is%20developed%20by%20a%20student!" target="_blank"><i class="fab fa-telegram"></i></a>
+
+<a class="share"  href="fb-messenger://share?link=https%3A%2F%2Fjeenius.ga"><i class="fab fa-facebook-messenger"></i></a>
+
+<div class="line-it-button" data-lang="en" data-type="share-b" data-ver="3" data-url="https://jeenius.ga/" data-color="grey" data-size="small" data-count="false" style="display: none;"></div>
+ <script src="https://d.line-scdn.net/r/web/social-plugin/js/thirdparty/loader.min.js" async="async" defer="defer"></script>
+
+<a class="share" href="javascript:void(0);" id="moreshare"><i class="fas fa-share-alt"></i></a>
+<hr style="border-top:2px solid #33e3e5;width:65%;">
+            <footer style="text-align:center;">
+<a class="share feedback" style="font-family:'Alegreya',serif;"href="mailto:lightisthekira@gmail.com?subject=Jeenius%20-%20Feedback" target="_blank" rel="noopener"><i class="fas fa-envelope"></i> Your feedback</a>
+</footer></div>
+ </div>
+</body>
+</html>

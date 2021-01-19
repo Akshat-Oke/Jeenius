@@ -1,0 +1,256 @@
+<?php
+    header("Cache-Control: must-revalidate"); // HTTP 1.1.
+header("Pragma: must-revalidate"); // HTTP 1.0.
+header("Expires: 0"); // Proxies.
+?>
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="short" type="image/x-icon" href="favicon.ico" />
+    <meta charset="utf-8">
+    <title>Jeenius</title>
+    <meta name="description" content="Solve tests, practice questions or add YOUR question!"/>
+    <meta property="og:title" content="Jeenius"/>
+    <meta property="og:description" content="Solve tests, practice questions or add YOUR question!"/>
+    <meta property="og:image" content="https://jeenius.ga/favicon.ico"/>
+    <meta property="og:url" content="https://jeenius.ga/index.php"/>
+    <meta name="theme-color" content="#000000">
+    <meta http-equiv="content-type" content="text/html; charset=windows-1252">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="https://kit.fontawesome.com/f028f07279.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Thasadith|Ubuntu|Noto%20Serif%20SC|Alegreya|Vollkorn%20SC">
+    <style>
+    body{
+        line-height:1.5px;
+        font-family:'Thasadith',serif;
+        margin:10px;
+        scroll-behavior: smooth;
+    }
+    div.scrollThis{
+        scroll-behavior: smooth;
+    }
+    div.fixed{
+        margin-top:2px;
+        margin-left:-45vw;
+        width:90vw;
+        text-align:center;
+        position:fixed;
+        bottom:15px;
+        left:50%;
+        background-color:rgba(255,255,255,0.6);
+    }
+    div.chatbox{
+        margin:10px;
+        margin-bottom:50px;
+        overflow:auto;
+        max-height:65vh;
+        border:2px solid black;
+    }
+    div.name{
+        font-family:'Noto Serif SC',serif;
+        font-size:0.6em;
+        font-size:0.8em;
+        padding:10px;
+        border-bottom:2px solid #616161;
+        margin-bottom:4px;
+    }
+    div.text{
+        font-size:1em;
+        font-family:'Ubuntu',serif;
+        display:table;
+        max-width:75vw;
+        max-height:250px;
+        overflow:auto;
+        clear:both;
+        word-wrap:break-word;
+        line-height:1.5;
+        background-color:#bceafb;
+        border:1px solid #bceafb;
+        border-radius:5px;
+        margin:10px;
+        padding:8px;
+        padding-top:0px;
+    }
+    .time{
+        /* width:80%; */
+        line-height:1.5;
+        clear:both;
+        margin:5px 0 0 0;
+        float:right;
+        font-size:0.7em;
+        font-family:'Thasadith',serif;
+    }
+    input[type=text] {
+  width:75%;
+  padding:5px;
+  font-family:'Alegreya',serif;
+  border:2px solid #fbe7bc;
+  font-size:1.3em;
+  outline:none;
+  transition:0.4s;
+}
+input[type=text]:focus {
+  border: 2px solid magenta;
+}
+button{
+    padding:5px 2px;
+    opacity:1;
+    outline:none;
+    margin-left:10px;
+    background-color:#ee88e5;
+    font-size:1.2em;
+    border:none;
+    transition:0.4s;
+}
+
+button.send{
+    opacity:1;
+    position:relative;
+    width:2.6em;
+    height:2.6em;
+    outline:none;
+    margin-left:10px;
+    background-color:#ee88e5;
+    font-size:1.2em;
+    border:none;
+    border-radius:50%;
+    transition:0.4s;
+}
+
+button.send:hover{
+    background-color:#ea2cbc;
+}
+span.sendicon{
+    position:relative;
+}
+span.fly{
+    animation:haha 0.6s 0s linear;
+}
+@keyframes haha{
+    from{bottom:0; opacity:1;right:0;}
+    to{bottom:40px;opacity:0;right:-50px;}
+}
+#remove{display:none;}
+    </style>
+ </head>
+ <body onload="haha();">
+ <div id="remove">
+ <input type="text" name="isuser"placeholder="Your username" id="a" style="width:50%;">
+        <button onclick="gotit();">Enter Name</button>
+        </div>
+        <script>
+            function gotit(){
+                var n=document.getElementById("a").value;
+                localStorage.setItem("user", n);
+                document.getElementById("remove").style.display="none";
+            }
+            function haha(){
+            if(localStorage.user!=undefined&&localStorage.user!=null){document.getElementById("remove").style.display="none";}
+            else{document.getElementById("remove").style.display="block";}
+                }
+        </script>
+        <br>
+        <div id="scrollThis" style="max-height:80vh;overflow:auto;margin:10px;">
+ <div id="chatbox"></div>
+ </div>
+ <div style="text-align:center;">
+ <div class="fixed">
+ <input type="text" id="chat_text"autocomplete="off"/>
+  <button id="entertext" class="send" onclick="sendchat();"><span id="sendicon" class="sendicon"><i class="fas fa-paper-plane"></i></span></button>
+ </div>
+ </div>
+ <script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    extensions: ["tex2jax.js"],
+    jax: ["input/TeX", "output/HTML-CSS"],
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+      processEscapes: true
+    },
+    "HTML-CSS": { fonts: ["TeX"] }
+  });
+</script>
+ <script>
+var colors = ["bceafb", "9ff7eb", "f7c49f", "f79fe2", "f7f09f"];
+ if(localStorage.color==undefined||localStorage.color==null||localStorage.color==""||localStorage.color==false){
+     var num = Math.floor(Math.random() * (5 - 0) ) + 0;
+     localStorage.setItem("color", colors[num]);
+ }
+ var division=document.getElementById("scrollThis");
+ setInterval(function(){ load(); }, 1000);
+    function load(){
+        var xhttp=new XMLHttpRequest();
+        xhttp.onreadystatechange=function(){
+            if(this.readyState==4&& this.status==200){
+                document.getElementById("chatbox").innerHTML="";
+                document.getElementById("chatbox").innerHTML=this.responseText+"<br>";
+                setTimeout(function(){console.log(division.scrollHeight);console.log(division.scrollTop);
+                if( division.scrollTop > (division.scrollHeight-700)){
+                division.scrollTop=division.scrollHeight;
+                };
+                },300);
+            }
+        }
+         xhttp.open("GET","/text/display.php?" + Math.random(),true);
+         xhttp.send();
+    }
+    function sendchat(){
+        if(localStorage.user!=undefined&&localStorage.user!=null&&localStorage.user!=""){
+            addfly();
+        if(document.getElementById("chat_text").value!=""){
+         var xhttp=new XMLHttpRequest();
+        xhttp.onreadystatechange=function(){
+            if(this.readyState==4&& this.status==200){
+                document.getElementById("chat_text").value="";
+                load();
+                setTimeout(function(){
+                division.scrollTop=division.scrollHeight;
+                },450);
+            }
+        }
+        var currentdate = new Date(); 
+var datetime =  + currentdate.getDate() + "-"
+                + (currentdate.getMonth()+1)  + "-" 
+                + currentdate.getFullYear() + " "  
+                + currentdate.getHours() + ":"  
+                + currentdate.getMinutes(); 
+;         xhttp.open("GET","/text/logit.php?text=" +document.getElementById("chat_text").value+"&name="+ localStorage.user +"&time="+datetime+"&color="+localStorage.color,true);
+         xhttp.send();
+    }
+        }
+    }
+    document.getElementById("sendicon").addEventListener("click", addfly);
+    function addfly(){
+        document.getElementById("sendicon").classList.add("fly");
+        setTimeout(function(){document.getElementById("sendicon").classList.remove("fly");},1000);
+    }
+    var input = document.getElementById("chat_text");
+
+// Execute a function when the user releases a key on the keyboard
+input.addEventListener("keyup", function(event) {
+  // Number 13 is the "Enter" key on the keyboard
+  if (event.keyCode === 13) {
+    // Cancel the default action, if needed
+    // Trigger the button element with a click
+    document.getElementById("entertext").click();
+  }
+});
+const tx = document.getElementsByTagName('textarea');
+for (let i = 0; i < tx.length; i++) {
+  tx[i].setAttribute('style', 'height:' + (tx[i].scrollHeight) + 'px;overflow-y:hidden;');
+  tx[i].addEventListener("input", OnInput, false);
+}
+
+function OnInput() {
+  this.style.height = 'auto';
+  this.style.height = (this.scrollHeight) + 'px';
+}
+
+ setInterval(function(){ document.getElementById("chatbox").scrollTop=document.getElementById("chatbox").scrollHeight;console.log("heu");MathJax.typeset();},1000);
+</script>
+<div style="height:60px;"></div>
+</body>
+</html>

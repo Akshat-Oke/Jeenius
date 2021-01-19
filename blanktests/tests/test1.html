@@ -1,0 +1,2125 @@
+<?php
+    header("Cache-Control: must-revalidate"); // HTTP 1.1.
+header("Pragma: must-revalidate"); // HTTP 1.0.
+header("Expires: 0"); // Proxies. testpapers /result.php
+?>
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Jeenius - Test</title>
+    <meta name="theme-color" content="#000000">
+    <meta http-equiv="content-type" content="text/html; charset=windows-1252">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="https://kit.fontawesome.com/f028f07279.js" crossorigin="anonymous"></script>
+
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Alegreya%20SC|Anaheim|Aleo|Antic%20Slab|Alegreya">
+    <script type="text/javascript">
+    var toastenabled=1;
+    ////////Check if user has entered name//////////
+    function checklog(){
+    if(localStorage.testname==undefined||localStorage.testname==null||localStorage.testname==""){
+        hide_toast();
+        //launch_toast();
+        setTimeout(function(){ launch_toast(); document.getElementById("desc").innerHTML="You have not logged in.";},6000);
+        setTimeout(function(){hide_toast();}, 8000);
+        setTimeout(function(){launch_toast();document.getElementById("desc").innerHTML="Flying to Login page...";},9500);
+        setTimeout(function(){window.location.replace("https://jeenius.ga/tests/login.php");}, 10500);
+    }
+    }
+    var slowLoad = window.setTimeout( function() {
+        alert( "Seems like your internet connection is slow. Answers might not be saved immediately after marking." );
+    }, 280 );
+
+    window.addEventListener( 'load', function() {
+        window.clearTimeout( slowLoad );
+    }, false );
+    var lost=0;
+    var right=0;
+    //var o;
+    window.addEventListener('online', updateOnlineStatus);
+            window.addEventListener('offline', updateOfflineStatus);
+            function updateOfflineStatus(){
+                window.scrollTo(0,0);
+                document.getElementById("Network").innerHTML="Network Lost";
+                if(right==0){
+                launch_toast();
+                 document.getElementById("desc").innerHTML="Network lost";
+                document.getElementById("img1").style.display="none";
+                right=1;
+                }
+                lost=1;
+            }
+            function updateOnlineStatus(){
+                 document.getElementById("Network").innerHTML="";
+                if(lost==1){
+                    //hide_toast();
+                launch_toast();
+                window.scrollTo(0,0);
+                document.getElementById("desc").innerHTML="Page will reload in 10 seconds.";
+                 document.getElementById("Network").innerHTML="Connection regained! Please<a href='https://jeenius.ga/tests/test1.php'>Reload</a> the page. ";
+                 setTimeout(function(){
+                     window.scrollTo(0,0);
+                      document.getElementById("Network").innerHTML="One moment...";hide_toast();window.location.replace("https://jeenius.ga/tests/test1.php")},10000);
+                document.getElementById("img1").style.display="block";
+                lost=0;
+                //setTimeout(function(){ x.className = x.className.replace("show", ""); document.getElementById("img1").style.display="block";}, 5000);
+                }
+            }
+
+</script>
+	<style>
+        :root{
+            --dark-bg:#000000;
+            --dark-bg-card:#212121;
+            --dark-text:rgba(0,0,0,0.87);
+        }
+    html{
+        scroll-behavior: smooth;
+    }
+	body{margin:0;
+	line-height:1.5;
+    -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+     -khtml-user-select: none; /* Konqueror HTML */
+       -moz-user-select: none; /* Old versions of Firefox */
+        -ms-user-select: none; /* Internet Explorer/Edge */
+            user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome, Edge, Opera and Firefox */
+	}
+    body.dark{
+        background-color:var(--dark-bg);
+    }
+    #topnav{
+        background-color:black;
+        overflow:hidden;
+        font-size:3vh;
+    	display:flex;
+    	align-items: center;
+        /* /display-style:block; */
+        height:10vh;
+        width:100%;
+        padding:0;
+        margin:0;
+        font-family:"Times New Roman";
+        position: fixed;
+        top:0;
+        z-index:10;
+        }
+    #bottomnav{
+        background-color:black;
+        overflow:hidden;
+        font-size:3vh;
+    	display:flex;
+    	align-items: center;
+        /* //display-style:block; */
+        height:10vh;
+        width:100%;
+        padding:0;
+        margin:0;
+        font-family:"Times New Roman";
+        position: fixed;
+        bottom:0;
+        box-shadow:0px -4px 10px 0 rgba(0,0,0,0.4);
+    }
+    
+    [type="radio"]:checked,
+[type="radio"]:not(:checked) {
+    position: absolute;
+    left: -9999px;
+}
+[type="radio"]:checked + label,
+[type="radio"]:not(:checked) + label
+{
+    position: relative;
+    padding-left: 28px;
+    cursor: pointer;
+    line-height: 20px;
+    display: inline-block;
+    color: #111;
+}
+[type="radio"]:checked + label:before,
+[type="radio"]:not(:checked) + label:before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 18px;
+    height: 18px;
+    border: 1px solid #ddd;
+    border-radius: 100%;
+    background: #fff;
+}
+[type="radio"]:checked + label:after,
+[type="radio"]:not(:checked) + label:after {
+    content: '';
+    width: 12px;
+    height: 12px;
+    background: #b630f7;
+    position: absolute;
+    top: 4px;
+    left: 4px;
+    border-radius: 100%;
+    -webkit-transition: all 0.2s ease;
+    transition: all 0.2s ease;
+}
+[type="radio"]:not(:checked) + label:after {
+    opacity: 0;
+    -webkit-transform: scale(0);
+    transform: scale(0);
+}
+[type="radio"]:checked + label:after {
+    opacity: 1;
+    -webkit-transform: scale(1);
+    transform: scale(1);
+}
+    #qcard{
+        box-shadow: 3px 6px 12px 0 rgba(0,0,0,0.2), -3px 6px 14px 0 rgba(0,0,0,0.2);
+        transition:all 1s ease;
+        clear:both;
+		border-radius: 5px;
+		max-height:50vh;
+		overflow: scroll;
+        padding-top:6px;
+        margin:-5px 12px 20px 12px;
+    }
+    #qcard.dark{
+        box-shadow: 3px 6px 12px 0 rgba(0,0,0,0.2), -3px 6px 14px 0 rgba(0,0,0,0.2);
+        background-color:var(--dark-bg-card);
+        color:rgba(255,255,255,0.8);
+        transition:all 1s ease;
+        clear:both;
+		border-radius: 5px;
+		max-height:40vh;
+		overflow: scroll;
+        padding-top:6px;
+        margin:-5px 12px 20px 12px;
+    }
+    #actualquestion{
+        transition:all 1s ease;
+        overflow:hidden;
+    }
+    #actualquestion.dark{
+        color:rgba(255,255,255,0.9);
+    }
+    div.question{
+		padding: 2px 16px;
+		}
+    div.progressbar{
+        position:fixed;
+        top:10vh;
+        z-index:11;
+        border-top:2px;
+    }
+    #optionsdiv.dark{
+        background-color:black;
+        color:rgba(255,255,255,0.9);
+    }
+    #rqbar{
+        width:100vw;
+        height:5px;
+        background-color:#b0b0b0;
+        box-shadow:0 -3px 4px 0 rgba(179,179,179,1.0),0 3px 4px 0 rgba(179,179,179,0.6);
+        clear:none;
+        padding:0px;
+        float:left;
+        transition:0.5s;
+    }
+    #lqbar{
+        box-shadow:0 -3px 4px 0 rgba(66,196,244,0.6), 0 3px 4px 0 rgba(66,196,244,0.4) ;
+        z-index:2;
+        height:5px;
+        float:left;
+        background-color:#42c4f4;
+        width:0vw;
+        transition:0.5s;
+    }
+    #aqbar{
+        box-shadow:0 -3px 4px 0 rgba(43, 219, 32,0.6),0 3px 4px 0 rgba(43, 219, 32,0.4);
+        height:5px;
+        float:left;
+        background-color:#2bdb20;
+        width:0vw;
+        transition:0.5s;
+    }
+    label{
+        width:90%;
+        padding-bottom:15px;
+    }
+    #dropdownnav{
+        text-align:center;
+        color:white;
+        font-size: 2.8vh;
+        margin:auto;
+        /* display-style: inline-block; */
+        padding:0.8vh 2.3vw;
+        background-color:white;
+        border:2px solid #29d6ff;/*bluelight*/
+        border-collapse:separate;
+        border-radius:5px;
+        box-shadow: 3px 3px 2px 0 rgba(170,170,170, 0.6),-3px -3px 2px 0 rgba(170,170,170, 0.6) ;
+    }
+    #dropdownnav.dark{
+         background-color:#ababab;
+    }
+    #submitbutton{
+        color:white;
+        background-color:#0098bc;
+        margin-right:6px;
+        margin-left:-6px;
+        font-size:2.4vh;
+        padding:1.2vh 0.7vh;
+        border:2px solid #0098bc;
+        border-radius:3px;
+        transition:0.4s;
+        -webkit-transition:0.4s;
+    }
+    #submitbutton:hover{
+        cursor:pointer;
+        color:#0098bc;
+        background-color:white;
+    }
+    /* The Modal (background) */
+.modal {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 100; /* Sit on top */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0,0,0); /* Fallback color */
+  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+/* Modal Content/Box */
+.modal-content {
+  background-color: #fefefe;
+  margin: 30% auto; /* 30% from the top and centered */
+  padding: 20px;
+  border: 1px solid #888;
+  width: 70%; /* Could be more or less, depending on screen size */
+}
+
+/* The Close Button */
+.close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+#submit-confirm-modal.dark{
+    color:var(--dark-text);
+    background-color:var(--dark-bg-card);
+}
+#settings-modal.dark{
+    color:white;
+    background-color:black;
+}
+    button.bottombutton{
+        color:#0098bc;
+        padding:1.8vh 1.0vh;
+        background-color:white;
+        border:2px solid #0098bc;
+        border-radius:4px;
+        font-size:2.7vh;
+        transition:0.4s;
+        -webkit-transition:0.4s;
+    }
+    button.bottombutton:active{
+        color:white !important;
+        background-color:black !important;
+    }
+    /*button.bottombutton:hover{
+        color:white;
+        background-color: rgba(51, 181, 229, 0.7);
+    }*/
+    button{
+        outline:none;
+    }
+    button.clearall{
+        font-size:2.5vh;
+        padding:1.2vh 0.8vh;
+        background-color:white;
+        color:#d432e8;
+        border:2px solid #d432e8;
+        border-radius:3px;
+        transition:0.4s;
+        -webkit-transition:0.4s;
+    }
+    button.clearall:active{
+        color:white;
+        background-color:#a91bbb;
+    }
+    img{
+        max-width:100%;
+        height:auto;
+    }
+    #fakeprevious{
+        display:none;
+    }
+    #dropdowncontent.hidden{
+        /* //display:none; */
+        margin:auto;
+        margin-bottom:5px;
+        margin-top:0px;
+        border:none;
+        max-width:80vw;
+        text-align:center;
+        max-height:0;
+        overflow-y:hidden;
+        transition: max-height 0.8s;
+    }
+    #dropdowncontent.dark{
+        background-color:#212121;
+        margin:auto;
+        margin-bottom:5px;
+        margin-top:0px;
+        border:none;
+        max-width:80vw;
+        text-align:center;
+        max-height:0;
+        overflow-y:hidden;
+        transition: max-height 0.8s;
+    }
+    #dropdowncontent.active {
+    max-height: 1000px;
+    border:3px solid #33b5e5;
+    }
+    #dropdowncontent button{
+        /* //padding:5px 8px; */
+        width:40px;
+        height:30px;
+        border:2px solid #20e4ad;
+        border-radius:5px;
+        background-color:white;
+        color:black;
+        margin:5px;
+        margin-bottom:7px;
+        transition:0.3s;
+        -webkit-transition:0.3s;
+    }
+    #dropdowncontent button:hover{
+        background-color:#20e4ad !important;
+        color:white !important;
+        border:2px solid teal !important;
+    }
+    #dropdowncontent button.active{
+        background-color:#e79626 !important;
+        color:white !important;
+    }
+    #dropdowncontent h3{
+        color:#c700ae;
+    }
+    #actualcontent.blurnow{
+        -webkit-filter: blur(5px);
+  -moz-filter: blur(5px);
+  -o-filter: blur(5px);
+  -ms-filter: blur(5px);
+  filter: blur(5px);
+    }
+    .modal-content button{
+        text-decoration:none;
+        border:2px solid #15ad55;
+        border-radius:20px;
+        padding: 1.2vh 10vw;
+        background-color:#12d162;
+        color:white;
+        font-size:3vh;
+        /* //width:50vw; */
+        font-family:'Anaheim', serif;
+        transition:0.3s;
+        -webkit-transition:0.3s;
+    }
+    .modal-content button:hover{
+        background-color:white;
+        color:#12d162;/*green*/
+    }
+            #toast {
+    visibility: hidden;
+    max-width: 50px;
+    height: 50px;
+    margin: auto;
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    border-radius: 2px;
+    position: fixed;
+    z-index: 1;
+    left: 0;right:0;
+    bottom: 50px;
+    font-size: 17px;
+    white-space: nowrap;
+}
+#toast.dark{
+    border:2px solid magenta;
+    visibility: hidden;
+    max-width: 50px;
+    height: 50px;
+    margin: auto;
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    border-radius: 2px;
+    position: fixed;
+    z-index: 1;
+    left: 0;right:0;
+    bottom: 50px;
+    font-size: 17px;
+    white-space: nowrap;
+}
+#toast #img1{
+	width: 50px;
+	height: 50px;
+    float: left;
+    padding-top: 16px;
+    padding-bottom: 16px;
+    box-sizing: border-box;
+    background-color: #111;
+    color: #fff;
+}
+#toast #desc{
+    color: #fff;
+    padding: 16px;
+    overflow: hidden;
+	white-space: nowrap;
+}
+
+#toast.show {
+    visibility: visible;
+    -webkit-animation: fadein 0.5s, expand 0.5s 0.5s,stay 3s 1s;/* shrink 0.5s 2s, fadeout 0.5s 2.5s;*/
+    animation: fadein 0.2s, expand 0.1s 0.2s,stay 0.5s 0.5s shrink 0.5s 4s, fadeout 0.5s 4.5s;
+}
+#toast.getout{
+    visibility: hidden;
+}
+@-webkit-keyframes fadein {
+    from {bottom: 0; opacity: 0;} 
+    to {bottom: 30px; opacity: 1;}
+}
+
+@keyframes fadein {
+    from {bottom: 0; opacity: 0;}
+    to {bottom: 30px; opacity: 1;}
+}
+
+@-webkit-keyframes expand {
+    from {min-width: 50px} 
+    to {min-width: 350px}
+}
+
+@keyframes expand {
+    from {min-width: 50px}
+    to {min-width: 350px}
+}
+@-webkit-keyframes stay {
+    from {min-width: 350px} 
+    to {min-width: 350px}
+}
+
+@keyframes stay {
+    from {min-width: 350px}
+    to {min-width: 350px}
+}
+@-webkit-keyframes shrink {
+    from {min-width: 350px;} 
+    to {min-width: 50px;}
+}
+
+@keyframes shrink {
+    from {min-width: 350px;} 
+    to {min-width: 50px;}
+}
+
+@-webkit-keyframes fadeout {
+    from {bottom: 30px; opacity: 1;} 
+    to {bottom: 60px; opacity: 0;}
+}
+
+@keyframes fadeout {
+    from {bottom: 30px; opacity: 1;}
+    to {bottom: 0px; opacity: 0;}
+}
+
+.spinner {
+  /* Spinner size and color */
+  margin-top:-5px;
+  width: 35px;
+  height: 35px;
+  border-top-color: #444;
+  border-left-color: #444;
+
+  /* Additional spinner styles */
+  animation: spinner 400ms linear infinite;
+  border-bottom-color: transparent;
+  border-right-color: transparent;
+  border-style: solid;
+  border-width: 2px;
+  border-radius: 50%;  
+  box-sizing: border-box;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+/* Animation styles */
+@keyframes spinner {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+.spinner-blue {
+  border-top-color: #09d;
+  border-left-color: #09d;
+}
+.spinner-slow {
+  animation: spinner 1s linear infinite;
+}
+#opensettings{
+    position:fixed;
+    top:12.5vh;
+    right:8px;
+    font-size:2.8vh;
+    background-color:white;
+    border:1px solid grey;
+    border-radius:5px;
+    box-shadow:2px 2px 8px rgba(0,0,0, 0.4);
+    color:grey;
+    outline:none;
+    padding:5px; padding-bottom:3px;
+}
+/* The switch - the box around the slider */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+}
+
+/* Hide default HTML checkbox */
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+/* The slider */
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 24px;
+  width: 24px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+input:checked + .slider {
+  background-color: #2196F3;
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked + .slider:before {
+  -webkit-transform: translateX(28px);
+  -ms-transform: translateX(28px);
+  transform: translateX(28px);
+}
+
+/* Rounded sliders */
+.slider.round {
+  border-radius: 34px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
+}
+#s-content.dark, #sub-content.dark{
+    background-color:black;
+    color:white;
+}
+#switchinputbutton{
+    padding:6px 10px;
+    margin-top:10px;
+    background-color:#cc34da;
+    text-align:center;
+    transition:0.3s;
+    -webkit-transition:0.3s;
+    border:none;
+}
+#switchinputbutton:hover{
+    background-color:black;
+    color:white;
+    border:2px solid magenta;
+}
+#switchinput{
+    color:#1ecbb5;
+    border:2px solid #d5d5d5;
+    padding:8px 6px;
+    outline:none;
+    transition:0.4s;
+    -webkit-transition:0.4s;
+}
+#switchinput:focus{
+    border:2px solid #8c8c8c;
+}
+#icon{
+    position:fixed;
+    z-index:20;
+    top:12.3vh;
+}
+#bookmarkicon{
+    color:#c637ed;
+}
+#bookmarkicon.dark{
+    color:#cf5dee;
+}
+	</style>
+  </head>
+  <body onload="setqnumbers(); setoptionandbar0(); settimer(); startqtimer(); checklog(); toggledark(0);setbookmarks();" style="transition:0.4s;-webkit-transition:0.4s;">
+      <div id="topnav">
+          <span id="timer" style="color:magenta;margin-left:3vw; margin-right:-5px;">Timer</span>
+          <button onclick="hey();" id="dropdownnav">
+              <span id="navqnumber" style="color:black;">0</span> <span id="dropdownicon"><i style="color:#33b5e5;" class="fas fa-caret-down"></i></span>
+            </button>
+            <button id="submitbutton">Submit</button>
+         <!-- <form method="post" action="<?php echo $_SERVER['PHP_SELF'];?>" onsubmit="confirmsubmit();">
+              <div style="display:none;">
+                  Hey!
+              </div>
+              <input type="submit" id="submitbutton" value="Submit" disabled/>
+          </form> -->
+      </div>
+      <div class="progressbar">
+          <span id="rqbar">
+              <span id="aqbar"></span>
+              <span id="lqbar"></span>
+          </span>
+      </div>
+        <div style="height:12vh;"></div>
+
+        <div style="text-align:center;">
+        <div id="dropdowncontent" class="hidden">
+            <h3 style="color:#2bdff0;" id="nameindropdown"></h3>
+                    <script>document.getElementById("nameindropdown").innerHTML=localStorage.testname;</script>
+            <h3 style="text-align:center;" id="navp">Physics</h3>
+            <div id="dropdownphysics"></div>
+            <hr style="border-top:2px solid #2bdff0; width:75%;">
+            <!--  -->
+            <h3 style="text-align:center;" id="navc">Chemistry</h3>
+            <div id="dropdownchemistry"></div>
+            <hr style="border-top:2px solid #2bdff0; width:75%;">
+            <!--  -->
+            <h3 style="text-align:center;" id="navm">Math</h3>
+            <div id="dropdownmath"></div>
+        </div>
+        </div>
+        <script>
+            function createnavbuttons(){ //call this in setqnumbers
+            console.log(totalp);
+            document.getElementById("dropdownphysics").innerHTML="";
+            document.getElementById("dropdownchemistry").innerHTML="";
+            document.getElementById("dropdownmath").innerHTML="";
+            if(totalp==30){
+                   launch_toast();
+                   document.getElementById("desc").innerHTML="Failed to load questions. Retrying...";
+                   //setTimeout(function(){setqnumbers();}, 2000);
+               }
+               else {
+                   launch_toast();
+                   document.getElementById("desc").innerHTML="Questions Loaded";
+               }
+            if(totalc==30){
+                   launch_toast();
+                   document.getElementById("desc").innerHTML="Failed to load questions. Retrying...";
+                   //setTimeout(function(){setqnumbers();}, 2000);
+               }
+               else {
+                   launch_toast();
+                   document.getElementById("desc").innerHTML="Questions Loaded";
+               }
+            if(totalm==30){
+                   launch_toast();
+                   document.getElementById("desc").innerHTML="Failed to load questions. Retrying...";
+                   //setTimeout(function(){setqnumbers();}, 2000);
+               }
+               else {
+                   launch_toast();
+                   document.getElementById("desc").innerHTML="Questions Loaded";
+               }
+                for (var i=0; i<totalp; i++){
+                  (function(){
+                      var btn=document.createElement("BUTTON");
+                      btn.className="dropdownbutton";
+                      btn.id="qbp"+i;
+                      var t=i;
+                      btn.innerHTML=(i+1);
+                      btn.addEventListener("click", function() { endqtimer(2,t,t);console.log("i is = "+t);setsubject(); hey();launch_toast(); showload();}, false);
+                      var pdrop=document.getElementById("dropdownphysics");
+                      pdrop.appendChild(btn);
+                }());
+                }
+                 for (var i=0; i<totalc; i++){
+                  (function(){
+                      var btn=document.createElement("BUTTON");
+                      btn.className="dropdownbutton";
+                      btn.id="qbc"+i;
+                      var t1=i;
+                      var w1=totalp+t1;
+                      btn.innerHTML=(i+1);
+                      btn.addEventListener("click", function() { endqtimer(2,t1,w1);console.log("i is = "+t1); setsubject();hey();launch_toast(); showload();}, false);
+                      var pdrop=document.getElementById("dropdownchemistry");
+                      pdrop.appendChild(btn);
+                }());
+                 }
+                 for (var i=0; i<totalm; i++){
+                  (function(){
+                      var btn=document.createElement("BUTTON");
+                      btn.className="dropdownbutton";
+                      btn.id="qbm"+i;
+                      var t2=i;
+                      var w2=totalp+totalc+t2;
+                      btn.innerHTML=(i+1);
+                      btn.addEventListener("click", function() { endqtimer(2,t2,w2);console.log("i is = "+t2); setsubject();hey();launch_toast(); showload();}, false);
+                      var pdrop=document.getElementById("dropdownmath");
+                      pdrop.appendChild(btn);
+                }());
+                 }
+            }
+            function gotop(qp){
+                endqtimer(2,qp,qp);//qp=qnumber here
+            }
+            function gotoc(qc){
+                var w=totalp+qc;
+                endqtimer(2,qc,w);//qnumber is totalp +qc
+            }
+            function gotom(qm){
+                var w=totalp+totalc+qm;
+                endqtimer(2,qm,w);//qnumber is...you get the idea
+            }
+            </script>
+        <!--Actual Content -->
+        <div id="actualcontent" style="transition:0.4s; -webkit-transition:0.4s;">
+        <span style="float:left;" id="icon"><img src="home_icon.png" style="max-height:35px; margin-left:3px;width:35px;opacity:0.4;"></span>
+        <h2 id="subject" style="clear:none;text-align:center; margin-bottom:-8px;transition:0.3s;">Physics</h2><hr id="subjecthr" style="width:50%;">
+        <br>
+        <div id="Network" style="color:red;font-size:26px; font-family:'Alegreya SC', serif;text-align:center;"></div>
+      <div class="pcard" id="qcard">
+      <div class="question">
+      <div style="margin-bottom:10px;">
+        <span style="float:left; font-size:1.17em;"><b> Question <span id="headernumber">0</span></b></span>
+         <span id="bookmarkicon" onclick="bookmarkquestion();" style="float:right;transition:0.4s;font-size: 25px;margin-right:10px;"></span>
+      </div>
+       <br>
+        <hr id="hrcolor" style="width:100%; margin-top:5px;">
+        <div id="actualquestion">
+
+            Question goes here.
+    
+        </div>
+      </div>
+      </div>
+
+      <div style=" margin: 25px 12px; transition:0.4s;" id="optionsdiv">
+          
+          <p>
+      <input type="radio" id="p1a" name="pa" value="a"><label for="p1a"><span id="option1">Option</span> </label>
+    </p>
+  <p>
+    <input type="radio" id="p1b" name="pa" value="b"><label for="p1b"><span id="option2">Option</span> </label>
+  </p>
+     <p>
+    <input type="radio" id="p1c" name="pa" value="c"><label for="p1c"><span id="option3">Option</span> </label>
+  </p>
+  <p>
+       <input type="radio" id="p1d" name="pa" value="d"><label for="p1d"><span id="option4">Option</span> </label>
+  </p>
+  
+    </div>
+        </div>
+  <!--Bottom Navigation-->
+  <div style="height:11vh;"></div>
+  <div style="text-align:center;">
+      <div id="bottomnav">
+          <button class="bottombutton" id="realprevious" style="display:inline-block;float:right; margin-left:6px;" onclick="endqtimer(0,0,0); setoptionandbar0();launch_toast(); showload();">Previous</button>
+          <button class="bottombutton" id="fakeprevious" style="background-color:#e0e0e0;color:#e9e9e9; display:inline-block;float:right; margin-left:6px;">Previous</button>
+          <button class="clearall" style="display:inline-block; margin:auto;" onclick="clearall();">Clear All</button>
+         <span style="float:right;"> <button class="bottombutton" id="nextbut" style=" float:right; margin-right:6px; padding:1.8vh 2vh;"
+          onclick="endqtimer(1,0,0); setoptionandbar0(); launch_toast(); showload();">Next</button></span>
+  </div>
+  </div>
+      <script>
+      /////////Mark For review Arc (bookmarks here)/////
+      var bookmarktrue=0;
+      var bookmarkthis="qt0";
+      function setbookmarkicon(){
+          if(localStorage.getItem("qt"+qnumber)==1){
+              document.getElementById("bookmarkicon").innerHTML="<i class= \"fas fa-bookmark \"></i>";
+          }
+          else {
+              document.getElementById("bookmarkicon").innerHTML="<i class= \"far fa-bookmark \"></i>";
+          }
+      }
+           function bookmarkquestion(){//for the bookmark icon when clicked
+       if(bookmarktrue==0){
+           bookmarkthis="qt"+qnumber;
+           bookmarktrue=1;
+           localStorage.setItem(bookmarkthis, "1");
+           document.getElementById("bookmarkicon").innerHTML="<i class= \"fas fa-bookmark \"></i>";
+       }
+       else{
+           bookmarktrue=0;
+           localStorage.removeItem(bookmarkthis);
+           document.getElementById("bookmarkicon").innerHTML="<i class= \"far fa-bookmark \"></i>";
+       }
+      // setbookmarks();
+   }
+   function setbookmarks(){
+       var colorRightNow;
+       for (var u=0; u<totalq; u++){
+           var d="qt"+u;
+           if(localStorage.getItem(d)==1){
+                if (u<totalp){
+               document.getElementById("qbp"+u).style.backgroundColor="#c637ed";//light purple
+            }
+            else if(u<(totalc+totalp)&&u>=totalp){
+              // var f=i-totalp;//will... nothing
+               document.getElementById("qbc"+(u-totalp)).style.backgroundColor="#c637ed";//light purple
+            }
+            else if(u>=(totalc+totalp)){
+               document.getElementById("qbm"+(u-totalp-totalc)).style.backgroundColor="#c637ed";//light purple
+            }
+           }
+      
+       }
+   }
+          function showload(){
+              document.getElementById("desc").innerHTML="Loading...";
+          }
+          function hey(){
+              window.scrollTo(0, 0);
+              var thisone=document.getElementById("dropdowncontent");
+              if (thisone.className === "hidden") {
+                thisone.className = "hidden  active";
+                document.getElementById("dropdownicon").innerHTML="<i style= \"color:#ff9845; \" class= \"fas fa-caret-up \"></i>";
+                 }
+                  else {
+                 thisone.className = "hidden";
+                 document.getElementById("dropdownicon").innerHTML="<i style= \"color:#33b5e5; \" class= \"fas fa-caret-down \"></i>";
+                }
+          }
+          ///////
+          //////////The Timings Arc ///////////////////////////////////////
+          function settimer(){//////Call On Window load!!!
+                if(localStorage.getItem("timeset")==undefined||localStorage.getItem("timeset")==null||localStorage.getItem("timeset")==""||!localStorage.getItem("timeset")){
+                    var rn=new Date().getTime();
+                    var countto= rn+10802000;//Countdown, time is 3 hours 2 seconds
+                    localStorage.setItem("timeset", countto);
+                }
+                else {
+                    var countto= localStorage.timeset;
+                }
+               // var rn=new Date().getTime();
+               // var countto= rn+10802000;//Countdown, time is 3 hours 2 seconds
+                setInterval(function(){ 
+                    var time= new Date().getTime();
+                    var timerem=countto-time;
+                    var displaytime=timefordisplay(timerem);
+                    document.getElementById("timer").innerHTML=displaytime;
+                    document.getElementById("submit-timer").innerHTML=displaytime;
+                 }, 1000)
+          }
+          function timefordisplay(milliseconds){
+  //Get hours from milliseconds
+  var hours = milliseconds / (1000*60*60);
+  var absoluteHours = Math.floor(hours);
+  var h = absoluteHours > 9 ? absoluteHours : '0' + absoluteHours;
+
+  //Get remainder from hours and convert to minutes
+  var minutes = (hours - absoluteHours) * 60;
+  var absoluteMinutes = Math.floor(minutes);
+  var m = absoluteMinutes > 9 ? absoluteMinutes : '0' +  absoluteMinutes;
+
+  //Get remainder from minutes and convert to seconds
+  var seconds = (minutes - absoluteMinutes) * 60;
+  var absoluteSeconds = Math.floor(seconds);
+  var s = absoluteSeconds > 9 ? absoluteSeconds : '0' + absoluteSeconds;
+  if(milliseconds<1){
+      gotoresult();
+      return "Over";
+  }
+  else{
+  return h + ':' + m + ':' + s;
+  }
+}
+       function setqtime(qnumber){
+            if (qnumber1<totalp){
+               endqtimer(qnumber, qpnumber);
+            }
+            else if(qnumber1<(totalc+totalp)&&qnumber1>=totalp){
+               endqtimer(qnumber, qcnumber);
+            }
+            else if(qnumber1>=(totalc+totalp)){
+               endqtimer(qnumber, qmnumber);
+            }
+       }
+       ////////
+       var settime;
+       var timediff;
+       var timestored=0;//just to look cool, put Saving Time status on submit
+       ////
+       function startqtimer(){
+           //var itemname="q"+qnumber;
+           settime=new Date().getTime();
+       }
+       //..
+       var filename1=localStorage.testname;
+       console.log(filename1);
+       var filename="/blanktests/tests/"+localStorage.testname+".xml?";
+       var thetime;
+       /////////////
+       //Behold, this is the most important function in this whole page!
+       function endqtimer(truenext, i, i1){    setbookmarks();
+           var subqnumber;
+           if(+qnumber<+totalp){
+               subqnumber="qp"+qpnumber;
+               var but1=document.getElementById("qbp"+qpnumber);
+               
+                        if(document.getElementById("p1a").checked==true||document.getElementById("p1b").checked==true||document.getElementById("p1c").checked==true||document.getElementById("p1d").checked==true){
+                        but1.style.backgroundColor="#1ea736";
+                        but1.classList.remove("active");
+                        but1.style.color="white";
+                        }
+                        else{but1.style.backgroundColor="#00b7d4"; but1.style.color="white";but1.classList.remove("active");}
+            }
+            else if(qnumber<(totalc+totalp)&&qnumber>=totalp){
+              subqnumber="qc"+qcnumber;
+                        if(document.getElementById("p1a").checked==true||document.getElementById("p1b").checked==true||document.getElementById("p1c").checked==true||document.getElementById("p1d").checked==true){
+                        document.getElementById("qbc"+qcnumber).style.backgroundColor="#1ea736";
+                        document.getElementById("qbc"+qcnumber).style.color="white";
+                        document.getElementById("qbc"+qcnumber).classList.remove("active");
+                        }
+                        else{document.getElementById("qbc"+qcnumber).style.backgroundColor="#00b7d4";document.getElementById("qbc"+qcnumber).style.color="white"; document.getElementById("qbc"+qcnumber).classList.remove("active");}
+            }
+            else if(qnumber>=(totalc+totalp)){
+              subqnumber="qm"+qmnumber;
+              var but=document.getElementById("qbm"+qmnumber);
+                        if(document.getElementById("p1a").checked==true||document.getElementById("p1b").checked==true||document.getElementById("p1c").checked==true||document.getElementById("p1d").checked==true){
+                        but.style.backgroundColor="#1ea736";
+                        but.style.color="white";
+                        but.classList.remove("active");
+                        }
+                        else{but.style.backgroundColor="#00b7d4";but.style.color="white";but.classList.remove("active");}
+            };
+           //var settime=Number(localStorage.getItem("q"+qnumber));
+           var yes=new Date().getTime();
+           timediff=yes - settime;
+           console.log(timediff);
+           
+           var xhttp= new XMLHttpRequest;
+            xhttp.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+             var xmlDoc=this.responseXML;
+               //var tagnamep="qp"+qpnumber;
+               console.log("subqnumber="+subqnumber);
+               var p=xmlDoc.getElementsByTagName(subqnumber)[0];
+                thetime=Number(p.getElementsByTagName("time")[0].childNodes[0].nodeValue);
+                console.log("Thetime="+thetime);
+                timediff+=thetime;
+                 console.log("difftime="+timediff);
+                storeoptionsandcorrect();
+            if(truenext==1){
+                loadDocnext();
+            }
+            else if(truenext==0){
+                loadDocprevious();
+            }
+            else if(truenext==10){
+                document.getElementById("desc").innerHTML="Saving times...";//but... nothing is being stored haha ;)
+                timestored=1;
+            }
+            else{//is called by the navigation buttons above
+                console.log(i+"is subjectnum "+i1+" is qnum");
+                loadDoc(i,i1);
+            }
+
+      //var numberofq = xmlDoc.getElementsByTagName("q").length;
+      //var x = xmlDoc.getElementsByTagName("q");
+  //var thequestion= x[qpnumber].getElementsByTagName("qq")[0].childNodes[0].nodeValue;
+                }
+            };
+            xhttp.open("GET",filename + Math.random(),true);
+            xhttp.send();
+           // console.log("difftime="+timediff);
+            //timediff+=thetime;*/
+            setbookmarks();
+       }
+          ////////////////////////
+          var theanswer;
+          var totalq=0;
+          var totalp=30;
+          var totalc=30;
+          var totalm=30;
+          var qnumber=-1;//The current question number from 1 to totalq
+          var qpnumber=-1;
+          var qcnumber=-1;
+          var qmnumber=-1;
+          var convertedop;
+          
+          function setqnumbers(){///////////Call this on load!!!!
+              var xhttp = new XMLHttpRequest();
+              xhttp.onreadystatechange = function() {
+              if (this.readyState == 4 && this.status == 200) {
+            addp(this);
+                }
+                else {
+                    launch_toast();
+                    document.getElementById("desc").innerHTML="Loading Questions...";
+                };
+            };
+            xhttp.open("GET","/blanktests/tests/"+localStorage.filename+"p.xml?" + Math.random(),true);
+            xhttp.send();
+            /////////
+            var xhttp = new XMLHttpRequest();
+              xhttp.onreadystatechange = function() {
+              if (this.readyState == 4 && this.status == 200) {
+            addc(this);
+                }
+                else {launch_toast();document.getElementById("desc").innerHTML="Loading Questions...";}
+            };
+            xhttp.open("GET","/blanktests/tests/"+localStorage.filename+"c.xml?" + Math.random(),true);
+            xhttp.send();
+            ////////
+            var xhttp = new XMLHttpRequest();
+              xhttp.onreadystatechange = function() {
+              if (this.readyState == 4 && this.status == 200) {
+            addm(this);
+                }
+                else {
+                    launch_toast();
+                    document.getElementById("desc").innerHTML="Loading Questions...";
+                }
+            };
+            xhttp.open("GET","/blanktests/tests/"+localStorage.filename+"m.xml?" + Math.random(),true);
+            xhttp.send();
+            /////
+          }
+          function addp(xml1){
+               var xmlDoc = xml1.responseXML;
+               totalp = xmlDoc.getElementsByTagName("q").length;
+               totalq+=totalp;
+               createnavbuttons();
+               if(totalp==30){
+                   setTimeout(function(){ launch_toast();
+                   document.getElementById("desc").innerHTML="Failed to load questions. Retrying...";
+                   //setTimeout(function(){setqnumbers();}, 2000);
+                   },12000);
+               }
+               else {
+                   launch_toast();
+                   document.getElementById("desc").innerHTML="Questions Loaded";
+               }
+          }
+          function addc(xml1){
+               var xmlDoc = xml1.responseXML;
+               totalc = xmlDoc.getElementsByTagName("q").length;
+               totalq+=totalc;
+               //check totalc later in addm
+          }
+          function addm(xml1){
+               var xmlDoc = xml1.responseXML;
+               totalm = xmlDoc.getElementsByTagName("q").length;
+               totalq+=totalm;
+               //////////LoadDoc, that is, questions here!///////////////////////////////////
+               loadDoc(0,0);
+               createnavbuttons();
+               localStorage.setItem("totalq", totalq);
+               if(totalm==30){
+                   setTimeout(function(){ launch_toast();
+                   document.getElementById("desc").innerHTML="Failed to load questions. Retrying...";
+                  // setTimeout(function(){setqnumbers();}, 2000);
+                   },12000);
+               }
+               else {
+                   launch_toast();
+                   document.getElementById("desc").innerHTML="Questions Loaded";
+               }
+               checkfortotalc();
+          }
+          function checkfortotalc(){
+              if(totalc==30){
+                   setTimeout(function(){ launch_toast();
+                   document.getElementById("desc").innerHTML="Failed to load questions. Retrying...";
+                   //setTimeout(function(){window.location.replace("https://jeenius.ga/tests/test1.php")}, 2000);/////////////////////test this//////////////////////////////////
+                   },6000);
+               }
+               else {
+                   launch_toast();
+                   document.getElementById("desc").innerHTML="Questions Loaded";
+               }
+          };
+          ////////////////
+
+        function setsubject(){//executed on any question navigation
+        document.getElementById("navp").style.color="#c700ae";
+        document.getElementById("navc").style.color="#c700ae";
+        document.getElementById("navm").style.color="#c700ae";
+            if (qnumber<totalp){
+                document.getElementById("subject").innerHTML="Physics";
+                document.getElementById("navp").style.color="#e79626";
+            }
+            else if(qnumber<(totalc+totalp)&&qnumber>=totalp){
+                document.getElementById("subject").innerHTML="Chemistry";
+                document.getElementById("navc").style.color="#e79626";
+            }
+            else if(qnumber>=(totalc+totalp)){
+                document.getElementById("subject").innerHTML="Math";
+                document.getElementById("navm").style.color="#e79626";
+            }
+        }
+
+         function clearall(){
+        var ele = document.getElementsByName("pa");
+   for(var i=0;i<ele.length;i++)
+      ele[i].checked = false;
+    };
+        //////////////////////////////////////////////////////////////////////
+        function loadDoc(subjectnum, qnumber1) {//Executed on window load
+         document.getElementById("fakeprevious").style.display="none";
+         document.getElementById("realprevious").style.display="inline-block";
+        qnumber=qnumber1;
+        correctqnumbers();
+        startqtimer();
+  var xhttp = new XMLHttpRequest();
+  xhttp.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+        if (qnumber1<totalp){
+               myFunctionp(this);
+            }
+            else if(qnumber1<(totalc+totalp)&&qnumber1>=totalp){
+               myFunctionc(this);
+            }
+            else if(qnumber1>=(totalc+totalp)){
+               myFunctionm(this);
+            }
+            hide_toast();
+    //myFunction(this);
+    }
+     else {
+                    launch_toast();
+                    document.getElementById("desc").innerHTML="Saving...";//actually loading ;)
+                }
+  };
+  
+  //qpnumber=0;
+ // console.log(qnumber1+" Qnum");
+            if(+qnumber1 < +totalp){
+                xhttp.open("GET","/blanktests/tests/"+localStorage.filename+"p.xml?" + Math.random(),true);
+                qpnumber=subjectnum;
+                //console.log(qnumber1+"<"+w+" "+subjectnum);
+            }
+            else if(qnumber1<(totalc+totalp)&&qnumber1>=totalp){
+                xhttp.open("GET","/blanktests/tests/"+localStorage.filename+"c.xml?" + Math.random(),true);
+                qcnumber=subjectnum;
+                console.log(qnumber1+">"+totalp);
+            }
+            else if(qnumber1>=(totalc+totalp)){
+               xhttp.open("GET","/blanktests/tests/"+localStorage.filename+"m.xml?" + Math.random(),true);
+               qmnumber=subjectnum;
+            };
+            //xhttp.open("GET","/daily/pd.xml?" + Math.random(),true);
+  xhttp.send();
+ };
+ /////////////
+        function loadDocnext() {
+            //endqtimer();//before moving on with qnumber
+            //storeoptionsandcorrect();//before ++qnumber but after determining time for the question in above func
+         ++qnumber;//finally increment qnumber
+         startqtimer();//start timer for the new question
+      document.getElementById("fakeprevious").style.display="none";
+         document.getElementById("realprevious").style.display="inline-block";
+     if(+qnumber>+(totalq-1)){
+         qnumber=0;
+     }
+  var xhttp = new XMLHttpRequest();
+  //xhttp.overrideMimeType("text/xml");
+ xhttp.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+        if (qnumber<totalp){
+               myFunctionp(this);
+            }
+            else if(+qnumber<+(totalc+totalp)&&+qnumber>=+totalp){
+               myFunctionc(this);
+            }
+            else if(qnumber>=(totalc+totalp)){
+               myFunctionm(this);
+            }
+    //myFunction(this);
+    hide_toast();
+    }
+     else {
+                    launch_toast();
+                    document.getElementById("desc").innerHTML="Loading questions...";
+                }
+  };
+            if(+qnumber<+totalp){
+                //xhttp.open("GET","/daily/pd.xml?" + Math.random(),true);
+                xhttp.open("GET","/blanktests/tests/"+localStorage.filename+"p.xml?" + Math.random(),true);
+                correctqnumbers();
+                qpnumber+=1;
+                 correctqnumbers();
+            }
+            else if(+qnumber<+(totalc+totalp)&&+qnumber>=+totalp){
+                //xhttp.open("GET","/daily/cd.xml?" + Math.random(),true);
+                xhttp.open("GET","/blanktests/tests/"+localStorage.filename+"c.xml?" + Math.random(),true);
+                correctqnumbers();
+                qcnumber+=1;
+                if(qpnumber==(totalp-1)){
+                    qnumber=totalp;
+                }
+               console.log(qcnumber); 
+            }
+            else if(+qnumber>=+(totalc+totalp))
+            {
+               //xhttp.open("GET","/daily/md1.xml?" + Math.random(),true);
+               xhttp.open("GET","/blanktests/tests/"+localStorage.filename+"m.xml?" + Math.random(),true);
+               correctqnumbers();
+               qmnumber+=1;
+               if(qmnumber>(totalm-1)){
+                   qmnumber=totalm-1;
+               }   
+            };
+            //console.log("qnumber="+qnumber);
+            //console.log("qmnumber="+qmnumber);
+            setsubject();
+  xhttp.send();
+ }
+ ////////////
+
+ function loadDocprevious() {
+    // correctqnumbers();
+    document.getElementById("fakeprevious").style.display="none";
+         document.getElementById("realprevious").style.display="inline-block";
+          //endqtimer();//before moving on with qnumber
+            //storeoptionsandcorrect();//before --qnumber but after determining time for the question in above func
+         --qnumber;//finally decrement qnumber
+         startqtimer();//start timer for the new question
+     //--qnumber;
+     if(qnumber<0){
+         qnumber=totalq-1;
+     }
+     correctqnumbers();
+  var xhttp = new XMLHttpRequest();
+  //xhttp.overrideMimeType("text/xml");
+   xhttp.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+            if(+qnumber<+totalp){
+               myFunctionp(this);
+            }
+            else if(qnumber<(totalc+totalp)&&qnumber>=totalp){
+               myFunctionc(this);
+            }
+            else if(qnumber>=(totalc+totalp)){
+               myFunctionm(this);
+            }
+    //myFunction(this);
+    hide_toast();
+    }
+     else {
+                    launch_toast();
+                    document.getElementById("desc").innerHTML="Saving...";
+                }
+  };
+            if (qnumber<totalp){
+                //xhttp.open("GET","/daily/pd.xml?" + Math.random(),true);
+                xhttp.open("GET","/blanktests/tests/"+localStorage.filename+"p.xml?" + Math.random(),true);
+                correctqnumbers();
+                qpnumber-=1;
+                correctqnumbers();
+            }
+            else if(qnumber<(totalc+totalp)&&qnumber>=totalp){
+                //xhttp.open("GET","/daily/cd.xml?" + Math.random(),true);
+                xhttp.open("GET","/blanktests/tests/"+localStorage.filename+"c.xml?" + Math.random(),true);
+                correctqnumbers();
+                qcnumber-=1;
+                
+            }
+            else if(qnumber>=(totalc+totalp)){
+               //xhttp.open("GET","/daily/md1.xml?" + Math.random(),true);
+               xhttp.open("GET","/blanktests/tests/"+localStorage.filename+"m.xml?" + Math.random(),true);
+               correctqnumbers();
+               qmnumber-=1;
+               correctqnumbers();
+            };
+            console.log("qnumber="+qnumber);
+            console.log("qmnumber="+qmnumber);
+            setsubject();
+  xhttp.send();
+ }
+ function correctqnumbers(){
+     if(qnumber==0){//qpnumber==0
+         qmnumber=-1;
+         qpnumber=0;
+         qcnumber=-1;
+     }
+     if(qnumber==(totalp-1)){//qpnumber==totalp-1
+         qcnumber=-1;
+     }
+     if(qnumber==(totalp)){//qcnumber==0
+         qpnumber=totalp;
+         document.getElementById("fakeprevious").style.display="inline-block";
+         document.getElementById("realprevious").style.display="none";
+     }
+     if(qnumber==(totalc+totalc-1)){//qcnumber==(totalc-1)((&&qmnumber>1??))
+         qmnumber=-1;
+     }
+     if(qnumber==(totalp+totalc)){//qmnumber==0
+         qcnumber=totalc;
+         document.getElementById("fakeprevious").style.display="inline-block";
+         document.getElementById("realprevious").style.display="none";
+     }
+     if(qnumber==(totalq-1)){//qmnumber==totalm-1
+         qpnumber=0;
+         qmnumber=totalm-1;
+     }
+ }
+ function myFunctionp(xml){
+     setsubject();
+     setbookmarkicon();
+     //setoptionandbar0(); Putting this at the end. Sometimes this is executed too fast
+     var xmlDoc = xml.responseXML;
+      var numberofq = xmlDoc.getElementsByTagName("q").length;
+      var x = xmlDoc.getElementsByTagName("q");
+  var thequestion= x[qpnumber].getElementsByTagName("qq")[0].childNodes[0].nodeValue;
+  var op1= x[qpnumber].getElementsByTagName("qq")[1].childNodes[0].nodeValue;
+  var op2= x[qpnumber].getElementsByTagName("qq")[2].childNodes[0].nodeValue;
+  var op3= x[qpnumber].getElementsByTagName("qq")[3].childNodes[0].nodeValue;
+  var op4= x[qpnumber].getElementsByTagName("qq")[4].childNodes[0].nodeValue;
+  theanswer= x[qpnumber].getElementsByTagName("qq")[5].childNodes[0].nodeValue;
+  if(x[qpnumber].getElementsByTagName("imagetrue")[0]!=undefined||x[qpnumber].getElementsByTagName("imagetrue")[0]!=null){
+  var isimagetrue=x[qpnumber].getElementsByTagName("imagetrue")[0].childNodes[0].nodeValue;
+  if(isimagetrue=="true"){
+      document.getElementById("actualquestion").innerHTML="";
+      imagesrc= x[qpnumber].getElementsByTagName("qq")[6].childNodes[0].nodeValue;
+      document.getElementById("actualquestion").innerHTML= "<img src="+imagesrc+" alt= \"Question image \"> <br>";
+      document.getElementById("actualquestion").innerHTML += thequestion;
+  }
+  else{
+      document.getElementById("actualquestion").innerHTML = thequestion;
+  }
+  }
+  else{
+      document.getElementById("actualquestion").innerHTML = thequestion;
+  }
+  //convertop();
+  document.getElementById("option1").innerHTML = op1;
+  document.getElementById("option2").innerHTML = op2;
+  document.getElementById("option3").innerHTML = op3;
+  document.getElementById("option4").innerHTML = op4;
+  
+  document.getElementById("actualquestion").style.display="block";
+  document.getElementById("headernumber").innerHTML=qpnumber+1;
+  document.getElementById("navqnumber").innerHTML=qpnumber+1;
+  MathJax.typeset();
+  setoptionandbar0();
+  document.getElementById("qbp"+qpnumber).classList.add("active");
+ }    
+ ////////////
+     function myFunctionc(xml){
+         setsubject();
+         setbookmarkicon();
+         //setoptionandbar0();
+     var xmlDoc = xml.responseXML;
+      var numberofq = xmlDoc.getElementsByTagName("q").length;
+      var x = xmlDoc.getElementsByTagName("q");
+  var thequestion= x[qcnumber].getElementsByTagName("qq")[0].childNodes[0].nodeValue;
+  var op1= x[qcnumber].getElementsByTagName("qq")[1].childNodes[0].nodeValue;
+  var op2= x[qcnumber].getElementsByTagName("qq")[2].childNodes[0].nodeValue;
+  var op3= x[qcnumber].getElementsByTagName("qq")[3].childNodes[0].nodeValue;
+  var op4= x[qcnumber].getElementsByTagName("qq")[4].childNodes[0].nodeValue;
+  theanswer= x[qcnumber].getElementsByTagName("qq")[5].childNodes[0].nodeValue;
+
+  if(x[qcnumber].getElementsByTagName("imagetrue")[0]!=undefined||x[qcnumber].getElementsByTagName("imagetrue")[0]!=null){
+  var isimagetrue=x[qcnumber].getElementsByTagName("imagetrue")[0].childNodes[0].nodeValue;
+  if(isimagetrue=="true"){
+      document.getElementById("actualquestion").innerHTML="";
+      imagesrc= x[qcnumber].getElementsByTagName("qq")[6].childNodes[0].nodeValue;
+      document.getElementById("actualquestion").innerHTML= "<img src="+imagesrc+" alt= \"Question image \"> <br>";
+      document.getElementById("actualquestion").innerHTML += thequestion;
+  }
+  else{
+      document.getElementById("actualquestion").innerHTML = thequestion;
+  }
+  }
+  else{
+      document.getElementById("actualquestion").innerHTML = thequestion;
+  }
+  //convertop();
+  document.getElementById("option1").innerHTML = op1;
+  document.getElementById("option2").innerHTML = op2;
+  document.getElementById("option3").innerHTML = op3;
+  document.getElementById("option4").innerHTML = op4;
+  
+  document.getElementById("actualquestion").style.display="block";
+  document.getElementById("headernumber").innerHTML=qcnumber+1;
+  document.getElementById("navqnumber").innerHTML=qcnumber+1;
+  MathJax.typeset();
+  setoptionandbar0();
+  document.getElementById("qbc"+qcnumber).classList.add("active");
+ }
+ ///////////////
+      function myFunctionm(xml){
+          setsubject();
+          setbookmarkicon();
+          //setoptionandbar0();
+     var xmlDoc = xml.responseXML;
+      var numberofq = xmlDoc.getElementsByTagName("q").length;
+      var x = xmlDoc.getElementsByTagName("q");
+  var thequestion= x[qmnumber].getElementsByTagName("qq")[0].childNodes[0].nodeValue;
+  var op1= x[qmnumber].getElementsByTagName("qq")[1].childNodes[0].nodeValue;
+  var op2= x[qmnumber].getElementsByTagName("qq")[2].childNodes[0].nodeValue;
+  var op3= x[qmnumber].getElementsByTagName("qq")[3].childNodes[0].nodeValue;
+  var op4= x[qmnumber].getElementsByTagName("qq")[4].childNodes[0].nodeValue;
+  theanswer= x[qmnumber].getElementsByTagName("qq")[5].childNodes[0].nodeValue;
+  /*var isimagetrue=x[qmnumber].getElementsByTagName("imagetrue")[0].childNodes[0].nodeValue;
+  if(isimagetrue=="true"){
+      document.getElementById("actualquestion").innerHTML="";
+      imagesrc= x[qpnumber].getElementsByTagName("qq")[6].childNodes[0].nodeValue;
+      document.getElementById("actualquestion").innerHTML= "<img src="+imagesrc+" alt= \"Question image \"> <br>";
+      document.getElementById("actualquestion").innerHTML += thequestion;
+  }
+  else{*/
+      document.getElementById("actualquestion").innerHTML = thequestion;
+  //}
+  //convertop();
+  document.getElementById("option1").innerHTML = op1;
+  document.getElementById("option2").innerHTML = op2;
+  document.getElementById("option3").innerHTML = op3;
+  document.getElementById("option4").innerHTML = op4;
+  
+  document.getElementById("actualquestion").style.display="block";
+  document.getElementById("headernumber").innerHTML=qmnumber+1;
+  document.getElementById("navqnumber").innerHTML=qmnumber+1;
+  MathJax.typeset();
+  setoptionandbar0();
+  document.getElementById("qbm"+qmnumber).classList.add("active");
+ }
+ ///////////////////////////////////////
+        
+    function convertop(){
+
+        if(theanswer=="p1a"){
+            convertedop="A";
+        }
+        else if(theanswer=="p1b"){
+            convertedop="B";
+        }
+        else if(theanswer=="p1c"){
+            convertedop="C";
+        }
+        else if(theanswer=="p1d"){
+            convertedop="D";
+            };
+     };
+     ///////////////// Storage Arc //////////////////////////////////////////////
+     //var filename="/tests/"+localStorage.testname+".xml?";
+    localStorage.score=0;
+     function storeoptionsandcorrect(){
+          var xmlhttp = new XMLHttpRequest();
+    xmlhttp.onreadystatechange = function() {
+         if (this.readyState == 3 ) {
+              launch_toast();
+              document.getElementById("desc").innerHTML="Saved!";
+         }
+         else if(this.readyState==4&&this.status==200){
+             hide_toast();
+         }
+         else if(this.readyState==1){
+             launch_toast();
+              document.getElementById("desc").innerHTML="Connecting...";
+         }
+    }
+    var qnum;
+    var optionselected;
+    //var score=localStorage.testname+"score";
+    
+    //var filename1=localStorage.testname;
+    var cor;
+            if(+qnumber<+totalp){
+                 /*  if(qnumber==(totalp)){//if last question of p
+                   qnum="qp"+(totalp-1);
+               }
+               else if(qnumber==0){//first p question
+                   qnum="qp0";
+               }
+               else{
+               qnum="qp"+(qpnumber-1);
+               }*/
+               qnum="qp"+qpnumber;
+               if(document.getElementById(theanswer).checked==true){
+                   cor="correct";
+               }
+               else{
+                   cor="incorrect";
+               };
+               if(document.getElementById("p1a").checked==true){
+                   optionselected="A";
+               }
+               else if(document.getElementById("p1b").checked==true){
+                   optionselected="B";
+               }
+               else if(document.getElementById("p1c").checked==true){
+                   optionselected="C";
+               }
+               else if(document.getElementById("p1d").checked==true){
+                   optionselected="D";
+               }
+               else{
+                   optionselected="DNE";
+               }
+            }
+            ///
+            else if(qnumber<(totalc+totalp)&&qnumber>=totalp){
+                  /* if(qnumber==(totalp+totalc)){// last c question
+                   qnum="qc"+(totalc-1);
+               }
+               else if(qnumber==){
+                   qnum="qc0";
+               }
+               else{
+               qnum="qc"+(qcnumber-1);
+               }*/
+               qnum="qc"+qcnumber;
+               
+               if(document.getElementById(theanswer).checked==true){
+                   cor="correct";
+               }
+               else{
+                   cor="incorrect";
+               };
+               if(document.getElementById("p1a").checked==true){
+                   optionselected="A";
+               }
+               else if(document.getElementById("p1b").checked==true){
+                   optionselected="B";
+               }
+               else if(document.getElementById("p1c").checked==true){
+                   optionselected="C";
+               }
+               else if(document.getElementById("p1d").checked==true){
+                   optionselected="D";
+               }
+               else{
+                   optionselected="DNE";
+               }
+            }
+            ///
+            else if(qnumber>=(totalc+totalp)){
+               /*if(qnumber==0){
+                   qnum="qm"+(totalm-1);
+               }
+               else if(qmnumber<0){
+                   qnum="qm0";
+               }
+               else{
+               qnum="qm"+(qmnumber-1);
+               }*/
+               qnum="qm"+qmnumber;
+               if(document.getElementById(theanswer).checked==true){
+                   cor="correct";
+               }
+               else{
+                   cor="incorrect";
+               };
+               if(document.getElementById("p1a").checked==true){
+                   optionselected="A";
+               }
+               else if(document.getElementById("p1b").checked==true){
+                   optionselected="B";
+               }
+               else if(document.getElementById("p1c").checked==true){
+                   optionselected="C";
+               }
+               else if(document.getElementById("p1d").checked==true){
+                   optionselected="D";
+               }
+               else{
+                   optionselected="DNE";
+               }
+            }
+            //console.log(optionselected+" is option");
+            //console.log(cor+" is correct");
+            //console.log(qnum);
+            //console.log("Qtime is="+timediff);
+            if(cor==="correct"&&optionselected!='DNE'){
+                localStorage.score=Number(localStorage.score)+4;
+                console.log("p is"+localStorage.score);
+                //localStorage.score=p;
+            }
+            else if(optionselected=="DNE"){
+
+            }
+            else if(cor=="incorrect"){
+                localStorage.score=Number(localStorage.score)-1;
+                //localStorage.score=pqr;
+            }
+            console.log(cor+" is correct");
+            console.log("score is"+localStorage.score);
+     xmlhttp.open("GET", "storevalues1.php?option="+optionselected+"&correct="+cor+"&time="+timediff+"&filename="+localStorage.testname+"&qnum="+qnum+"&score="+localStorage.score, true);
+     //xmlhttp.open("GET", "/tests/storevalues1.php?option=A&correct=corre&filename=Akshat3&qnum=qp0", true);
+     //xmlhttp.open("GET", "/tests/getthis.php?q=abc&e=eee", true);
+     xmlhttp.send();
+     //setoptionandbar0();
+     }
+    
+     var errorfile=0;
+     function setoptionandbar0(){
+         console.log("setoption");
+          var xhttp = new XMLHttpRequest();
+   xhttp.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+        setoptionandbar1(this);
+        setthebar(this);
+            }
+        };
+     xhttp.open("GET",filename + Math.random(),true);
+         xhttp.send();
+     }
+     function setoptionandbar1(xml){
+         console.log("setoption1");
+         if(+qnumber<+totalp){
+               var xmlDoc=xml.responseXML;
+                                if(xmlDoc==undefined||xmlDoc==null||localStorage.testname==undefined||localStorage.testname==null||localStorage.testname==""){
+                                    //launch_toast();
+                                    if(errorfile==3){
+                                        if(localStorage.testname==undefined||localStorage.testname==null||localStorage.testname==""){
+                                            launch_toast();
+                                            document.getElementById("desc").innerHTML="You did not Login.";
+                                            setTimeout(function(){launch_toast(); document.getElementById("desc").innerHTML="Redirecting to Login page...";},4000);
+                                            setTimeout(function(){window.location.replace("https://jeenius.ga/tests/login.php");},5300);
+                                            errorfile=7;
+                                        }
+                                    //document.getElementById("desc").innerHTML="Something is wrong. Reload the page.";
+                                    }
+                                    else if(errorfile<4){
+                                    document.getElementById("desc").innerHTML="Error in fetching file.";
+                                    //setTimeout(function(){setoptionandbar0(); hide_toast();}, 4000);
+                                    errorfile+=1;
+                                    }
+                                }
+               var tagnamep="qp"+qpnumber;
+               var p=xmlDoc.getElementsByTagName(tagnamep)[0];
+               var optionis=p.getElementsByTagName("markedop")[0].childNodes[0].nodeValue;
+               settheoption(optionis);
+               //setthebar(xmlDoc);
+            }
+            else if(qnumber<(totalc+totalp)&&qnumber>=totalp){
+               var xmlDoc=xml.responseXML;
+                                /*if(xmlDoc==undefined||xmlDoc==null){
+                                    //console.log("error");
+                                    //launch_toast();
+                                    if(errorfile==3){
+                                        if(xmlDoc==undefined||xmlDoc==null||localStorage.testname==undefined||localStorage.testname==null||localStorage.testname==""){
+                                            launch_toast();
+                                            document.getElementById("desc").innerHTML="You did not Login.";
+                                            setTimeout(function(){launch_toast();document.getElementById("desc").innerHTML="Redirecting to Login page...";},4000);
+                                            setTimeout(function(){window.location.replace("http://jeenius.epizy.com/tests/login.php");},5300);
+                                            errorfile=7;
+                                        }
+                                    //document.getElementById("desc").innerHTML="Something is wrong. Reload the page.";
+                                    }
+                                    else if(errorfile<4){
+                                    document.getElementById("desc").innerHTML="Error in fetching file.";
+                                    //setTimeout(function(){setoptionandbar0(); hide_toast();}, 4000);
+                                    errorfile+=1;
+                                    }
+                                }*/
+               var tagnamep="qc"+qcnumber;
+               var c=xmlDoc.getElementsByTagName(tagnamep)[0];
+               var optionis=c.getElementsByTagName("markedop")[0].childNodes[0].nodeValue;
+               settheoption(optionis);
+               //setthebar(xmlDoc);
+            }
+            else if(qnumber>=(totalc+totalp)){
+               var xmlDoc=xml.responseXML;
+                                if(xmlDoc==undefined||xmlDoc==null){
+                                    
+                                    if(errorfile==3){
+                                        if(xmlDoc==undefined||xmlDoc==null||localStorage.testname==undefined||localStorage.testname==null||localStorage.testname==""){
+                                            launch_toast();
+                                            document.getElementById("desc").innerHTML="You did not Login.";
+                                            setTimeout(function(){launch_toast();document.getElementById("desc").innerHTML="Redirecting to Login page...";},4000);
+                                            setTimeout(function(){window.location.replace("https://jeenius.ga/tests/login.php");},5300);
+                                            errorfile=7;
+                                        }
+                                    //document.getElementById("desc").innerHTML="Something is wrong. Reload the page.";
+                                    }
+                                    else if(errorfile<4){
+                                    document.getElementById("desc").innerHTML="Error in fetching file.";
+                                    //setTimeout(function(){setoptionandbar0(); hide_toast();}, 4000);
+                                    errorfile+=1;
+                                    }
+                                }
+               var tagnamep="qm"+qmnumber;
+               var m=xmlDoc.getElementsByTagName(tagnamep)[0];
+               var optionis=m.getElementsByTagName("markedop")[0].childNodes[0].nodeValue;
+               settheoption(optionis);
+               //setthebar(xmlDoc);
+            }
+        
+         /*xhttp.open("GET",filename + Math.random(),true);
+         xhttp.send();*/
+     }
+     function settheoption(optionis){
+         if(optionis=="DNE"){
+             clearall();
+         }
+         else if(optionis=="A"){
+             document.getElementById("p1a").checked="true";
+         }
+         else if(optionis=="B"){
+             document.getElementById("p1b").checked="true";
+         }
+         else if(optionis=="C"){
+             document.getElementById("p1c").checked="true";
+         }
+         else if(optionis=="D"){
+             document.getElementById("p1d").checked="true";
+         }
+         else{
+             clearall();
+         };
+     }
+     var markedquestions=0;
+     var leftquestions=0;
+     function setthebar(theDoc1){
+         theDoc=theDoc1.responseXML;
+           markedquestions=0;
+           leftquestions=0;
+        for(var i=0; i<totalq; i++){
+            var yeah=theDoc.getElementsByTagName("markedop")[i].childNodes[0].nodeValue;
+           if(yeah=="DNE"){
+               leftquestions+=1;
+           }
+           else if(yeah=="A"||yeah=="B"||yeah=="C"||yeah=="D"){
+               markedquestions+=1;
+           }
+
+        }
+        console.log(totalq+"="+markedquestions+"mq + "+leftquestions+"lq");
+        var widthinvw=(markedquestions/totalq)*100;
+        document.getElementById("aqbar").style.width=widthinvw+"vw";
+        widthinvw=(leftquestions/totalq)*100;
+        document.getElementById("lqbar").style.width=widthinvw+"vw";
+     }
+      </script>
+      <div id="submit-confirm-modal" class="modal">
+
+    <!-- Modal content -->
+            <div class="modal-content" id="sub-content" style="border:2px solid red;border-radius:8px; text-align:center; transition:0.4s; -webkit-transition:0.4s;">
+            <span class="close" style="font-size:30px;">&times;</span>
+            <h1 id="submit-timer" style="text-align:center; color:red; margin-top:-10px;margin-bottom:-8px;"></h1><hr style="border-top:1px solid red; width:40%;margin-bottom:0;"><br>
+            <h2 style="text-align:center; color:#27dcb5;margin-bottom:30px;margin-top:-10px;  font-family: 'Alegreya SC', serif;">Submit?</h2>
+            <!-- <div style="font-size:12px; text-align:center; margin-bottom:20px;margin-top:-12px;">Are you sure?</div> -->
+            <button onclick="submitthings(); ">Submit</button> 
+            </div>
+        </div>
+    <script>
+        function submitthings(){
+            launch_toast();
+            endqtimer(11,0,0);
+            //if(timestored==1){
+                document.getElementById("desc").innerHTML="Saved!";
+                setTimeout(function(){hide_toast();},800);
+                setTimeout(function(){launch_toast(); document.getElementById("desc").innerHTML="Let's see your score..."},1600);
+                setTimeout(function(){gotoresult();},2200);
+            //}
+        }
+        function gotoresult(){
+            for (var d=0; d<totalq; d++){
+                if(localStorage.getItem("qt"+d)!=undefined&&localStorage.getItem("qt"+d)!=null||localStorage.getItem("qt"+d)!=""||localStorage.getItem("qt"+d)!=false){
+                    localStorage.removeItem("qt"+d);
+                }
+            }
+            localStorage.removeItem("timeset");
+            localStorage.removeItem("one");
+            localStorage.setItem("testsubmitted", 1);
+            window.location.replace("https://jeenius.ga/blanktests/tests/result.php");
+        }
+        // Get the modal
+var modal = document.getElementById("submit-confirm-modal");
+
+// Get the button that opens the modal
+var btn = document.getElementById("submitbutton");
+
+// Get the <span> element that closes the modal
+var span = document.getElementsByClassName("close")[0];
+
+// When the user clicks on the button, open the modal
+btn.onclick = function() {
+    document.getElementById("actualcontent").classList.add("blurnow");
+  modal.style.display = "block";
+}
+
+// When the user clicks on <span> (x), close the modal
+span.onclick = function() {
+    document.getElementById("actualcontent").classList.remove("blurnow");
+  modal.style.display = "none";
+}
+
+// When the user clicks anywhere outside of the modal, close it
+window.onclick = function(event) {
+  if (event.target == modal) {
+      document.getElementById("actualcontent").classList.remove("blurnow");
+    modal.style.display = "none";
+  }
+}
+</script>
+            <!-- Loading toast-->
+<div id="toast"><div id="img1"><span id="spinner" class="spinner spinner-blue spinner-slow"></span></div><div id="desc">A notification message..</div></div>
+<script>
+   var x;
+    function launch_toast() {
+        if(toastenabled==0){
+            document.getElementById("toast").style.display="none";
+            console.log("disabled toast!!!");
+        }
+        else{
+        x = document.getElementById("toast")
+    x.className = "show";
+    x.style.display="block";
+        }
+    //setTimeout(function(){ x.className = x.className.replace("show", ""); }, 20000);
+}
+function hide_toast(){
+     document.getElementById("toast").style.display="none";
+     setTimeout(function(){ x.className = x.className.replace("show", ""); }, 200);
+}
+</script>
+<!--Toast over!!-->
+<!-- Settings modal-->
+    <button id="opensettings" onclick="showsettings();"><i class="fas fa-cog"></i></button>
+    <div id="settings-modal" class="modal">
+    <!-- Modal content -->
+            <div class="modal-content" id="s-content" style="border:2px solid blue;border-radius:4px; text-align:center;transition:0.4s; -webkit-transition:0.4s;">
+            <span class="close" id="closesettings" onclick="closethis();" style="margin-top:0;font-size:30px;">&times;</span>
+            <div style=" font-size:2.1em;color:#26ae84; text-align:center; font-family:'Antic Slab', serif;">Settings</div>
+            <br>
+            
+                <span style="font-family:'Almarai', serif;float:left; font-size:1.1em;"> Show status toasts: </span>
+                <span style="float:right; margin-right:10px;"><label class="switch" style="height:18px;">
+  <input type="checkbox" id="toast-toggle1" onclick="toggletoast();" checked>
+  <span class="slider round"></span>
+</label></span>
+<br><br><hr style="width:65%;"><br>
+    <span style="font-family:'Almarai', serif;float:left; font-size:1.1em;"> Dark Mode: </span>
+                <label class="switch" style="height:18px; ">
+  <input type="checkbox" id="toast-toggle2" onclick="toggledark(1);">
+  <span class="slider round"></span>
+</label>
+            
+    <hr style="width:65%;"><br>
+    <div style="text-align:center; font-family:'Aleo', serif; font-size:1.3em; color:#33b5e5;">Switched Devices?</div>
+        <div style="font-size:0.8em; font-family:'Alegreya';">Put underscores instead of spaces and append your code.</div>
+        <input type="text" id="switchinput" placeholder="Ex. Akshat_Oke24" ><br>
+        <button id="switchinputbutton" onclick="changestorage();">Enter</button>
+            <div style="text-align:center; font-family:'Alegreya SC', serif;font-size:1em;" id="browser"></div>
+            <div style="text-align:center; font-family:'Alegreya SC', serif;font-size:1em;" id="incognito"></div>
+        </div>
+    </div>
+    
+    
+    <script>
+        function changestorage(){
+            var nameisnow = document.getElementById("switchinput").value;
+            if(nameisnow!=""){
+                localStorage.testname=nameisnow;
+                window.location.replace("https://jeenius.ga/tests/test1.php");
+            }
+        }
+        function showsettings(){
+            document.getElementById("settings-modal").style.display="block";
+        }
+        function closethis(){
+             document.getElementById("settings-modal").style.display="none";
+        }
+        window.onclick = function(event) {
+  if (event.target == document.getElementById("settings-modal")) {
+      //document.getElementById("actualcontent").classList.remove("blurnow");
+     document.getElementById("settings-modal").style.display="none";
+        }
+    }
+
+    function toggletoast(){
+        console.log("toggled");
+        if(document.getElementById("toast-toggle1").checked==false){
+            toastenabled=0;
+        }
+        else if(document.getElementById("toast-toggle1").checked==true){
+            toastenabled=1;
+        }
+    }
+    function toggledark(insettings){
+        if(insettings==0){
+        if(localStorage.theme=="dark"){
+            document.getElementById("toast-toggle2").checked=true;
+        }
+        else{
+            document.getElementById("toast-toggle2").checked==false;
+        }
+        }
+        if(document.getElementById("toast-toggle2").checked==true){
+            localStorage.setItem("theme", "dark");
+        }
+        else {
+            localStorage.setItem("theme", "light");
+        }
+        if(document.getElementById("toast-toggle2").checked==true||localStorage.theme=="dark"){
+            localStorage.setItem("theme", "dark");
+            document.getElementById("sub-content").classList.add("dark");
+            document.getElementById("s-content").classList.add("dark");
+            document.getElementById("actualquestion").classList.add("dark");
+            document.getElementById("qcard").classList.add("dark");
+            document.getElementById("dropdowncontent").style.backgroundColor="#212121";
+            document.getElementById("toast").classList.add("dark");
+            document.getElementById("bookmarkicon").classList.add("dark");
+            document.getElementById("dropdownnav").classList.add("dark");
+            document.getElementById("optionsdiv").style.color="rgba(255,255,255,0.8)";
+                    document.getElementById("option1").style.color="rgba(255,255,255,0.75)";
+                    document.getElementById("option2").style.color="rgba(255,255,255,0.75)";
+                    document.getElementById("option3").style.color="rgba(255,255,255,0.75)";
+                    document.getElementById("option4").style.color="rgba(255,255,255,0.75)";
+            document.getElementsByTagName("BODY")[0].style.color="rgba(255,255,255,0.8)";
+            document.getElementsByTagName("BODY")[0].style.backgroundColor="black";
+            document.getElementById("opensettings").style.backgroundColor="black";
+            document.getElementById("opensettings").style.color="white";
+            document.getElementById("opensettings").style.boxShadow="2px 2px 8px rgba(255,255,255, 0.4);";
+            document.getElementById("realprevious").style.backgroundColor="#7e7e7e";
+            document.getElementById("realprevious").style.color="white";
+            document.getElementById("nextbut").style.backgroundColor="#7e7e7e";
+            document.getElementById("nextbut").style.color="white";
+            document.getElementById("rqbar").style.backgroundColor="#989898";
+                        document.getElementById("toast-toggle2").checked=true;
+        }
+        else if(document.getElementById("toast-toggle2").checked==false||localStorage.theme=="light"){
+            localStorage.setItem("theme", "light");
+            document.getElementById("sub-content").classList.remove("dark");
+            document.getElementById("s-content").classList.remove("dark");
+            document.getElementById("actualquestion").classList.remove("dark");
+            document.getElementById("qcard").classList.remove("dark");
+            document.getElementById("dropdowncontent").style.backgroundColor="white";
+            document.getElementById("toast").classList.remove("dark");
+            document.getElementById("bookmarkicon").classList.remove("dark");
+            document.getElementById("dropdownnav").classList.remove("dark");
+            document.getElementById("optionsdiv").style.color="black";
+                    document.getElementById("option1").style.color="black";
+                    document.getElementById("option2").style.color="black";
+                    document.getElementById("option3").style.color="black";
+                    document.getElementById("option4").style.color="black";
+            document.getElementsByTagName("BODY")[0].style.color="black";
+            document.getElementsByTagName("BODY")[0].style.backgroundColor="white";
+            document.getElementById("opensettings").style.backgroundColor="white";
+            document.getElementById("opensettings").style.color="grey";
+            document.getElementById("opensettings").style.boxShadow="2px 2px 8px rgba(0,0,0, 0.4);";
+            document.getElementById("realprevious").style.backgroundColor="white";
+            document.getElementById("realprevious").style.color="#0098bc";
+            document.getElementById("nextbut").style.backgroundColor="white";
+            document.getElementById("nextbut").style.color="#0098bc";
+            document.getElementById("rqbar").style.backgroundColor="#b0b0b0";
+                        document.getElementById("toast-toggle2").checked=false;
+        }
+    }
+
+  // Opera 8.0+
+var isOpera = (!!window.opr && !!opr.addons) || !!window.opera || navigator.userAgent.indexOf(' OPR/') >= 0;
+
+// Firefox 1.0+
+var isFirefox = typeof InstallTrigger !== 'undefined';
+
+// Safari 3.0+ "[object HTMLElementConstructor]" 
+var isSafari = /constructor/i.test(window.HTMLElement) || (function (p) { return p.toString() === "[object SafariRemoteNotification]"; })(!window['safari'] || (typeof safari !== 'undefined' && safari.pushNotification));
+
+// Internet Explorer 6-11
+var isIE = /*@cc_on!@*/false || !!document.documentMode;
+
+// Edge 20+
+var isEdge = !isIE && !!window.StyleMedia;
+
+// Chrome 1 - 79
+var isChrome = !!window.chrome && (!!window.chrome.webstore || !!window.chrome.runtime);
+
+// Edge (based on chromium) detection
+var isEdgeChromium = isChrome && (navigator.userAgent.indexOf("Edg") != -1);
+var chromeyes=0;
+
+var output = document.getElementById("browser").innerHTML;
+output="Browser | ";
+    if(isChrome==true){
+        document.getElementById("browser").innerHTML+="Chrome";
+        chromeyes=1;
+    }
+    else if(isFirefox==true){
+        document.getElementById("browser").innerHTML+="Firefox";
+    }
+    else if(isSafari==true){
+        document.getElementById("browser").innerHTML+="Safari (Chrome is recommended)";
+    }
+    else if(isEdge==true){
+        document.getElementById("browser").innerHTML+="Edge";
+    }
+    else if(isEdgeChromium==true){
+        document.getElementById("browser").innerHTML+="Edge, Chromium";
+    }
+    else if(isIE==true){
+        document.getElementById("browser").innerHTML+="IE (Chrome is recommended)";
+    }
+    else if(isOpera==true){
+        document.getElementById("browser").innerHTML+="Opera (Chrome is recommended)";
+    }
+
+
+    async function main() {
+        if(chromeyes==1){
+    if ('storage' in navigator && 'estimate' in navigator.storage) {
+    const {usage, quota} = await navigator.storage.estimate();
+    console.log(`Using ${usage} out of ${quota} bytes.`);
+
+    if(quota < 120000000){
+        document.getElementById("incognito").innerHTML="<span style='color:red;'>Incognito (Not recommended:Switch to normal mode)</span>";
+    }
+    else {
+        document.getElementById("incognito").innerHTML="Normal mode";
+    }   
+    }
+    else {
+    console.log('Can not detect');
+    }
+    }
+    }
+    main();
+</script>
+  </body>
+</html>

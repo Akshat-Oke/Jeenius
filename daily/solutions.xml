@@ -1,0 +1,101 @@
+<solutions>
+    <sp0>
+        <imagetrue>/daily/solutionpics/tunnelEarth.jpg</imagetrue>
+        <solution>C</solution>
+        <author>Solution by Toppr</author>
+    </sp0>
+    <sp4>
+        <imagetrue>/daily/solutionpics/EMwavepolar.jpg</imagetrue>
+        <solution>A</solution>
+        <author>Question | JEE Main 9th Jan Eve, 2020 | Brilliant Learning Solutions Private Limited</author>
+    </sp4>
+
+    <chem> Chemistry           </chem>
+    <sc0>
+        <solution>Ionisation Energy of barium is less than Radium. The I.E increases slightly for Radium in Group 2</solution>
+        <author>Source | OP Tandon</author>
+    </sc0>
+
+    <sc1>
+        <solution>
+     Refining of metals By distillation: Some metals have very low melting point and soon vaporize on behind heating, while the associated impurities remains in the solid state. Zinc, mercury and arsenic are purified by this method.Vacuum distillation gives very pure product and is used in the refining of the metals of IA and IIA Groups.
+   &#xD;
+Zn, Cd and Hg form vapors easily. They can be heated and distilled out from their impurities. Impure metal block is heated at a temperature so that the metal atoms start to evaporate. The temperature is then held constant. The vapors are condensed and separated out in a container called receiver. Non – volatile impurities are left behind in the distillation chamber.
+​
+Easily vaporizable metals are subjected to distillation. Metals when subjected to heating give vapors. Vapors are then collected over and are cooled to retain the pure metal.
+</solution>
+        <author>Source | Embibe</author>
+    </sc1>
+
+    <sc2>
+        <solution>Pinacol-Pinacolone rearrangement</solution>
+        <author>Solution | Akshat</author>
+    </sc2>
+    <sc21>
+    <author>Question: Akshat | Source: Wikipedia &#60;b &#62;</author>
+	 	 <solution>Phosphines accept electron density from metal p or d orbitals into combinations of P–C σ* antibonding orbitals that have π symmetry. When phosphines bond to electron-rich metal atoms, backbonding would be expected to lengthen P–C bonds as P–C σ* orbitals become populated by electrons. The expected lengthening of the P–C distance is often hidden by an opposing effect: as the phosphorus lone pair is donated to the metal, P(lone pair)–R(bonding pair) repulsions decrease, which acts to shorten the P–C bond. The two effects have been deconvoluted by comparing the structures of pairs of metal-phosphine complexes that differ only by one electron.Oxidation of R3P–M complexes results in longer M–P bonds and shorter P–C bonds, consistent with π-backbonding. In early work, phosphine ligands were thought to utilize 3d orbitals to form M–P pi-bonding, but it is now accepted that d-orbitals on phosphorus are not involved in bonding as they are too high in energy.</solution> 
+        </sc21>
+    <sc22>
+        <author>Akshat</author>
+	 	 <solution>All metals except Scandium form \(MO\) oxides.
+\(V_2O_5\) is amphoteric though mainly acidic and it gives \(VO_4^{3-}\) and \(VO_2^+\) salts.</solution> 
+    </sc22>
+    <sc23>
+        <author>Akshat | Source: Embibe</author>
+	 	 <solution>Both hydrogen ( H2 ) and deuterium ( D2 ) molecules have same bond length but have different bond energy, melting point and boiling point.</solution> 
+    </sc23>
+    <sc24>
+        <solution>No solution provided.</solution>
+        <author>Name requested to be not disclosed</author>
+	</sc24>
+    <sc25>
+        <solution>Conceptual</solution>
+        <author>Author | Akshat</author>
+    </sc25>
+    
+    <maths>Begins here!!!!!!!!</maths>
+
+
+    <sm0>
+        <solution>Consider A to be true and check whether all statements are coherent. Then consider B to be true and examine all statements. Similarly for C and D. A statement must be either true or false. If it is not true according to another statement, it is false and thus you must check acoordingly.</solution>
+        <author>Question By Akshat</author>
+    </sm0>
+
+    <sm2>
+        <solution>Let \((h,k)\) be the centre of one circle. Thus, \(k= radius\). Write equation of circle and put \((9,6)\) in it to obtain a relation. Also, \((h,k)\) lies on \(y= \tan \frac{\theta}{2}\) where \(\tan \theta=m\). Thus replace \(h\) and \(k\) with corresponding \(r\) terms in the circle's equation to get a quadratic in \(r\). Solve to get \(r_1+r_2\). Since we already have \(r_1 r_2 =\frac{117}{2}\), use that to find \(\tan \theta\). </solution>
+        <author> Solution | Unknown</author>
+    </sm2>
+
+    <sm3>
+        <solution>Area of Polygon =\(A=\frac{10}{\tan \frac{\pi}{10}}\). Thus, \[p_1+p_2+ \cdots +p_{10}=A\]Using AM-HM and \(\tan \theta\) greater than \(\theta\) for every \(\theta \in(0, \pi /2\) we get the answer.</solution>
+        <author>Source | Unknown</author>
+    </sm3>
+
+    <sm4>
+        <solution>Let total length be \(1\). Let lengths of segments be \(x, \: y-x,\: 1-y\) (we are measuring the lengths from one end of the stick. Apply triangle inequalities to the lengths to get conditions on \(x\) and \(y\). Possible (sample) space is \(y\) greater than \(x\) and favourable is y less than 1/2, x greater than 1/2 and \(y\) less than \(x+\frac{1}{2}\) Draw graphs to get Probability\(=\frac{1}{4}\)</solution>
+        <author>Solution | MPA class</author>
+    </sm4>
+    <sm6>
+        <imagetrue>/daily/solutionpics/modzvalue.png</imagetrue>
+        <solution>\(|z|\in [\sqrt 8, \sqrt{16}]\)</solution>
+        <author>JEEMain 9th Jan Eve, 2020 | Brilliant Learning Solutions Private Limited</author>
+    </sm6>
+    <sm19>
+    <author>Akshat</author>
+	 	 <solution>Find \(f'(x)\). You'll see that it is greater than zero when \(x\in (1,2)\) Also, \(f(1)=\frac{1}{3}\) and \(f(2)=\frac{1}{\sqrt{8}}\) </solution> 
+    </sm19>
+    <sm20>
+         <author>Solution | Akshat</author>
+	 	 <solution>First make 3 groups of the 6 colors. You can do that in \(\frac{6!}{3!2^3}=15\) ways. Put the 2 colors of each of the 3 groups opposite to each other. When you interchange one of the pairs, you get a new combination. But if you interchange another pair you get the same combination back. So the number of ways becomes \(15\times 2=30\)</solution>
+        </sm20>
+        <sm21>
+            <author>Akshat</author>
+	 	 <solution>For 3 points on one side of the plane, total 4 planes possible.
+For 2 points on one side of the plane there are total 3 planes (\( {{4}\choose {2}}/ 2!\)
+Thus total \(4+3=7\)</solution>  
+        </sm21>
+        <sm22>
+             <author>Akshat</author>
+	 	 <solution>Put \(\sqrt{x}=t\) For \(\int \frac{1}{t(t^6+1)}\) put \(\frac{1}{t^5}+1=y\)</solution> 
+        </sm22>
+</solutions>

@@ -1,0 +1,819 @@
+<?php
+    header("Cache-control: max-age=172800");
+?>
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Jeenius | Custom Tests</title>
+        <meta name="theme-color" content="#000000">
+    <meta http-equiv="content-type" content="text/html; charset=windows-1252">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="https://kit.fontawesome.com/f028f07279.js" crossorigin="anonymous"></script>
+
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Thasadith|Vollkorn%20SC|Noto%20Serif%20SC|Alegreya">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.2/jspdf.min.js"></script>
+    <script src:"https://cdn.jsdelivr.net/npm/html2canvas@1.0.0-alpha.12/dist/npm/index.js"></script>
+    <style>
+    div.header{
+    color:black;
+    /*
+    animation-name:colorful;
+    animation-duration:4.5s;
+    animation-delay:0s;
+    animation-timing-function: ease-in-out;
+    animation-iteration-count:infinite;
+    animation-direction: alternate;*/
+}
+.header1{
+    animation-name:colorful;
+    animation-duration:4s;
+    animation-delay:0s;
+    animation-timing-function: ease-in-out;
+    animation-iteration-count:infinite;
+    animation-direction: alternate;
+    margin:0;
+    font-size:2em;
+    font-family: 'Vollkorn SC', serif;
+    white-space:nowrap;
+    display:inline-block;
+}
+        .header2{
+    animation-name:colorful;
+    animation-duration:4s;
+    animation-delay:0.4s;
+    animation-timing-function: ease-in-out;
+    animation-iteration-count:infinite;
+    animation-direction: alternate;
+    margin:0;
+    font-size:2em;
+    font-family: 'Vollkorn SC', serif;
+    white-space:nowrap;
+    display:inline-block;
+}
+        .header3{
+    animation-name:colorful;
+    animation-duration:4s;
+    animation-delay:0.8s;
+    animation-timing-function: ease-in-out;
+    animation-iteration-count:infinite;
+    animation-direction: alternate;
+    margin:0;
+    font-size:2em;
+    font-family: 'Vollkorn SC', serif;
+    white-space:nowrap;
+    display:inline-block;
+}
+        .header4{
+    animation-name:colorful;
+    animation-duration:4s;
+    animation-delay:1.6s;
+    animation-timing-function: ease-in-out;
+    animation-iteration-count:infinite;
+    animation-direction: alternate;
+    margin:0;
+    font-size:2em;
+    font-family: 'Vollkorn SC', serif;
+    white-space:nowrap;
+    display:inline-block;
+}
+        .header5{
+    animation-name:colorful;
+    animation-duration:4s;
+    animation-delay:2.4s;
+    animation-timing-function: ease-in-out;
+    animation-iteration-count:infinite;
+    animation-direction: alternate;
+    margin:0;
+    font-size:2em;
+    font-family: 'Vollkorn SC', serif;
+    white-space:nowrap;
+    display:inline-block;
+}
+        .header6{
+    animation-name:colorful;
+    animation-duration:4s;
+    animation-delay:3.2s;
+    animation-timing-function: ease-in-out;
+    animation-iteration-count:infinite;
+    animation-direction: alternate;
+    margin:0;
+    font-size:2em;
+    font-family: 'Vollkorn SC', serif;
+    white-space:nowrap;
+    display:inline-block;
+}
+        .header7{
+    animation-name:colorful;
+    animation-duration:4s;
+    animation-delay:4s;
+    animation-timing-function: ease-in-out;
+    animation-iteration-count:infinite;
+    animation-direction: alternate;
+    margin:0;
+    font-size:2em;
+    font-family: 'Vollkorn SC', serif;
+    white-space:nowrap;
+    display:inline-block;
+}
+@keyframes colorful{
+    0%{color:#e53361;}
+    9%{color:#e5339f;}
+    18%{color:#e533d1;}
+    27%{color:#e233e5;}
+    36%{color:#b433e5;}
+    45%{color:#7a33e5;}
+    53%{color:#5233e5;}
+    64%{color:#333be5;}
+    73%{color:#3274d5;}
+    86%{color:#32add5;}
+    100%{color:#32e1d3;}
+}
+.field{
+  --uiFieldPlaceholderColor: var(--fieldPlaceholderColor, #767676);
+}
+
+.field__input{ 
+  background-color: transparent;
+  border-radius: 0;
+  border: none;
+
+  -webkit-appearance: none;
+  -moz-appearance: none;
+
+  font-family: inherit;
+  font-size: 1em;
+}
+
+.field__input:focus::-webkit-input-placeholder{
+  color: var(--uiFieldPlaceholderColor);
+}
+
+.field__input:focus::-moz-placeholder{
+  color: var(--uiFieldPlaceholderColor);
+  opacity: 1;
+}
+
+/*
+=====
+LEVEL 2. CORE STYLES
+=====
+*/
+
+.a-field{
+  display: inline-block;
+}
+
+.a-field__input{ 
+  display: block;
+  box-sizing: border-box;
+  width: 100%;
+}
+
+.a-field__input:focus{
+  outline: none;
+}
+
+/*
+=====
+LEVEL 3. PRESENTATION STYLES
+=====
+*/
+
+/* a-field */
+
+.a-field{
+  --uiFieldHeight: var(--fieldHeight, 2.5rem);  
+  --uiFieldBorderWidth: var(--fieldBorderWidth, 2px);
+  --uiFieldBorderColor: var(--fieldBorderColor);
+
+  --uiFieldFontSize: var(--fieldFontSize, 1rem);
+  --uiFieldHintFontSize: var(--fieldHintFontSize, 1rem);
+
+  --uiFieldPaddingRight: var(--fieldPaddingRight, 1rem);
+  --uiFieldPaddingBottom: var(--fieldPaddingBottom, 1rem);
+  --uiFieldPaddingLeft: var(--fieldPaddingLeft, 1rem);   
+
+  position: relative;
+  box-sizing: border-box;
+  font-size: var(--uiFieldFontSize);
+  padding-top: 1rem;  
+}
+
+.a-field__input{
+  height: var(--uiFieldHeight);
+  padding: 0 var(--uiFieldPaddingRight) 0 var(--uiFieldPaddingLeft);
+  border-bottom: var(--uiFieldBorderWidth) solid var(--uiFieldBorderColor);  
+}
+
+.a-field__input::-webkit-input-placeholder{
+  opacity: 0;
+  transition: opacity .2s ease-out;
+}
+
+.a-field__input::-moz-placeholder{
+  opacity: 0;
+  transition: opacity .2s ease-out;
+}
+
+.a-field__input:not(:placeholder-shown) ~ .a-field__label-wrap .a-field__label{
+  opacity: 0;
+  bottom: var(--uiFieldPaddingBottom);
+}
+
+.a-field__input:focus::-webkit-input-placeholder{
+  opacity: 1;
+  transition-delay: .2s;
+}
+
+.a-field__input:focus::-moz-placeholder{
+  opacity: 1;
+  transition-delay: .2s;
+}
+
+.a-field__label-wrap{
+  box-sizing: border-box;
+  width: 100%;
+  height: var(--uiFieldHeight);	
+
+  pointer-events: none;
+  cursor: text;
+
+  position: absolute;
+  bottom: 0;
+  left: 0;
+}
+
+.a-field__label{
+  position: absolute;
+  left: var(--uiFieldPaddingLeft);
+  bottom: calc(50% - .5em);
+
+  line-height: 1;
+  font-size: var(--uiFieldHintFontSize);
+
+  pointer-events: none;
+  transition: bottom .2s cubic-bezier(0.9, -0.15, 0.1, 1.15), opacity .2s ease-out;
+  will-change: bottom, opacity;
+}
+
+.a-field__input:focus ~ .a-field__label-wrap .a-field__label{
+  opacity: 1;
+  bottom: var(--uiFieldHeight);
+}
+
+/* a-field_a1 */
+
+.a-field_a1 .a-field__input{
+  transition: border-color .2s ease-out;
+  will-change: border-color;
+}
+
+.a-field_a1 .a-field__input:focus{
+  border-color: var(--fieldBorderColorActive);
+}
+
+/* a-field_a2 */
+
+.a-field_a2 .a-field__label-wrap::after{
+  content: "";
+  box-sizing: border-box;
+  width: 0;
+  height: var(--uiFieldBorderWidth);
+  background-color: var(--fieldBorderColorActive);
+
+  position: absolute;
+  bottom: 0;
+  left: 0;  
+
+  will-change: width;
+  transition: width .285s ease-out;
+}
+
+.a-field_a2 .a-field__input:focus ~ .a-field__label-wrap::after{
+  width: 100%;
+}
+
+/* a-field_a3 */
+
+.a-field_a3{
+  padding-top: 1.5rem;
+}
+
+.a-field_a3 .a-field__label-wrap::after{
+  content: "";
+  box-sizing: border-box;
+  width: 100%;
+  height: 0;
+
+  opacity: 0;
+  border: var(--uiFieldBorderWidth) solid var(--fieldBorderColorActive);
+
+  position: absolute;
+  bottom: 0;
+  left: 0;
+
+  will-change: opacity, height;
+  transition: height .2s ease-out, opacity .2s ease-out;
+}
+
+.a-field_a3 .a-field__input:focus ~ .a-field__label-wrap::after{
+  height: 100%;
+  opacity: 1;
+}
+
+.a-field_a3 .a-field__input:focus ~ .a-field__label-wrap .a-field__label{
+  bottom: calc(var(--uiFieldHeight) + .5em);
+}
+
+/*
+=====
+LEVEL 4. SETTINGS
+=====
+*/
+
+.field{
+  --fieldBorderColor: #D1C4E9;
+  --fieldBorderColorActive: #673AB7;
+}
+input[type=text].enter, input[type=number].enter{color:rgba(255,255,255,0.75);}
+input[type=submit], .submit{
+    font-family:'Noto Serif SC', serif;
+    font-size:1.3em;
+    padding:3px 10px;
+    outline:none;
+    border:none;
+    transition:0.4s;
+    background-color:white;
+    color:black;
+    margin-bottom:15px;
+}
+
+input[type=submit]:disabled{color:#313131 !important;opacity:0.4 !important;}
+.submit:hover{color:white; background-color:#212121;}
+.pdf{
+    font-size:1.7em;
+    display:none;
+}
+textarea{
+    max-height:250px;
+    width:50%;
+    background-color:#d0d0d0;
+    outline:none;
+    font-family:"Times New Roman";
+    border:2px solid #43f3c1;
+    transition:0.4s;
+    -webkit-transition:0.4s;
+    font-size:1.2em;
+}
+        html{
+        scroll-behavior: smooth; /* Animates scrolling - "smooth" scrolling*/
+    }
+        body{
+            margin:0;
+            background-color:black;
+            line-height:1.5;
+            color:rgba(255,255,255,0.9);
+            text-align:center;
+        }
+        #navbar1{
+    padding-top:10px;
+    text-align:center; padding-bottom:10px;
+    font-family:'Alegreya',serif;
+    font-size:1.5em;
+    top:8vh;
+    /* //background:rgba(255,255,255,0.3); */
+    z-index:10;
+    margin:0 auto;
+    border-bottom:1px solid black;
+    width:100vw;
+}
+a.advertise{
+    padding:5px 5px;
+    margin:0 5px 0 5px;
+    color:#42b2b7;
+}
+a.advertise:visited{
+    color:#33e3e5;
+}
+        .share{
+            color:rgba(255,255,255,1);
+            font-size:1.9em;
+            margin:-10px 10px;
+            text-decoration:none;
+            transition:0.4s;
+        }
+        a.share:visited{
+            color:rgba(255,255,255,1);
+        }
+        a.share:hover{
+            color:magenta;
+        }
+        a.feedback{
+            font-size:1.4em; color:#33e3e5;
+        }
+        .quesinput{
+            padding:5px 10px;
+            width:50%;
+            color:black;
+            background-color:rgba(255,255,255,0.8);
+            font-family:"Times New Roman";
+    border:2px solid #43f3c1;
+    transition:0.4s;
+    -webkit-transition:0.4s;
+    font-size:1.2em;
+    color:black;
+    outline:none;
+        }
+        
+        table {
+  font-family: arial, sans-serif;
+  border-collapse: collapse;
+  width: 90%;
+}
+table{margin-right:auto;margin-left:auto;}
+td, th {
+  border: 1px solid #dddddd;
+  text-align: left;
+  padding: 8px;
+}
+td{
+    font-family:'Alegreya',serif;
+}
+th{
+    font-family:'Noto Serif SC',serif;
+}
+tr.correct{
+    background-color:#55c674;
+}
+tr.incorrect{
+    background-color:#c65565;
+}
+/* .quesinput:focus{
+  color
+} */
+</style>
+</head>
+<body>
+<div class="header" style="font-size: 1.8em; font-family: 'Vollkorn SC', serif;">
+        <span class="header1">J</span><span class="header2">E</span><span class="header3">E</span><span class="header4">N</span><span class="header5">I</span><span class="header6">U</span><span class="header7">S</span>
+        </div>
+        <div style="font-size:1.0em; font-family:'Thasadith', serif;">By Akshat</div><hr style="width:60%;">
+        <div id="navbar1">
+<a class="advertise" href="https://jeenius.ga/">Home</a>
+<a class="advertise" href="https://jeenius.ga/daily/physicsq.php">Questions</a>
+<a class="advertise" href="https://jeenius.ga/tests/login.php">Tests</a>
+</div>
+    <div style="font-size:2.3em; font-family:'Noto Serif SC',serif;">Custom Test</div>
+    <div style="font-size:1.2em; font-family:'Thasadith',serif; padding:10px;">For multiple correct and numericals<br>Enter the test name and answers below. Enter your answers below, and then the correct answer key below that. Press <code> Check</code> to check your score automatically, without manually checking and calculating your scores!</div>
+    <span style="color:#4fe349; font-size:1.3em;"><i class="fas fa-check-circle"></i> All answer formats supported!</span><br>
+    <div><a href="https://jeenius.ga/blanktests/tests" class="advertise"style="text-decoration:none; font-size:1.2em; padding:10px;">For only single correct answers and for a better experience, click here.</a></div>
+    <hr style="border-top:2px solid #33e3e5;width:80%;">
+    <div style="padding:12px;"><div style="font-size:1.8em; font-family:'Vollkorn SC',serif;">Share</div>
+<a class="share" href="whatsapp://send?text=https%3A%2F%2Fjeenius.ga%2Fblanktests%2Ftests%2F%20Try%20Jeenius%3A%20A%20platform%20where%20content%20is%20by%20the%20JEE%20community,%20and%20is%20developed%20by%20a%20student!%0D%0AYou+can+make+your+own+tests%21" data-action="share/whatsapp/share"><i class="fab fa-whatsapp"></i></a>
+<a class="share" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fjeenius.ga%2Fblanktests%2Ftests%2F%20Try%20Jeenius%3A%20A%20platform%20where%20content%20is%20by%20the%20JEE%20community,%20and%20is%20developed%20by%20a%20student!%0D%0AYou+can+make+your+own+tests%21" target="_blank" rel="noopener"><i class="fab fa-facebook-square"></i></a>
+<a class="share" href="https://twitter.com/intent/tweet?text=Try%20Jeenius-you%20can%20make%20your%20own%20tests!" target="_blank" rel="noopener"><i class="fab fa-twitter-square"></i></a>
+<a class="share" href="https://www.linkedin.com/shareArticle?mini=true&url=https%3A//jeenius.ga/blanktests/tests/&title=Try%20Jeenius-Make%20your%20own%20tests!&summary=&source="target="_blank" rel="noopener"><i class="fab fa-linkedin"></i></a>
+<a class="share" href="https://telegram.me/share/url?url=https%3A%2F%2Fjeenius.ga&text=Try%20Jeenius%3A%20A%20platform%20where%20content%20is%20by%20the%20JEE%20community,%20and%20is%20developed%20by%20a%20student!" target="_blank"><i class="fab fa-telegram"></i></a>
+
+<a class="share"  href="fb-messenger://share?link=https%3A%2F%2Fjeenius.ga"><i class="fab fa-facebook-messenger"></i></a>
+
+<div class="line-it-button" data-lang="en" data-type="share-b" data-ver="3" data-url="https://jeenius.ga/" data-color="grey" data-size="small" data-count="false" style="display: none;"></div>
+ <script src="https://d.line-scdn.net/r/web/social-plugin/js/thirdparty/loader.min.js" async="async" defer="defer"></script>
+
+<a class="share" href="javascript:void(0);" id="moreshare"><i class="fas fa-share-alt"></i></a>
+</div><hr style="border-top:2px solid #33e3e5;width:65%;"><br>
+
+<div style="font-size:1.6em; font-family:'Vollkorn SC',serif;color:rgba(255,255,255,0.95);margin-top:-10px;" id="whosetest"></div>
+
+<div id="thetestname"style="font-size:2em; font-family:'Vollkorn SC',serif;color:rgba(255,255,255,0.95);margin-top:-10px;">Custom Test</div> <span id="testname" style="color:#33e5c5;font-size:1.8em;font-family:'Vollkorn SC',serif;color:rgba(255,255,255,0.95);"></span></div>
+    <div class="page">
+  <label class="field a-field a-field_a1">
+    <input type="text" class="field__input a-field__input enter" onkeyup="getit(this); whose(this);" placeholder="Name" autocomplete="off"required>
+    <span class="a-field__label-wrap">
+      <span class="a-field__label">Your name</span>
+    </span>
+  </label>    
+  <br><br>
+  <label class="field a-field a-field_a2">
+    <input type="text"name="testname" class="field__input a-field__input enter" placeholder="Ex. Mains 10" onfocusout="storename(this);" onkeyup="namefill(this);"autocomplete="off"required>
+    <span class="a-field__label-wrap">
+      <span class="a-field__label">Test name</span>
+    </span>
+  </label>
+  <br><br>
+  <label class="field a-field a-field_a2">
+    <input type="number"name="testname" class="field__input a-field__input enter" placeholder="Ex. 4"  onkeyup="cormarks(this);"autocomplete="off"required>
+    <span class="a-field__label-wrap">
+      <span class="a-field__label">Marks for correct answer</span>
+    </span>
+  </label>
+  <br><br>
+  <label class="field a-field a-field_a2">
+    <input type="number"name="testname" class="field__input a-field__input enter" placeholder="Ex. 1"  onkeyup="incormarks(this);"autocomplete="off"required>
+    <span class="a-field__label-wrap">
+      <span class="a-field__label">Negative Marks for incorrect answer</span>
+    </span>
+  </label>
+</div>
+<div style="font-size:2em; font-family:'Noto Serif SC',serif;">Enter Answers</div>
+<input type="number" placeholder="Number of questions"style="padding:4px;color:black;" id="questionnum"/><br/>
+<br>
+<button class="submit" onclick="generateq();">Enter</button>
+<div id="yourans">Enter number of questions.</div>
+<div style="font-size:2em; font-family:'Noto Serif SC',serif;">Enter Correct Answers</div>
+<div id="corans">Enter number of questions.</div>
+<button class="submit" onclick="submitans();">Check</button>
+<div id="forpdf">
+<div id="score" style="font-family:'Vollkorn SC',serif; font-size:2em;"></div>
+
+<div id="table" style="margin:auto; text-align:center;margin-left: auto;margin-right: auto;"></div></div>
+<div id="bypass"></div>
+
+<script>
+    var totalq=0;
+    function generateq(){
+        document.getElementById("yourans").innerHTML="";
+        document.getElementById("corans").innerHTML="";
+        var h=document.getElementById("questionnum").value;
+        totalq=h;
+        //For user answers
+        for (var j=1; j<=h; j++){
+            var head=document.createElement("div");
+            head.className="qhead";
+            head.innerHTML="Question "+j;
+            var btn=document.createElement("INPUT");
+            btn.setAttribute("type", "text");
+                      btn.className="quesinput";
+                      btn.id="quesinput"+j;
+                      btn.addEventListener("keyup", function() { validate(this);}, false);
+                      var pdrop=document.getElementById("yourans");
+                      pdrop.appendChild(head);
+                      pdrop.appendChild(btn);
+                      pdrop.appendChild(document.createElement("br"));
+        }
+        //For correct answer
+        for (var j=1; j<=h; j++){
+            var head=document.createElement("div");
+            head.className="qhead";
+            head.innerHTML="Question "+j;
+            var btn=document.createElement("INPUT");
+            btn.setAttribute("type", "text");
+                      btn.className="quesinput focused";
+                      btn.id="ansinput"+j;
+                      btn.addEventListener("keyup", function() { validate(this);}, false);
+                      var pdrop=document.getElementById("corans");
+                      pdrop.appendChild(head);
+                      pdrop.appendChild(btn);
+                      pdrop.appendChild(document.createElement("br"));
+        }
+    }
+var cormarksare=4;
+var incormarksare=1;
+var grandscore=0;
+function cormarks(y){
+    cormarksare=Number(y.value);
+}
+function incormarks(y){
+    incormarksare=Number(y.value);
+}
+function getit(t){
+    t.value=t.value.replace(/ /g,"_");
+    localStorage.setItem("testname",t.value);
+    console.log(localStorage.testname);
+}
+function namefill(g){
+    document.getElementById("testname").innerHTML="";
+    document.getElementById("testname").innerHTML=g.value;
+}
+function whose(j){
+    document.getElementById("whosetest").innerHTML="";
+    document.getElementById("whosetest").innerHTML=j.value.replace(/[0-9]/g, '')+"'s";
+}
+function storename(n){
+    n.value=n.value.replace(/ /g,"_");
+    localStorage.setItem("filename",n.value);
+}
+var val = ["Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P", "S", "F", "G", "H", "J", "K", "L", "Z", "X", "V", "N", "M", "!", "@", "#", "$", "%", "^", "&", "*", "(", ")", "-", "_"];
+var valid=0;
+function countq(text, which){
+    var str=text.value;
+    var lines = (str.match(/\n/g) || '').length + 1;
+    document.getElementById(which).innerHTML=lines.toString();
+}
+function validate(text){
+    var str=text.value.toLocaleUpperCase();
+    if(str!=""){
+        for(var i=0;i<val.length; i++){
+    if(str.includes(val[i])){
+        text.style.border="2px solid red";
+        text.style.color="red";
+        valid=0;
+        break;
+    }
+    else{
+        text.style.border="2px solid #43f3c1";
+        text.style.color="black";
+        valid=1;
+        var arr=str.replace( /\n/g, "!" ).split( "!" );
+        for(var j=0;j<arr.length; j++){
+            if(isNaN(arr[j])){
+                
+            if(arr[j].length>4){
+                text.style.border="2px solid red";
+        text.style.color="red";
+        //valid=0;
+        break;
+            }
+            }
+            else {
+                var index = arr[j].indexOf(".");
+                if((arr[j].length - index - 1)>4){
+                    text.style.border="2px solid red";
+        text.style.color="red";
+        //valid=0;
+        break;
+                }
+                }
+            }
+        }
+    }
+    text.value=text.value.toLocaleUpperCase();
+    }
+}
+//var table = document.getElementById("table");
+var ans, str, arr1, arr2;
+
+function submitans(){
+    grandscore=0;
+    var inputans, theanswer;
+    //totalq=0;
+    var table="<table><tr><td>Name</td><td>"+localStorage.testname+"</td><td>Total</td><td id='df'></td></tr><tr><th>Question</th><th>Marked</th><th>Correct</th><th>Result</th></tr>";
+    
+    //table+="<tr style='text-align:center;'><th colspan='4'>Physics</th></tr>";
+    
+        for(var p=1; p<=totalq; p++){
+            inputans=document.getElementById("quesinput"+p).value;
+            theanswer= document.getElementById("ansinput"+p).value;
+            if(inputans==theanswer){
+                if(inputans.length>=1){
+                grandscore+=cormarksare;
+                table+="<tr class='correct'><td>Question "+p+"</td><td>"+inputans+"</td><td>"+theanswer+"</td><td>Correct</td></tr>";
+            }
+            }
+            else if(inputans.length>=1){
+                grandscore-=incormarksare;
+                table+="<tr class='incorrect'><td>Question "+p+"</td><td>"+inputans+"</td><td>"+theanswer+"</td><td>Incorrect</td></tr>"
+            }
+            else{if(theanswer.length>0)
+                table+="<tr><td>Question "+p+"</td><td>N/A</td><td>"+theanswer+"</td><td>Unattempted</td></tr>"
+            }
+        }
+/*
+    ans=document.getElementById("cans");
+    table+="<tr><th colspan='4'>Chemistry</th></tr>";
+     str=ans.value.toLocaleUpperCase();
+     arr1=str.replace( /\n/g, "!" ).split( "!" );
+     arr2=document.getElementById("ccor").value.replace( /\n/g, "!" ).split( "!" );
+    if(arr1.length==arr2.length){
+        for(var p=0; p<arr1.length; p++){
+            if(arr1[p]==arr2[p]){
+                if(arr1[p].length>=1){if(arr2[p].length>0){++totalq;}
+                grandscore+=cormarksare;
+                table+="<tr class='correct'><td>Question "+(p+1)+"</td><td>"+arr1[p]+"</td><td>"+arr2[p]+"</td><td>Correct</td></tr>";
+            }
+            }
+            else if(arr1[p].length>=1){if(arr2[p].length>0){++totalq;}
+                grandscore-=incormarksare;
+                table+="<tr class='incorrect'><td>Question "+(p+1)+"</td><td>"+arr1[p]+"</td><td>"+arr2[p]+"</td><td>Incorrect</td></tr>"
+            }
+            else{if(arr2[p].length>0){++totalq;}
+                table+="<tr><td>Question "+(p+1)+"</td><td>N/A</td><td>"+arr2[p]+"</td><td>Unattempted</td></tr>"
+            }
+        }
+    }
+
+    ans=document.getElementById("mans");
+    table+="<tr><th colspan='4'>Math</th></tr>";
+     str=ans.value.toLocaleUpperCase();
+     arr1=str.replace( /\n/g, "!" ).split( "!" );
+     arr2=document.getElementById("mcor").value.replace( /\n/g, "!" ).split( "!" );
+    if(arr1.length==arr2.length){
+        for(var p=0; p<arr1.length; p++){
+            if(arr1[p]==arr2[p]){
+                if(arr1[p].length>=1){if(arr2[p].length>0){++totalq;}
+                grandscore+=cormarksare;
+                table+="<tr class='correct'><td>Question "+(p+1)+"</td><td>"+arr1[p]+"</td><td>"+arr2[p]+"</td><td>Correct</td></tr>";
+                }
+            }
+            else if(arr1[p].length>=1){if(arr2[p].length>0){++totalq;}
+                grandscore-=incormarksare;
+                table+="<tr class='incorrect'><td>Question "+(p+1)+"</td><td>"+arr1[p]+"</td><td>"+arr2[p]+"</td><td>Incorrect</td></tr>"
+            }
+            else{if(arr2[p].length>0){++totalq;}
+                table+="<tr><td>Question "+(p+1)+"</td><td>N/A</td><td>"+arr2[p]+"</td><td>Unattempted</td></tr>"
+            }
+        }
+    }*/
+    table+="</table>";
+    document.getElementById("table").innerHTML=table;
+    console.log(grandscore);
+    //document.getElementById("score").innerHTML=localStorage.testname+"<br>"+localStorage.filename+"<div>"+grandscore+"</div>";
+    document.getElementById("df").innerHTML=grandscore;
+    displayscore();
+    document.getElementById("table").scrollIntoView();
+    document.getElementById("pdfbutton").style.display="block";
+}
+function displayscore(){
+    var percent=(grandscore/(totalq*cormarksare))*100;
+    document.getElementById("df").innerHTML="Score: "+grandscore+"/"+(totalq*cormarksare)+"<br>Percentage: "+percent;
+    document.getElementById("score").innerHTML="<br>"+localStorage.testname+"<br>"+localStorage.filename+document.getElementById("df").innerHTML;
+}
+const tx = document.getElementsByTagName('textarea');
+for (let i = 0; i < tx.length; i++) {
+  tx[i].setAttribute('style', 'height:' + (tx[i].scrollHeight) + 'px;overflow-y:hidden;');
+  tx[i].addEventListener("input", OnInput, false);
+}
+
+function OnInput() {
+  this.style.height = 'auto';
+  this.style.height = (this.scrollHeight) + 'px';
+}
+</script>
+<br>
+<div style="text-align:center;">
+<button class="submit pdf" id="pdfbutton" onclick="javascript:demoFromHTML()" style="margin:auto; font-size:1.2em;">Download PDF</button><!--javascript:demoFromHTML()-->
+</div>
+<br>
+<footer>
+<a class="share feedback" href="mailto:lightisthekira@gmail.com?subject=Jeenius%20-%20Feedback" target="_blank" rel="noopener"><i class="fas fa-envelope"></i> Your feedback</a>
+</footer>
+<script>
+var shareButton=document.getElementById("moreshare");
+if(navigator.share){}
+else{
+    shareButton.style.display="none";
+};
+shareButton.addEventListener('click', event => {
+  if (navigator.share) {
+    navigator.share({
+      title: 'Jeenius | Custom Tests',
+      url: 'https://jeenius.ga/blanktests/tests/',
+      text: 'Try Jeenius: A platform where content is by the JEE community, and is developed by a student! On this page you can create your own Tests.'
+    }).then(() => {
+      console.log('Thanks for sharing!');
+    })
+    .catch(console.error);
+  } else {
+    shareButton.style.display="none";
+  }
+});
+</script>
+<script type="text/javascript">
+        function demoFromHTML() {
+            var pdf = new jsPDF('p', 'pt', 'letter');
+            // source can be HTML-formatted string, or a reference
+            // to an actual DOM element from which the text will be scraped.
+            source = $('#table')[0];
+
+            // we support special element handlers. Register them with jQuery-style 
+            // ID selector for either ID or node name. ("#iAmID", "div", "span" etc.)
+            // There is no support for any other type of selectors 
+            // (class, of compound) at this time.
+            specialElementHandlers = {
+                // element with id of "bypass" - jQuery style selector
+                '#bypassme': function(element, renderer) {
+                    // true = "handled elsewhere, bypass text extraction"
+                    return true
+                }
+            };
+            margins = {
+                top: 80,
+                bottom: 60,
+                left: 40,
+                width: 522
+            };
+            // all coords and widths are in jsPDF instance's declared units
+            // 'inches' in this case
+            pdf.fromHTML(
+                    source, // HTML string or DOM elem ref.
+                    margins.left, // x coord
+                    margins.top, {// y coord
+                        'width': margins.width, // max width of content on PDF
+                        //'elementHandlers': specialElementHandlers
+                    },
+            function(dispose) {
+                // dispose: object with X, Y of the last line add to the PDF 
+                //          this allow the insertion of new lines after html
+                var g=localStorage.filename+".pdf";
+                pdf.save(g);
+            }
+            , margins);
+        }
+     
+    </script>
+    <footer style="font-size:1em; font-family:'Thasadith',serif; padding:10px;color:rgba(255,255,255,0.85);">Answers are not saved and will be lost on reloading page. This page does not any data to the server; everything is executed on your device. To save your result, download the PDF.</footer>
+</body>
+</html>

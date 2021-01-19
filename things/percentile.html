@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html>
+  <head>
+<title>Percentile - Jeenius</title>    <meta name="theme-color" content="#000000" />
+    <meta http-equiv="content-type" content="text/html; charset=windows-1252" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script
+      src="https://kit.fontawesome.com/f028f07279.js"
+      crossorigin="anonymous"
+    ></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css"
+    />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css?family=Ubuntu|Noto%20Serif%20SC|Vollkorn%20SC"
+    />
+    <style>
+      body {
+        display: flex;
+        min-height: 100vh;
+        flex-direction: column;
+      }
+
+      main {
+        flex: 1 0 auto;
+      }
+      html {
+        scroll-behavior: smooth; /* Animates scrolling - "smooth" scrolling*/
+      }
+      .fixed {
+        z-index: 90;
+        font-family: "Vollkorn SC", serif;
+        position: fixed;
+        display: block;
+        width: 100vw;
+        top: 0px;
+        padding: 5px;
+        font-size: 6vh;
+        color: black;
+        text-align: center;
+        height: 6.5vh;
+        background: rgba(255, 255, 255, 0.7);
+      }
+      .fixed a,
+      a:visited {
+        color: black;
+        text-decoration: none;
+      }
+      footer {
+        color: rgba(0, 0, 0, 0.7);
+      }
+      footer a,
+      footer a:visited {
+        color: rgba(0, 0, 0, 0.82);
+      }
+      a:hover {
+        color: black;
+      }
+      button {
+        margin: 0 30px 15px 30px;
+      }
+      .share {
+        color: rgba(0, 0, 0, 0.7);
+        font-size: 1.9em;
+        margin: -10px 10px;
+        text-decoration: none;
+        transition: 0.4s;
+      }
+      a.share:visited {
+        color: rgba(0, 0, 0, 0.7);
+      }
+      a.share:hover {
+        color: magenta;
+      }
+      a.feedback {
+        font-size: 1.4em;
+        color: #33e3e5;
+      }
+      li:hover {
+        cursor: pointer;
+      }
+      i{margin-right:2px;}
+      .scoreDiv{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    width: 100vw;
+      }
+      .card{
+          width:312px;
+      }
+      #wantToSee{display:none;}
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="fixed">
+        <a href="http://jeenius.ga" target="_blank" 
+          >Jeenius</a
+        >
+      </div>
+      <div style="height: 6vh"></div>
+    </header>
+    <main>
+      <div class="container">
+        <h2 style="display:inline-block; clear:both;"><i class="fas fa-file-alt blue-text"></i> Find your percentile<span class="new badge blue" data-badge-caption="2.0">v</span></h2>
+
+        <div
+          style="
+            margin: auto;
+            margin-top: 30px;
+            width: 70%;
+            height: 1px;
+            background: black;
+            opacity: 0.5;
+          "
+        ></div>
+        <div class="row">
+          <h3>Enter your name</h3>
+          <div class="col s12">
+            <div class="row">
+              <div class="input-field col s12">
+                <i class="fas fa-user-alt prefix purple-text"></i>
+                <input type="text" id="name" class="autocomplete" autocomplete="off"/>
+                <label for="name">Your name as it appears in BITS, EXACTLY</label>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <h3>Enter your BITS ID</h3>
+          <div class="col s12">
+            <div class="row">
+              <div class="input-field col s12">
+                <i class="fas fa-user-alt prefix purple-text"></i>
+                <input type="text" id="id" class="validate" autocomplete="off" pattern="2020[AB][A-Z0-9]PS([0-9]{4})H"/>
+                <label for="id">Your BITS ID number</label>
+                <span
+                  class="helper-text"
+                  data-error="Enter a valid ID Number"
+                ></span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- <h3 class="center-align">OR...</h3>
+        <div class="row">
+          <h3>Enter your score</h3>
+          <div class="col s12">
+            <div class="row">
+              <div class="input-field col s12">
+                <i class="fas fa-calculator prefix purple-text"></i>
+                <input
+                  type="number"
+                  id="score"
+                  class="autocomplete validate"
+                  min="0"
+                  max="84"
+                  autocomplete="off"
+                />
+                <label for="score">Your marks/score</label>
+                <span
+                  class="helper-text"
+                  data-error="Enter a valid score"
+                ></span>
+              </div>
+            </div>
+          </div>
+        </div> -->
+        <div class="row center-align">
+          <button class="btn-large waves-effect waves-purple" onclick="findScore()">Let's go, find it!</button>
+          <button class="btn-large red waves-effect waves-light" onclick="alert('Meh. You should study.');">No, I'm scared!</button>
+        </div>
+      </div>
+        <div id="result">
+            
+        </div>
+        <div class="row center-align" id="wantToSee">
+            <h4>Want to see your GPA for these?</h4>
+          <button class="btn-large waves-effect waves-purple" onclick="findTotalScore()">Yeah! I'm excited</button>
+          <button class="btn-large red waves-effect waves-light" onclick="alert('Take a dose of BITS Intelligenase.');">Pass, I'll get PTSD</button>
+        </div><br>
+        <div id="totalResult" style="text-align:center;"></div>
+    </main>
+    <div style="height: 20px"></div>
+    <footer class="page-footer blue lighten-2">
+      <div class="container">
+        <div class="row">
+          <div class="col l6 s12">
+            <h5 class="white-text">Jeenius</h5>
+            <p class="grey-text text-lighten-4">
+              Jeenius is just a website entirely designed and developed by
+              Akshat Oke. There is no one else involved with this website,
+              except for a few APIs. Check out the other pages too!
+            </p>
+          </div>
+          <div class="col l4 offset-l2 s12">
+            <h5 class="white-text">Links</h5>
+            <ul>
+              <li>
+                <a class="grey-text text-lighten-3" href="http://jeenius.ga/"
+                  >Home</a
+                >
+              </li>
+              <li>
+                <a
+                  class="grey-text text-lighten-3"
+                  href="http://jeenius.ga/things/chemtricks.php"
+                  >Learn</a
+                >
+              </li>
+              <li>
+                <a
+                  class="grey-text text-lighten-3"
+                  href="http://jeenius.ga/daily/physicsq.php"
+                  >Questions</a
+                >
+              </li>
+              <li>
+                <a
+                  class="grey-text text-lighten-3"
+                  href="http://jeenius.ga/tests/login.php"
+                  >Tests</a
+                >
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="footer-copyright">
+        <div class="container">
+          No copyrights. Just fun.<br />Made in Pune.
+          <a
+            class="grey-text text-lighten-4 right"
+            href="http://jeenius.ga/contactme.php"
+            >Contact Me</a
+          >
+        </div>
+      </div>
+    </footer>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <script>
+       /* var elems, instances;
+        var userArray;
+      document.addEventListener("DOMContentLoaded", function () {
+          getdata();
+         elems = document.querySelectorAll('.autocomplete');
+         instances = M.Autocomplete.init(elems, {});
+      });
+      var EGarray, cSarray;
+      function getdata() {
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function () {
+          if (this.readyState == 4 && this.status == 200) {
+            EGarray = this.responseText.split(/\r?\n/g);
+          }
+        };
+        xhttp.open("GET", "scores/EG_1.txt?math="+Math.random(), true);
+        xhttp.send();
+        ////////////
+        xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function () {
+          if (this.readyState == 4 && this.status == 200) {
+            cSarray = this.responseText.split(/\r?\n/g);
+          }
+        };
+        xhttp.open("GET", "scores/CS_1.txt?math="+Math.random(), true);
+        xhttp.send();
+        createAutocomplete();
+      }*/
+      var branch, userArray;
+      function createAutocomplete(){
+        xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function () {
+          if (this.readyState == 4 && this.status == 200) {
+            userArray = this.responseText.split(/\r?\n/g);
+            var names={};
+            for(var i=0; i<592;i++){
+                names[userArray[i]]=null;
+            }
+            instances[0].updateData(names);
+          }
+        };
+        xhttp.open("GET", "scores/users.txt?math="+Math.random(), true);
+        xhttp.send();
+        
+      }
+/////////////////////////////////////////
+
+        var tabNumber = 0;//to have unique id's for each tab
+      function Subject(obj){
+          //subject is course name.
+          //subNum is which exam results to take
+          //units are units for the course
+          //totalEntries is the total number of students in that course exam list
+          this.subject = obj.subject;
+          this.units = obj.units;
+          this.totalEntries = obj.totalEntries;
+          this.subNum = obj.subNum;
+          this.score = 0;
+          this.percentile = 0;
+          var self = this;
+          this.getData = () =>{
+              let temp;
+            var  xhttp = new XMLHttpRequest();
+          xhttp.onreadystatechange = function () {
+          if (xhttp.readyState == 4 && xhttp.status == 200) {
+            temp = xhttp.responseText.split(/\r?\n/g);
+            //this.arr = temp;
+            self.arr = temp;
+            }
+          };
+        xhttp.open("GET", "scores/"+self.subject+"_"+self.subNum+".txt?math="+Math.random(), false);
+        xhttp.send();
+          }
+          this.findAndReturnScore = ()=>{
+              var i = this.arr.indexOf(id.trim());
+              this.score = this.arr[i+this.totalEntries +1];
+              var below= 0, t = 0;
+              self.total =0;
+              self.min = self.max= 0;
+              console.log(this.arr.length);
+          for (var j = this.totalEntries + 1 ; j< this.arr.length ; j++){
+              this.arr[j] = Number(this.arr[j]);
+              this.total += this.arr[j];
+              if(this.max<= this.arr[j]){
+                  this.max = this.arr[j]; 
+              }
+              if(this.min >= this.arr[j]){
+                  this.min = this.arr[j]; 
+              }
+              if(this.arr[j] < self.score){
+                  below++;
+              }
+              else if(Number(this.arr[j]) == self.score){
+                  t++;
+              }
+          }
+          this.below = below;
+          below += Math.floor(t/2);
+          this.percentile = below / this.totalEntries *100;
+          this.grade = Math.round(this.percentile/10);
+          return this.display()
+          }
+          
+// <div class="card">
+//     <div class="card-content">
+//       <p>I am a very simple card. I am good at containing small bits of information. I am convenient because I require little markup to use effectively.</p>
+//     </div>
+//     <div class="card-tabs">
+//       <ul class="tabs tabs-fixed-width">
+//         <li class="tab"><a href="#test4">Test 1</a></li>
+//         <li class="tab"><a class="active" href="#test5">Test 2</a></li>
+//         <li class="tab"><a href="#test6">Test 3</a></li>
+//       </ul>
+//     </div>
+//     <div class="card-content grey lighten-4">
+//       <div id="test4">Test 1</div>
+//       <div id="test5">Test 2</div>
+//       <div id="test6">Test 3</div>
+//     </div>
+//   </div>
+
+          this.display = () =>{
+              this.arr.sort(function(a, b){return a - b});
+              let info1 = "<p class='flow-text'>Score: <span class='blue-text'>"+this.score+"</span><br>Percentile: <span class='green-text'>"+this.percentile.toFixed(2)+"</span></p><p class='flow-text'>There are <span class='red-text'>" + this.below + "</span> students below you.</p>";
+              let info2 = "<p class='flow-text'>Average is " +(this.total/this.totalEntries).toFixed(3) +"<br>Maximum: " + this.max +"<br>Minimum: "+this.min +"<br> Marks at 50 percentile:" + this.arr[this.totalEntries+1+Math.floor( this.totalEntries * 0.5)]+"</p>";
+              let card = "<div class='card'> <div class='card-content'> <span class='card-title'>" + this.subject + "</span> <p class='flow-text'>Total students: " + this.totalEntries +"</p></div>";
+              card += "<div class ='card-tabs'><ul class='tabs tabs-fixed-width'>";
+              card += "<li class='tab'><a class=\"active\" href='#tab" + tabNumber++ + "'>MY</a></li><li class='tab'><a href='#tab"+ tabNumber++ +"'>STATS</a></li></ul>";
+              card += "</div> <div class='card-content blue lighten-5'> <div id='tab" + (tabNumber-2) + "'>"+info1 + "</div><div id='tab" + (tabNumber-1) + "'>"+info2+"</div></div></div>"; 
+            //   return "<h4>"+this.subject+"</h4><div class='flow-text'>Your score is " + this.score + ".<br>You have a percentile of <span class='green-text'>" + this.percentile.toFixed(2) +"%</span> with <span class='red-text'>"+ this.below +"</span> students below you.</div>";
+            return card;
+          }
+      }
+/////////////////////////////////////////
+//subject, subNum, units, totalEntries
+    var instances;
+    var subjectData = [
+        {
+            subject: "CS",
+            subNum: 1,
+            units:4,
+            totalEntries: 528
+        },
+        {
+            subject: "EG",
+            subNum: 1,
+            units: 2,
+            totalEntries: 592
+        },
+        {
+            subject: "MATH",
+            subNum: 1,
+            units: 3,
+            totalEntries: 1104
+        },
+        {
+            subject: "BIO",
+            subNum: 1,
+            units: 3,
+            totalEntries: 592
+        }
+    ];
+    var subjectInstances= [];
+        document.addEventListener("DOMContentLoaded", function () {
+          setdata();
+         var elems = document.querySelectorAll('.autocomplete');
+         instances = M.Autocomplete.init(elems, {});
+      });
+      function setdata(){
+          createAutocomplete();
+          subjectData.forEach(function(item){
+          subjectInstances.push(new Subject(item));
+          });
+          subjectInstances.forEach(function(item){
+              item.getData();
+          })
+      }
+      var name, id;
+      function findScore(){
+          document.getElementById("wantToSee").style.display="none";
+          if(document.getElementById("id").checkValidity()){
+            document.getElementById("result").scrollIntoView();
+            name = document.getElementById("name").value;
+            let i = userArray.indexOf(name);
+            if(i>0){
+                id = userArray[i+593];
+                if(id == document.getElementById("id").value){
+                findBranch();
+                displayUserInfo();
+                let dataPut ="";
+                subjectInstances.forEach(function(item){
+                    dataPut += item.findAndReturnScore();
+                });
+                document.getElementById("scoresDiv").innerHTML += dataPut;
+                document.getElementById("wantToSee").style.display="block";
+                var els = document.querySelectorAll(".tabs");
+                var instanceTabs = M.Tabs.init(els, {});
+                }
+                else document.getElementById("result").innerHTML = "ID and name do not match";
+            }
+            else document.getElementById("result").innerHTML = "Name not found. Names are taken from the EG list. If you are in group 2, your name is not in this list.";
+          }
+          else{
+              document.getElementById("result").innerHTML = "ID invalid.";
+          }
+      }
+      function findBranch(){
+          var patt = new RegExp("[AB][A(0-8)]");
+          var b = patt.exec(id);
+          console.log(b);
+          switch(b[0]){
+              case("A1"):branch="B.E. Chemical Engineering"; break;
+case("A2"):branch="B.E. CivilEngineering"; break;
+case("A3"):branch="B.E. Electrical and Electronics Engineering"; break;
+case("A4"):branch="B.E. Mechanical Engineering"; break;
+case("A5"):branch="B.Pharm"; break;
+case("A7"):branch="B.E. Computer Science Engineering"; break;
+case("A8"):branch="B.E. Electronics and Instrumentation Engineering"; break;
+case("AA"):branch="B.E. Electronics and Communication Engineering"; break;
+case("B1"):branch="M.Sc. Biological Sciences"; break;
+case("B2"):branch="M.Sc. Chemistry"; break;
+case("B3"):branch="M.Sc. Economics"; break;
+case("B4"):branch="M.Sc. Mathematics"; break;
+case("B5"):branch="M.Sc. Physics"; break;
+          }
+      }
+      function displayUserInfo(){
+          var theDiv = document.getElementById("result");
+          let p = "<div style=\"font-family:'Noto Serif SC',serif; color:black; text-align:center;\" ><h3><i class=\"far fa-user teal-text\"></i> " + name + "</h3><h4><i class=\"far fa-id-card teal-text\"></i> "+id+"</h4><h4><i class=\"fas fa-graduation-cap teal-text\"></i> "+ branch+"</h4></div><div class=\"scoreDiv\" id='scoresDiv'></div>";
+        //   let p = "<div class=\"row\"><div class=\"col s12\"><div class=\"card teal\"><div class=\"card-content white-text\"><span class='card-title'>";
+        //   p += "<i class=\"far fa-user white-text\"></i> Name: "+name+ "</span><br><span class='card-title'><i class=\"far fa-id-card white-text\"></i> ID: "+ id+"</span><br><span class='card-title'><i class=\"fas fa-graduation-cap\"></i>Branch: "+branch+"</span></div></div></div></div>";
+          theDiv.innerHTML = p;
+      }
+      function findTotalScore(){
+          let numerator = 0, denominator = 0;
+          subjectInstances.forEach(function(item){
+                    numerator += item.grade * item.units;
+                    denominator += item.units;
+                });
+          let gpa = numerator/denominator;
+          document.getElementById("totalResult").scrollIntoView();
+          document.getElementById("totalResult").innerHTML = "<h2>GPA: <span class='teal-text'>"+gpa.toFixed(4)+"</span></h2>";
+      }
+    //   var egScore, csScore, name, id;
+    //   function findScore() {
+    //       if(document.getElementById("id").checkValidity()){
+    //       document.getElementById("result").scrollIntoView();
+    //     name = document.getElementById("name").value;
+    //     var i = userArray.indexOf(name);
+    //     if(i>0){
+    //          id = userArray[i+593];
+    //          if(id == document.getElementById("id").value){
+    //         console.log(id);
+    //         var i = EGarray.indexOf(id.trim());
+    //         egScore = EGarray[i+593];
+    //     //console.log(EGarray[i + 593]);
+    //       i = cSarray.indexOf(id);
+    //       csScore = cSarray[i+529];
+    //       //console.log(cSarray[i+ 529]);
+    //       findPercent();
+    //          }
+    //          else{
+    //              document.getElementById("result").innerHTML = "ID does not match with name.";
+    //          }
+    //     }
+    //     else{
+    //         document.getElementById("result").innerHTML = "Name not found.";
+    //     }
+    //   }
+    //   }
+    //   var CSdisplay, EGdisplay;
+    //   function findPercent(){
+    //       var csBelow = 0, egBelow = 0, temp = 0;
+    //       for (var i=529; i<1057; i++){
+    //           if(cSarray[i] < csScore){
+    //               csBelow++;
+    //           }
+    //           else if(cSarray[i] == csScore){
+    //               temp++;
+    //           }
+    //       }
+    //        CSdisplay = csBelow;
+    //       csBelow += Math.floor(temp/2);
+    //       ///////////////
+    //       temp = 0;
+    //       for (var i=593; i<1185; i++){
+    //           if(EGarray[i] < egScore){
+    //               egBelow++;
+    //           }
+    //           else if(EGarray[i] == egScore){
+    //               temp++;
+    //           }
+    //       }
+    //        EGdisplay = egBelow;
+    //       egBelow += Math.floor(temp/2);
+    //       eg = egBelow / 592 *100;
+    //       cs = csBelow / 528 *100;
+    //       console.log(egBelow);
+    //       console.log(csBelow);
+    //       displayResult(eg, cs);
+    //   }
+    //   function displayResult(eg, cs){
+    //       var theDiv = document.getElementById("result");
+    //       var put = "<h3>Score:</h3><div style='font-size:1.6em;'><i class=\"far fa-user blue-text\"></i> Name: "+name+ "<br><i class=\"far fa-id-card blue-text\"></i> ID: "+ id+"</div>"+getContent("CS", csScore, cs, CSdisplay);
+    //       put += getContent("EG", egScore, eg, EGdisplay);
+    //       theDiv.innerHTML = put;
+
+    //   }
+    //   function getContent(subject, score,percent, below){
+    //       return "<h4>"+subject+"</h4><div class='flow-text'>Your score is " + score + ".<br>You have a percentile of <span class='green-text'>" + percent.toFixed(2) +"%</span> with <span class='red-text'>"+ below +"</span> students below you.</div>";
+    //   }
+    </script>
+  </body>
+</html>

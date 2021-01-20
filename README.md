@@ -57,3 +57,11 @@ A clean cubing timer with auto generated scrambles. Customisation settings yet t
 
 This reads data for each student and gives your score, percentile and GPA. Requires data of all students. Find your score [here.](http://jeenius.ga/things/percentile.html)
 
+## Online Compiler
+
+Just tried my hand at the Jdoodle API which allows 100 calls per day. Compile your program [here.](http://jeenius.ga/compile.html)
+
+## Chemistry tricks
+
+Chemistry tricks that I made and compiled. [Check them out!](http://jeenius.ga/things/checktricks.php)
+

@@ -19,7 +19,7 @@ at the end of the url. Ex. [jeenius.ga/daily/physicsq.php?q=10](http://jeenius.g
 
 ## Blank Tests or Custom Tests
 
-If you are solving a question paper and want to mark MCQ answers and check instantaneously, these pages will do that for you. The first one is just a modification of the Tests page where it records time but can only take single choice answers. The other one is a single page which checks any answer against your answer key provided. You can try it [here](http://jeenius.ga/tests/)
+If you are solving a question paper and want to mark MCQ answers and check instantaneously, these pages will do that for you. The first one is just a modification of the Tests page where it records time but can only take single choice answers. The other one is a single page which checks any answer against your answer key provided. You can try it [here](http://jeenius.ga/blanktests/)
 
 ## Timetable
 

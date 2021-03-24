@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Linear least-square fit</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css"
+    />
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script
+      id="MathJax-script"
+      async
+      src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"
+    ></script>
+  </head>
+  <style>
+    body {
+      display: flex;
+      min-height: 100vh;
+      flex-direction: column;
+    }
+
+    main {
+      flex: 1 0 auto;
+    }
+    h2 {
+      margin-left: 30px;
+    }
+    table {
+      display: none;
+    }
+    td {
+      min-width: 120px;
+    }
+  </style>
+  <body>
+    <main>
+      <h2>Linear least-square fit line</h2>
+      <div class="container">
+        <div class="col center-align">Press <i>Enter</i> after each value</div>
+        <div class="form">
+          <div class="row">
+            <div class="col s6 m6">
+              <div class="input-field col s12">
+                <textarea
+                  id="x-values"
+                  class="materialize-textarea validate"
+                  onkeyup="validate(this, 'x-count')"
+                ></textarea>
+                <label for="x-values">X values line by line</label>
+              </div>
+            </div>
+            <div class="col s6 m6">
+              <div class="input-field col s12">
+                <textarea
+                  id="y-values"
+                  class="materialize-textarea validate"
+                  onkeyup="validate(this, 'y-count')"
+                ></textarea>
+                <label for="y-values">Y values line by line</label>
+              </div>
+            </div>
+          </div>
+          <div class="row flow-text">
+            <div class="col">X count: <span id="x-count">0</span></div>
+            <div class="col offset-s4">
+              Y count: <span id="y-count">0</span>
+            </div>
+          </div>
+          <div class="row center-align">
+            <button class="btn-large waves-effect waves-purple">
+              Calculate
+            </button>
+          </div>
+        </div>
+        <table id="table" class="uk-table">
+          <tr>
+            <th>X values</th>
+            <th>Y values</th>
+            <th>\(X_i - X\)</th>
+            <th>\(Y_i(X_i- \overline{X})\)</th>
+            <th>\(X_i - X^2\)</th>
+          </tr>
+        </table>
+      </div>
+
+      <div id="results" class="container flow-text"></div>
+    </main>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <script>
+      function validate(textarea, count) {
+        var str = textarea.value;
+        var notNumbers = /[^\d.\n]/g;
+        var myArray = notNumbers.exec(str);
+        if (str != "" && (myArray == null || myArray.length == 0)) {
+          textarea.style.color = "initial";
+          textarea.setCustomValidity("");
+        } else if (str != "") {
+          textarea.setCustomValidity("Only numbers are allowed");
+          textarea.style.color = "red";
+        }
+
+        document.getElementById(count).innerHTML = str.split(
+          /\r\n|\r|\n/
+        ).length;
+      }
+      var x_avg, y_avg;
+      var x_array, y_array;
+      var slope, intercept;
+      var x_xi = [],
+        xi_square = [],
+        xi_avg_yi = [];
+
+      document.querySelector("button").onclick = getValues;
+
+      function getValues() {
+        if (
+          document.getElementById("x-values").checkValidity() &&
+          document.getElementById("y-values").checkValidity()
+        ) {
+          var str1 = document.getElementById("x-values").value;
+          x_array = str1.replace(/\n/g, "!").split("!");
+          var str2 = document.getElementById("y-values").value;
+          y_array = str2.replace(/\n/g, "!").split("!");
+          if (x_array.length == y_array.length && str1 != "" && str2 != "") {
+            if (x_array.length >= 3) findAverage();
+            else M.toast({ html: "Atleast 3 points are required!" });
+          } else if (str1 != "" && str2 != "")
+            M.toast({ html: "Number of values don't match!" });
+          else M.toast({ html: "Empty data cannot be used!" });
+        } else {
+          M.toast({ html: "Only numbers are allowed!", classes: "red" });
+        }
+      }
+
+      function findAverage() {
+        var sum = 0;
+        x_array.forEach((val) => {
+          sum += Number(val);
+        });
+        x_avg = sum / x_array.length;
+
+        sum = 0;
+        y_array.forEach(function (val) {
+          sum += Number(val);
+        });
+        y_avg = sum / y_array.length;
+
+        getX_Xi();
+      }
+
+      function getX_Xi() {
+        x_array.forEach(function (val, i) {
+          x_xi[i] = Number(val) - Number(x_avg);
+          xi_avg_yi[i] = x_xi[i] * Number(y_array[i]);
+        });
+
+        x_xi.forEach((val, i) => {
+          xi_square[i] = val * val;
+        });
+        findSlope();
+      }
+
+      function findSlope() {
+        var numerator = 0;
+        xi_avg_yi.forEach((val) => {
+          numerator += val;
+        });
+
+        var denominator = 0;
+        xi_square.forEach((val) => {
+          denominator += val;
+        });
+        slope = numerator / denominator;
+
+        findIntercept();
+      }
+
+      function findIntercept() {
+        intercept = y_avg - slope * x_avg;
+
+        displayTable();
+      }
+
+      function displayTable() {
+        document.getElementById("table").style.display = "block";
+        var table = document.getElementById("table");
+        var rowCount = 1;
+
+        for (var i = 1; i <= x_array.length; i++) {
+          var row = table.insertRow(i);
+          ///X
+          var p1 = row.insertCell(0);
+          p1.innerHTML = x_array[i - 1];
+          ///Y
+          p1 = row.insertCell(1);
+          p1.innerHTML = y_array[i - 1];
+          ///Xi - X
+          p1 = row.insertCell(2);
+          p1.innerHTML = x_xi[i - 1];
+          ///Xi - X * Y
+          p1 = row.insertCell(3);
+          p1.innerHTML = xi_avg_yi[i - 1];
+          //Xi - X square
+          p1 = row.insertCell(4);
+          p1.innerHTML = xi_square[i - 1];
+        }
+        result();
+      }
+
+      function result() {
+        var p = document.getElementById("results");
+        var description = "\\(\\overline\{X}\ = " + x_avg + " \\)";
+        var text =
+          description +
+          "<h4>The equation is:</h4> <span class='green-text'>\\[ y = " +
+          slope.toFixed(3) +
+          "x + " +
+          intercept.toFixed(3) +
+          "\\]</span>";
+        p.innerHTML = text;
+        MathJax.typeset();
+      }
+      function addColumn() {
+        [...document.querySelectorAll("#table tr")].forEach((row, i) => {
+          // const input = document.createElement("input");
+          // input.setAttribute("type", "text");
+          const num = document.createElement("div");
+          num.innerHTML = i1++;
+          const cell = document.createElement(i ? "td" : "th");
+          cell.appendChild(num);
+          row.appendChild(cell);
+        });
+      }
+    </script>
+    <footer class="page-footer blue lighten-2">
+      <div class="container">
+        <div class="row">
+          <div class="col l6 s12">
+            <h5 class="white-text">Jeenius</h5>
+            <p class="grey-text text-lighten-4">
+              Jeenius is just a website entirely designed and developed by
+              Akshat Oke. There is no one else involved with this website,
+              except for a few APIs. Check out the other pages too!
+            </p>
+          </div>
+          <div class="col l4 offset-l2 s12">
+            <h5 class="white-text">Links</h5>
+            <ul>
+              <li>
+                <a class="grey-text text-lighten-3" href="http://jeenius.ga/"
+                  >Home</a
+                >
+              </li>
+              <li>
+                <a
+                  class="grey-text text-lighten-3"
+                  href="http://jeenius.ga/things/chemtricks.php"
+                  >Learn</a
+                >
+              </li>
+              <li>
+                <a
+                  class="grey-text text-lighten-3"
+                  href="http://jeenius.ga/daily/physicsq.php"
+                  >Questions</a
+                >
+              </li>
+              <li>
+                <a
+                  class="grey-text text-lighten-3"
+                  href="http://jeenius.ga/tests/login.php"
+                  >Tests</a
+                >
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="footer-copyright">
+        <div class="container">
+          No copyrights. Just fun.<br />Made in Pune.
+          <a
+            class="grey-text text-lighten-4 right"
+            href="http://jeenius.ga/index.php/contactme.php"
+            >Contact Me</a
+          >
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

@@ -2,74 +2,94 @@
 <html>
   <head>
     <title>Jeenius - TimeTable</title>
-    <meta name="theme-color" content="#000000">
-    <meta http-equiv="content-type" content="text/html; charset=windows-1252">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <script src="https://kit.fontawesome.com/f028f07279.js" crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
-    
-      <!-- UIkit CSS -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/uikit@3.5.9/dist/css/uikit.min.css" />
-<!-- UIkit JS -->
-<script src="https://cdn.jsdelivr.net/npm/uikit@3.5.9/dist/js/uikit.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/uikit@3.5.9/dist/js/uikit-icons.min.js"></script>
-<style>
-    textarea{
-        width:80%;
-        min-height:200px;
-    }
-    #output{
-        font-size:22px;
-    }
-</style>
+    <meta name="theme-color" content="#000000" />
+    <meta http-equiv="content-type" content="text/html; charset=windows-1252" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script
+      src="https://kit.fontawesome.com/f028f07279.js"
+      crossorigin="anonymous"
+    ></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css"
+    />
+
+    <!-- UIkit CSS -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/uikit@3.5.9/dist/css/uikit.min.css"
+    />
+    <!-- UIkit JS -->
+    <script src="https://cdn.jsdelivr.net/npm/uikit@3.5.9/dist/js/uikit.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/uikit@3.5.9/dist/js/uikit-icons.min.js"></script>
+    <style>
+      textarea {
+        width: 80%;
+        min-height: 200px;
+      }
+      #output {
+        font-size: 22px;
+      }
+    </style>
   </head>
   <body>
-      
-      <h1 style="margin-left:15px;">A small compiler</h1>
-      <div class="container">
-          <p>Yo! I found out about jdoodle today. They have this API for compiling and running programs. I am not listing all available languages in the select field because there are too many!</p>
+    <h1 style="margin-left: 15px">A small compiler</h1>
+    <div class="container">
+      <p>
+        Yo! I found out about jdoodle today. They have this API for compiling
+        and running programs. I am not listing all available languages in the
+        select field because there are too many!
+      </p>
 
-          <div class="uk-alert-warning" uk-alert>
+      <div class="uk-alert-warning" uk-alert>
         <a class="uk-alert-close" uk-close></a>
-            <p> JavaScript must be enabled in your browser. I use Ajax calls, not a form submit.</p>
+        <p>
+          JavaScript must be enabled in your browser. I use Ajax calls, not a
+          form submit.
+        </p>
       </div>
       <div class="uk-alert-danger" uk-alert>
-       
-            <p> This is not meant to be used as a compiler/interpretor regurlarly but use it just to try it out. I am using jdoodle's API which allows 200 execution calls per day. So I am limiting you to only <strong>3 calls per day</strong> - use them wisely.</p>
+        <p>
+          This is not meant to be used as a compiler/interpretor regurlarly but
+          use it just to try it out. I am using jdoodle's API which allows 200
+          execution calls per day. So I am limiting you to only
+          <strong>3 calls per day</strong> - use them wisely.
+        </p>
       </div>
-      
-     <div class="uk-margin">
-        <label class="uk-form-label" for="lang">Select your Programming Language</label>
-        <div class="uk-form-controls">
-            <select class="uk-select" id="lang">
-                <option>java</option>
-<option>cpp</option>
-<option>c</option>
-<option>c99</option>
-<option>cpp14</option>
-<option selected>php</option>
-<option>perl</option>
-<option>python2</option>
-<option>python3</option>
-<option>ruby</option>
-<option>go</option>
-<option>scala</option>
-<option>bash</option>
-<option>sql</option>
-<option>pascal</option>
-<option>csharp</option>
-<option>swift</option>
-<option>rust</option>
-<option>r</option>
-<option>nodejs</option>
-<option>kotlin</option>
-            </select>
-        </div>
-    </div>
 
-  
-        <h3>Your code</h3>
-       <textarea class="uk-textarea" id="code">
+      <div class="uk-margin">
+        <label class="uk-form-label" for="lang"
+          >Select your Programming Language</label
+        >
+        <div class="uk-form-controls">
+          <select class="uk-select" id="lang">
+            <option>java</option>
+            <option>cpp</option>
+            <option>c</option>
+            <option>c99</option>
+            <option>cpp14</option>
+            <option selected>php</option>
+            <option>perl</option>
+            <option>python2</option>
+            <option>python3</option>
+            <option>ruby</option>
+            <option>go</option>
+            <option>scala</option>
+            <option>bash</option>
+            <option>sql</option>
+            <option>pascal</option>
+            <option>csharp</option>
+            <option>swift</option>
+            <option>rust</option>
+            <option>r</option>
+            <option>nodejs</option>
+            <option>kotlin</option>
+          </select>
+        </div>
+      </div>
+
+      <h3>Your code</h3>
+      <textarea class="uk-textarea" id="code">
            <?php 
            //My first PHP program!
            echo "Hello World,\n";
@@ -78,39 +98,58 @@
            $c=$a*$b;
            echo $a."*".$b."=".$c;
            ?>
-           </textarea>
-       <h3>Your inputs</h3>
-       <textarea class="uk-textarea" id="stdin" style="min-height:50px;" placeholder="If any. I don't know how to give inputs though"></textarea>
-       <hr class="uk-divider-icon">
-       
-       <h4>Output</h4>
-       <div id="output"></div>
-       <button class="btn waves-effect blue" onclick="compile();" id="button">Run + Compile</button>
-      </div>
-      <br>
-      <br>
+           </textarea
+      >
+      <h3>Your inputs</h3>
+      <textarea
+        class="uk-textarea"
+        id="stdin"
+        style="min-height: 50px"
+        placeholder="If any. I don't know how to give inputs though"
+      ></textarea>
+      <hr class="uk-divider-icon" />
 
-        <script>
-            function compile(){
-                
-                localStorage.setItem("code", "1");
-             var xhttp = new XMLHttpRequest();
-             document.getElementById("button").disabled="true";
-                       var thecode = encodeURIComponent(document.getElementById("code").value);
-                      var lang = document.getElementById("lang").value;
-                       xhttp.open("POST", "compileit.php", true);
-                       //Send the proper header information along with the request
-        xhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-        var sendthis1="code="+thecode+"&lang="+lang+"&inputs="+encodeURIComponent(document.getElementById("stdin").value);
-                       xhttp.send(sendthis1);
-                       xhttp.onreadystatechange = function(){
-                           if(this.readyState==4 && this.status == 200){
-                                var mwahaha = this.responseText;
-                                document.getElementById("output").innerHTML=mwahaha.replace("\n","<br>");
-                                document.getElementById("button").disabled="false";
-                           }
-                       }
-            }
-        </script>
+      <h4>Output</h4>
+      <div id="output"></div>
+      <button class="btn waves-effect blue" onclick="compile();" id="button">
+        Run + Compile
+      </button>
+    </div>
+    <br />
+    <br />
+
+    <script>
+      function compile() {
+        localStorage.setItem("code", "1");
+        var xhttp = new XMLHttpRequest();
+        document.getElementById("button").disabled = "true";
+        var thecode = encodeURIComponent(document.getElementById("code").value);
+        var lang = document.getElementById("lang").value;
+        xhttp.open("POST", "compileit.php", true);
+        //Send the proper header information along with the request
+        xhttp.setRequestHeader(
+          "Content-type",
+          "application/x-www-form-urlencoded"
+        );
+        var sendthis1 =
+          "code=" +
+          thecode +
+          "&lang=" +
+          lang +
+          "&inputs=" +
+          encodeURIComponent(document.getElementById("stdin").value);
+        xhttp.send(sendthis1);
+        xhttp.onreadystatechange = function () {
+          if (this.readyState == 4 && this.status == 200) {
+            var mwahaha = this.responseText;
+            document.getElementById("output").innerHTML = mwahaha.replace(
+              "\n",
+              "<br>"
+            );
+            document.getElementById("button").disabled = "false";
+          }
+        };
+      }
+    </script>
   </body>
 </html>

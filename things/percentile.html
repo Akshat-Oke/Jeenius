@@ -1,7 +1,13 @@
+<?php
+    $newfile = fopen("new.txt", "a");
+    fwrite($newfile, "N\n");
+    fclose($newfile);
+?>
 <!DOCTYPE html>
 <html>
   <head>
-<title>Percentile - Jeenius</title>    <meta name="theme-color" content="#000000" />
+    <title>Percentile - Jeenius</title>
+    <meta name="theme-color" content="#000000" />
     <meta http-equiv="content-type" content="text/html; charset=windows-1252" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <script
@@ -13,6 +19,7 @@
       href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css"
     />
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.2/jspdf.min.js"></script>
     <link
       rel="stylesheet"
       href="https://fonts.googleapis.com/css?family=Ubuntu|Noto%20Serif%20SC|Vollkorn%20SC"
@@ -43,6 +50,29 @@
         text-align: center;
         height: 6.5vh;
         background: rgba(255, 255, 255, 0.7);
+      }
+      div.card-content,
+      .card-tabs {
+        background-color: white;
+      }
+      div.card {
+        background-color: #e3f2fd !important;
+      }
+      .card-content {
+        position: relative;
+      }
+      .grade-label {
+        position: absolute;
+        top: 20px;
+        border-radius: 7px;
+        font-size: large;
+        border: 2px solid;
+        padding: 3px 12px;
+        min-width: 48px;
+        text-align: center;
+        right: 14px;
+        background-color: #009688;
+        color: white;
       }
       .fixed a,
       a:visited {
@@ -82,32 +112,44 @@
       li:hover {
         cursor: pointer;
       }
-      i{margin-right:2px;}
-      .scoreDiv{
-    display: flex;
-    flex-direction: row;
-    justify-content: space-around;
-    flex-wrap: wrap;
-    width: 100vw;
+      i {
+        margin-right: 2px;
       }
-      .card{
-          width:312px;
+      .scoreDiv {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-around;
+        flex-wrap: wrap;
+        margin: 0 auto;
+        width: 90vw;
+        max-width: 1200px;
       }
-      #wantToSee{display:none;}
+      .card {
+        margin-right: 12px;
+        margin-left: 12px;
+        width: 312px;
+      }
+      #wantToSee {
+        display: none;
+      }
     </style>
   </head>
   <body>
     <header>
       <div class="fixed">
-        <a href="http://jeenius.ga" target="_blank" 
-          >Jeenius</a
-        >
+        <a href="http://jeenius.ga" target="_blank">Jeenius</a>
       </div>
       <div style="height: 6vh"></div>
     </header>
     <main>
       <div class="container">
-        <h2 style="display:inline-block; clear:both;"><i class="fas fa-file-alt blue-text"></i> Find your percentile<span class="new badge blue" data-badge-caption="2.0">v</span></h2>
+        <h2 style="display: inline-block; clear: both">
+          <i class="fas fa-file-alt blue-text"></i> Find your percentile<span
+            class="new badge blue"
+            data-badge-caption="3.0"
+            >v</span
+          >
+        </h2>
 
         <div
           style="
@@ -125,8 +167,15 @@
             <div class="row">
               <div class="input-field col s12">
                 <i class="fas fa-user-alt prefix purple-text"></i>
-                <input type="text" id="name" class="autocomplete" autocomplete="off"/>
-                <label for="name">Your name as it appears in BITS, EXACTLY</label>
+                <input
+                  type="text"
+                  id="name"
+                  class="autocomplete"
+                  autocomplete="off"
+                />
+                <label for="name"
+                  >Your name as it appears in BITS, EXACTLY</label
+                >
               </div>
             </div>
           </div>
@@ -137,7 +186,13 @@
             <div class="row">
               <div class="input-field col s12">
                 <i class="fas fa-user-alt prefix purple-text"></i>
-                <input type="text" id="id" class="validate" autocomplete="off" pattern="2020[AB][A-Z0-9]PS([0-9]{4})H"/>
+                <input
+                  type="text"
+                  id="id"
+                  class="validate"
+                  autocomplete="off"
+                  pattern="2020[AB][A-Z0-9]PS([0-9]{4})H *"
+                />
                 <label for="id">Your BITS ID number</label>
                 <span
                   class="helper-text"
@@ -172,19 +227,56 @@
           </div>
         </div> -->
         <div class="row center-align">
-          <button class="btn-large waves-effect waves-purple" onclick="findScore()">Let's go, find it!</button>
-          <button class="btn-large red waves-effect waves-light" onclick="alert('Meh. You should study.');">No, I'm scared!</button>
+          <button
+            class="btn-large waves-effect waves-purple"
+            onclick="findScore()"
+          >
+            Let's go, find it!
+          </button>
+          <button
+            class="btn-large red waves-effect waves-light"
+            onclick="alert('Meh. You should study.');"
+          >
+            No, I'm scared!
+          </button>
+        </div>
+        <div class="row center-align">
+          By clicking on <span class="teal-text">Let's go, find it!</span>, you
+          agree to the
+          <a href="#termsModal" class="modal-trigger red-text">
+            Terms and Conditions.</a
+          >
         </div>
       </div>
-        <div id="result">
-            
-        </div>
-        <div class="row center-align" id="wantToSee">
-            <h4>Want to see your GPA for these?</h4>
-          <button class="btn-large waves-effect waves-purple" onclick="findTotalScore()">Yeah! I'm excited</button>
-          <button class="btn-large red waves-effect waves-light" onclick="alert('Take a dose of BITS Intelligenase.');">Pass, I'll get PTSD</button>
-        </div><br>
-        <div id="totalResult" style="text-align:center;"></div>
+      <div id="result"></div>
+      <!-- <div class="row center-align" style="font-size: x-large">
+        <i class="fas fa-info-circle red-text"></i> M2 scores not available yet
+      </div> -->
+      <div class="row center-align" id="wantToSee">
+        <h4>Want to see your GPA for these?</h4>
+        <button
+          class="btn-large waves-effect waves-purple"
+          onclick="findTotalScore()"
+        >
+          Yeah! I'm excited
+        </button>
+        <!-- <button class="btn-large red waves-effect waves-light" onclick="alert('Take a dose of BITS Intelligenase.');">Pass, I'll get PTSD</button> -->
+        <button
+          class="btn-large red waves-effect waves-light"
+          onclick="alert('Unfortunately that option cannot be taken. Take a dose of BITS Intelligenase instead.');"
+        >
+          Nah, let me live in peace
+        </button>
+        <br />
+        <button
+          class="btn-large waves-effect waves-light black white-text"
+          onclick="getPDF()"
+        >
+          Download PDF
+        </button>
+      </div>
+      <br />
+      <div id="totalResult" style="text-align: center"></div>
     </main>
     <div style="height: 20px"></div>
     <footer class="page-footer blue lighten-2">
@@ -193,9 +285,9 @@
           <div class="col l6 s12">
             <h5 class="white-text">Jeenius</h5>
             <p class="grey-text text-lighten-4">
-              Jeenius is just a website entirely designed and developed by
-              Akshat Oke. There is no one else involved with this website,
-              except for a few APIs. Check out the other pages too!
+              Jeenius is just a simple website developed by Akshat Oke. There is
+              no one else involved with this website, except for a few APIs.
+              Check out the other pages too!
             </p>
           </div>
           <div class="col l4 offset-l2 s12">
@@ -244,7 +336,7 @@
     </footer>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
     <script>
-       /* var elems, instances;
+      /* var elems, instances;
         var userArray;
       document.addEventListener("DOMContentLoaded", function () {
           getdata();
@@ -272,289 +364,848 @@
         xhttp.send();
         createAutocomplete();
       }*/
-      var branch, userArray;
-      function createAutocomplete(){
-        xhttp = new XMLHttpRequest();
-        xhttp.onreadystatechange = function () {
-          if (this.readyState == 4 && this.status == 200) {
-            userArray = this.responseText.split(/\r?\n/g);
-            var names={};
-            for(var i=0; i<592;i++){
-                names[userArray[i]]=null;
-            }
-            instances[0].updateData(names);
-          }
-        };
-        xhttp.open("GET", "scores/users.txt?math="+Math.random(), true);
-        xhttp.send();
-        
+      if (
+        localStorage.username != undefined &&
+        localStorage.username != null &&
+        localStorage.username != false
+      ) {
+        document.getElementById("name").value = localStorage.username;
       }
-/////////////////////////////////////////
-
-        var tabNumber = 0;//to have unique id's for each tab
-      function Subject(obj){
-          //subject is course name.
-          //subNum is which exam results to take
-          //units are units for the course
-          //totalEntries is the total number of students in that course exam list
-          this.subject = obj.subject;
-          this.units = obj.units;
-          this.totalEntries = obj.totalEntries;
-          this.subNum = obj.subNum;
-          this.score = 0;
-          this.percentile = 0;
-          var self = this;
-          this.getData = () =>{
-              let temp;
-            var  xhttp = new XMLHttpRequest();
+      var branch, userArray, location;
+      function createAutocomplete() {
+        xhttp = new XMLHttpRequest();
+        if (
+          localStorage.getItem("users_txt") != undefined &&
+          localStorage.getItem("users_txt") != null &&
+          localStorage.getItem("users_txt") != false
+        ) {
+          userArray = localStorage.getItem("users_txt").split(/\r?\n/g);
+          var names = {};
+          for (var i = 0; i < 592; i++) {
+            names[userArray[i]] = null;
+          }
+          if (!instances) {
+            var elems = document.querySelectorAll(".autocomplete");
+            instances = M.Autocomplete.init(elems, {});
+          }
+          instances[0].updateData(names);
+          return;
+        } else {
           xhttp.onreadystatechange = function () {
-          if (xhttp.readyState == 4 && xhttp.status == 200) {
-            temp = xhttp.responseText.split(/\r?\n/g);
-            //this.arr = temp;
-            self.arr = temp;
+            if (this.readyState == 4 && this.status == 200) {
+              localStorage.setItem("users_txt", this.responseText);
+              userArray = this.responseText.split(/\r?\n/g);
+              var names = {};
+              for (var i = 0; i < 592; i++) {
+                names[userArray[i]] = null;
+              }
+              instances[0].updateData(names);
             }
           };
-        xhttp.open("GET", "scores/"+self.subject+"_"+self.subNum+".txt?math="+Math.random(), false);
-        xhttp.send();
+          xhttp.open("GET", "scores/users.txt", true);
+          xhttp.send();
+        }
+        //     //http://www.geoplugin.net/json.gp#
+        //      xhttp = new XMLHttpRequest();
+        //     xhttp.onreadystatechange = function () {
+        //       if (this.readyState == 4 && this.status == 200) {
+        //         var data = JSON.parse(this.responseText);
+        //         location = data.city + ", " + data.region;
+        //         console.log(location);
+        //       }
+        //     };
+        //     xhttp.open("GET", "https://api.ipify.org/?format=json", true);
+        //    // xhttp.open("GET", "https://ipinfo.io/json", true);
+        //     //xhttp.send();
+      }
+      /////////////////////////////////////////
+
+      var tabNumber = 0; //to have unique id's for each tab
+      var o = "";
+      function Subject(obj) {
+        //subNum is which exam results to take
+        //units are units for the course
+        //totalEntries is the total number of students in that course exam list
+        /** subject is course name.*/
+        this.subject = obj.subject;
+        this.units = obj.units;
+        //this.totalEntries = obj.totalEntries;
+        this.subNum = obj.subNum;
+        this.grade_partitions = obj.grade_partitions;
+        this.clrThreshold = obj.clrThreshold ?? 1;
+        this.totalCLR = 0;
+        this.score = 0;
+        this.total = 0;
+        this.percentile = 0;
+        var self = this;
+
+        this.getData = () => {
+          let temp;
+          var xhttp = new XMLHttpRequest();
+          if (
+            localStorage.getItem(self.subject) != undefined &&
+            localStorage.getItem(self.subject) != null &&
+            localStorage.getItem(self.subject) != false
+          ) {
+            self.arr = localStorage.getItem(self.subject).split(/\r?\n/g);
+            self.totalEntries = (self.arr.length - 1) / 2;
+            return;
+          } else {
+            xhttp.onreadystatechange = function () {
+              if (xhttp.readyState == 4 && xhttp.status == 200) {
+                localStorage.setItem(self.subject, xhttp.responseText);
+                temp = xhttp.responseText.split(/\r?\n/g);
+                //this.arr = temp;
+                self.arr = temp;
+                self.totalEntries = (temp.length - 1) / 2;
+              }
+            };
+
+            xhttp.open(
+              "GET",
+              self.subNum == undefined || self.subNum == null
+                ? "scores/" + self.subject + ".txt"
+                : "scores/" + self.subject + "_" + self.subNum + ".txt",
+              true
+            );
+            xhttp.send();
           }
-          this.findAndReturnScore = ()=>{
-              var i = this.arr.indexOf(id.trim());
-              this.score = this.arr[i+this.totalEntries +1];
-              var below= 0, t = 0;
-              self.total =0;
-              self.min = self.max= 0;
-              console.log(this.arr.length);
-          for (var j = this.totalEntries + 1 ; j< this.arr.length ; j++){
+        };
+        this.findAndReturnScore = () => {
+          var i = this.arr.indexOf(id.trim());
+          this.score = this.arr[i + this.totalEntries + 1];
+          if (this.score <= this.clrThreshold) {
+            this.grade = 0;
+            this.units = 0;
+          } else {
+            var below = 0,
+              t = 0;
+            self.total = 0;
+            self.min = self.max = 0;
+            console.log(this.arr.length);
+            for (var j = this.totalEntries + 1; j < this.arr.length; j++) {
               this.arr[j] = Number(this.arr[j]);
               this.total += this.arr[j];
-              if(this.max<= this.arr[j]){
-                  this.max = this.arr[j]; 
+              if (this.max <= this.arr[j]) {
+                this.max = this.arr[j];
               }
-              if(this.min >= this.arr[j]){
-                  this.min = this.arr[j]; 
+              if (this.min >= this.arr[j]) {
+                this.min = this.arr[j];
               }
-              if(this.arr[j] < self.score){
-                  below++;
+              if (this.arr[j] < self.score) {
+                below++;
+              } else if (Number(this.arr[j]) == self.score) {
+                t++;
               }
-              else if(Number(this.arr[j]) == self.score){
-                  t++;
-              }
-          }
-          this.below = below;
-          below += Math.floor(t/2);
-          this.percentile = below / this.totalEntries *100;
-          this.grade = Math.round(this.percentile/10);
-          return this.display()
-          }
-          
-// <div class="card">
-//     <div class="card-content">
-//       <p>I am a very simple card. I am good at containing small bits of information. I am convenient because I require little markup to use effectively.</p>
-//     </div>
-//     <div class="card-tabs">
-//       <ul class="tabs tabs-fixed-width">
-//         <li class="tab"><a href="#test4">Test 1</a></li>
-//         <li class="tab"><a class="active" href="#test5">Test 2</a></li>
-//         <li class="tab"><a href="#test6">Test 3</a></li>
-//       </ul>
-//     </div>
-//     <div class="card-content grey lighten-4">
-//       <div id="test4">Test 1</div>
-//       <div id="test5">Test 2</div>
-//       <div id="test6">Test 3</div>
-//     </div>
-//   </div>
 
-          this.display = () =>{
-              this.arr.sort(function(a, b){return a - b});
-              let info1 = "<p class='flow-text'>Score: <span class='blue-text'>"+this.score+"</span><br>Percentile: <span class='green-text'>"+this.percentile.toFixed(2)+"</span></p><p class='flow-text'>There are <span class='red-text'>" + this.below + "</span> students below you.</p>";
-              let info2 = "<p class='flow-text'>Average is " +(this.total/this.totalEntries).toFixed(3) +"<br>Maximum: " + this.max +"<br>Minimum: "+this.min +"<br> Marks at 50 percentile:" + this.arr[this.totalEntries+1+Math.floor( this.totalEntries * 0.5)]+"</p>";
-              let card = "<div class='card'> <div class='card-content'> <span class='card-title'>" + this.subject + "</span> <p class='flow-text'>Total students: " + this.totalEntries +"</p></div>";
-              card += "<div class ='card-tabs'><ul class='tabs tabs-fixed-width'>";
-              card += "<li class='tab'><a class=\"active\" href='#tab" + tabNumber++ + "'>MY</a></li><li class='tab'><a href='#tab"+ tabNumber++ +"'>STATS</a></li></ul>";
-              card += "</div> <div class='card-content blue lighten-5'> <div id='tab" + (tabNumber-2) + "'>"+info1 + "</div><div id='tab" + (tabNumber-1) + "'>"+info2+"</div></div></div>"; 
-            //   return "<h4>"+this.subject+"</h4><div class='flow-text'>Your score is " + this.score + ".<br>You have a percentile of <span class='green-text'>" + this.percentile.toFixed(2) +"%</span> with <span class='red-text'>"+ this.below +"</span> students below you.</div>";
-            return card;
+              if (this.arr[j] < self.clrThreshold) {
+                ++this.totalCLR;
+                this.total -= this.arr[j];
+              }
+            }
+            this.below = below;
+            below += t > 2 ? Math.floor(t / 2) : t;
+            this.percentile = (below / this.totalEntries) * 100;
+            // this.grade = Math.round(this.percentile / 10);
+            this.findGrade();
           }
-      }
-/////////////////////////////////////////
-//subject, subNum, units, totalEntries
-    var instances;
-    var subjectData = [
-        {
-            subject: "CS",
-            subNum: 1,
-            units:4,
-            totalEntries: 528
-        },
-        {
-            subject: "EG",
-            subNum: 1,
-            units: 2,
-            totalEntries: 592
-        },
-        {
-            subject: "MATH",
-            subNum: 1,
-            units: 3,
-            totalEntries: 1104
-        },
-        {
-            subject: "BIO",
-            subNum: 1,
-            units: 3,
-            totalEntries: 592
-        }
-    ];
-    var subjectInstances= [];
-        document.addEventListener("DOMContentLoaded", function () {
-          setdata();
-         var elems = document.querySelectorAll('.autocomplete');
-         instances = M.Autocomplete.init(elems, {});
-      });
-      function setdata(){
-          createAutocomplete();
-          subjectData.forEach(function(item){
-          subjectInstances.push(new Subject(item));
+          return this.display();
+        };
+
+        this.findGrade = () => {
+          let above = self.totalEntries - self.below;
+          let grade = 10;
+          for (let i = 0; i < this.grade_partitions.length; i++) {
+            if (above <= this.grade_partitions[i]) break;
+            else --grade;
+          }
+          this.grade = grade;
+        };
+
+        // <div class="card">
+        //     <div class="card-content">
+        //       <p>I am a very simple card. I am good at containing small bits of information. I am convenient because I require little markup to use effectively.</p>
+        //     </div>
+        //     <div class="card-tabs">
+        //       <ul class="tabs tabs-fixed-width">
+        //         <li class="tab"><a href="#test4">Test 1</a></li>
+        //         <li class="tab"><a class="active" href="#test5">Test 2</a></li>
+        //         <li class="tab"><a href="#test6">Test 3</a></li>
+        //       </ul>
+        //     </div>
+        //     <div class="card-content grey lighten-4">
+        //       <div id="test4">Test 1</div>
+        //       <div id="test5">Test 2</div>
+        //       <div id="test6">Test 3</div>
+        //     </div>
+        //   </div>
+        this.getGradeAnalysis = () => {
+          let makeGreen = 10 - self.grade;
+          let above = self.totalEntries - self.below;
+          if (this.grade == 0) above = "Lite";
+          let table = `
+          <table>
+            <thead>
+              <tr><th>Rank</th><th>Grade</th></tr>
+            </thead>
+            <tbody>`;
+          for (let i = 0; i < this.grade_partitions.length; i++) {
+            table += `<tr ${makeGreen == i ? 'class="teal lighten-2"' : ""}>
+              <td> &#60; ${this.grade_partitions[i]}`;
+            if (i != 0) table += ` and &#62; ${this.grade_partitions[i - 1]}`;
+            table += `</td><td>${getGradeFromInteger(10 - i)}</td></tr>`;
+          }
+          table +=
+            "</tbody></table><p>Your rank: <span class='teal-text'>" +
+            above +
+            "</span></p>";
+          return table;
+        };
+
+        this.display = () => {
+          let start = (this.arr.length - 1) / 2 + 1;
+          let deleteCount = (this.arr.length - 1) / 2;
+          this.arr.splice(0, deleteCount);
+          this.arr.sort(function (a, b) {
+            return a - b;
           });
-          subjectInstances.forEach(function(item){
-              item.getData();
-          })
+          let info1;
+          if (this.grade == 0) {
+            info1 = `<p class='flow-text'><span class='blue-text'>Relax and enjoy. You are in the CLR gang.</span></p><p><i class="fas fa-question-circle teal-text"></i>You have been classified as CLR in ${this.subject} because either your score is below the threshold level <span style="text-decoration:underline">${this.clrThreshold}</span> or your ID was not found in the list of marks.<br></p>
+              `;
+          } else {
+            info1 = `
+            <p class='flow-text'>
+              Score: <span class='blue-text'>${this.score}</span>
+              <br>
+              Percentile: <span class='green-text'>${this.percentile.toFixed(
+                2
+              )}</span>
+              <br>
+              Grade: <span class='red-text'>${this.grade}</span>
+            </p>
+            <p class='flow-text'>
+              There are <span class='red-text'>${
+                this.below
+              }</span> students below you.
+            </p>
+            `;
+            let info11 =
+              "<p class='flow-text'>Score: <span class='blue-text'>" +
+              this.score +
+              "</span><br>Percentile: <span class='green-text'>" +
+              this.percentile.toFixed(2) +
+              "</span></p><p class='flow-text'>There are <span class='red-text'>" +
+              this.below +
+              "</span> students below you.</p>";
+          }
+          let info2 = `
+            <p class='flow-text'>
+              Average is ${(
+                this.total /
+                (this.totalEntries - this.totalCLR)
+              ).toFixed(3)}
+              <br>
+              Maximum: ${this.max}
+              <br>
+              Minimum: ${this.min}
+              <br>
+              Marks at 50 percentile: ${
+                this.arr[
+                  // this.totalEntries + 1 + Math.floor(this.totalEntries * 0.5)
+                  Math.floor(this.totalEntries * 0.5)
+                ]
+              }
+              <br>Marks at 80 percentile: ${
+                this.arr[+Math.floor(this.totalEntries * 0.8)]
+              }
+              </p>
+            `;
+          // let info22 =
+          //   "<p class='flow-text'>Average is " +
+          //   (this.total / this.totalEntries).toFixed(3) +
+          //   "<br>Maximum: " +
+          //   this.max +
+          //   "<br>Minimum: " +
+          //   this.min +
+          //   "<br> Marks at 50 percentile: " +
+          //   this.arr[
+          //     this.totalEntries + 1 + Math.floor(this.totalEntries * 0.5)
+          //   ] +
+          //   "<br> Marks at 80 percentile: " +
+          //   this.arr[
+          //     this.totalEntries + 1 + Math.floor(this.totalEntries * 0.8)
+          //   ] +
+          //   "</p>";
+          let card = `
+          <div class='card'>
+            
+            <div class='card-content'>
+              <span class='grade-label'>${getGradeFromInteger(
+                this.grade
+              )}</span>
+              <span class='card-title'> ${this.subject.replace("_", " ")}</span>
+              <p class='flow-text'>
+                Total students: ${this.totalEntries}
+              </p>
+              <p class='flow-text'>Units: ${obj.units}</p>
+              <p>Total CLR taken: <span class="red-text"> ${
+                this.totalCLR
+              }</span></p>
+            </div>
+            <div class ='card-tabs'>
+              <ul class='tabs tabs-fixed-width'>
+                <li class='tab'><a class="active" href='#tab${tabNumber++}'>MY</a></li>
+                <li class='tab'><a href='#tab${tabNumber++}'>STATS</a></li>
+                <li class='tab'><a href='#tab${tabNumber++}'>Grades</a></li>
+              </ul>
+            </div>
+            <div class='card-content blue lighten-5'>
+              <div id='tab${tabNumber - 3}'>${info1}</div>
+              <div id='tab${tabNumber - 2}'>${info2}</div>
+              <div id='tab${tabNumber - 1}'>${this.getGradeAnalysis()}</div>
+            </div>
+          </div>
+          `;
+          // let card =
+          //   "<div class='card'> <div class='card-content'> <span class='card-title'>" +
+          //   this.subject.replace("_", " ") +
+          //   "</span> <p class='flow-text'>Total students: " +
+          //   this.totalEntries +
+          //   "</p>" +
+          //   "<p class='flow-text'>Units: " +
+          //   obj.units +
+          //   "</p></div>";
+          // card += "<div class ='card-tabs'><ul class='tabs tabs-fixed-width'>";
+          // card +=
+          //   "<li class='tab'><a class=\"active\" href='#tab" +
+          //   tabNumber++ +
+          //   "'>MY</a></li><li class='tab'><a href='#tab" +
+          //   tabNumber++ +
+          //   "'>STATS</a></li></ul>";
+          // card +=
+          //   "</div> <div class='card-content blue lighten-5'> <div id='tab" +
+          //   (tabNumber - 2) +
+          //   "'>" +
+          //   info1 +
+          //   "</div><div id='tab" +
+          //   (tabNumber - 1) +
+          //   "'>" +
+          //   info2 +
+          //   "</div></div></div>";
+
+          return card;
+        };
       }
-      var name, id;
-      function findScore(){
-          document.getElementById("wantToSee").style.display="none";
-          if(document.getElementById("id").checkValidity()){
+      function getGradeFromInteger(num) {
+        switch (num) {
+          case 10:
+            return "A";
+          case 9:
+            return "A-";
+          case 8:
+            return "B";
+          case 7:
+            return "B-";
+          case 6:
+            return "C";
+          case 5:
+            return "D";
+          case 4:
+            return "E";
+          case 0:
+            return "CLR";
+          default:
+            return "F";
+        }
+      }
+      /////////////////////////////////////////
+      //subject, subNum, units, totalEntries
+      var instances;
+      var subjectData = [
+        // {
+        //     subject: "CS",
+        //     subNum: 1,
+        //     units:4,
+        //     totalEntries: 528
+        // },
+        // {
+        //     subject: "EG",
+        //     subNum: 1,
+        //     units: 2,
+        //     totalEntries: 592
+        // },
+        // {
+        //     subject: "MATH",
+        //     subNum: 1,
+        //     units: 3,
+        //     totalEntries: 1104
+        // },
+        // {
+        //     subject: "BIO",
+        //     subNum: 1,
+        //     units: 3,
+        //     totalEntries: 592
+        // },
+        // {
+        //     subject: "TH",
+        //     subNum: 1,
+        //     units: 3
+        // },
+        // {
+        //     subject: "BIO_LAB",
+        //     subNum: 1,
+        //     units: 1
+        // },
+        // {
+        //     subject: "TRW",
+        //     subNum: 1,
+        //     units: 2
+        // },
+        {
+          subject: "PHY",
+          subNum: 1,
+          units: 3,
+          grade_partitions: [80, 150, 250, 450],
+        },
+        {
+          subject: "PNS",
+          subNum: 1,
+          units: 3,
+          grade_partitions: [102, 237, 394, 508, 720, 800],
+          clrThreshold: 100,
+        },
+        {
+          ///
+          subject: "CHEM",
+          subNum: 1,
+          units: 3,
+          grade_partitions: [65, 119, 290, 371, 460],
+        },
+        {
+          //
+          subject: "ME",
+          units: 2,
+          grade_partitions: "40,70,",
+          grade_partitions: [55, 80, 236, 362, 436, 466],
+        },
+        {
+          ///
+          subject: "EEE",
+          units: 3,
+          grade_partitions: [60, 106, 231, 324, 380],
+          clrThreshold: 130,
+        },
+        {
+          subject: "CHEM_LAB",
+          units: 1,
+          grade_partitions: [250, 370, 400, 700],
+        },
+        {
+          subject: "PHY_LAB",
+          units: 1,
+          grade_partitions: [250, 370, 400, 700],
+        },
+        {
+          subject: "MATH_2",
+          units: 3,
+          grade_partitions: [97, 140, 361, 417, 500, 600, 700, 800, 1000],
+        },
+      ];
+      var subjectInstances = [];
+      document.addEventListener("DOMContentLoaded", function () {
+        var elems = document.querySelectorAll(".autocomplete");
+        instances = M.Autocomplete.init(elems, {});
+        setdata();
+      });
+      function setdata() {
+        createAutocomplete();
+        subjectData.forEach(function (item) {
+          subjectInstances.push(new Subject(item));
+        });
+        subjectInstances.forEach(function (item) {
+          item.getData();
+        });
+      }
+      var name,
+        id,
+        foundScore = 0;
+      function findScore() {
+        //if(foundScore == 0){
+        if (1) {
+          i = 0;
+          foundScore = 1;
+          document.getElementById("wantToSee").style.display = "none";
+          if (document.getElementById("id").checkValidity()) {
             document.getElementById("result").scrollIntoView();
             name = document.getElementById("name").value;
+            localStorage.setItem("username", name);
             let i = userArray.indexOf(name);
-            if(i>0){
-                id = userArray[i+593];
-                if(id == document.getElementById("id").value){
+            if (i > 0) {
+              id = userArray[i + 593];
+              if (id == document.getElementById("id").value.trim()) {
                 findBranch();
                 displayUserInfo();
-                let dataPut ="";
-                subjectInstances.forEach(function(item){
-                    dataPut += item.findAndReturnScore();
+                let dataPut = "";
+                subjectInstances.forEach(function (item) {
+                  dataPut += item.findAndReturnScore();
                 });
                 document.getElementById("scoresDiv").innerHTML += dataPut;
-                document.getElementById("wantToSee").style.display="block";
+                document.getElementById("wantToSee").style.display = "block";
                 var els = document.querySelectorAll(".tabs");
                 var instanceTabs = M.Tabs.init(els, {});
-                }
-                else document.getElementById("result").innerHTML = "ID and name do not match";
-            }
-            else document.getElementById("result").innerHTML = "Name not found. Names are taken from the EG list. If you are in group 2, your name is not in this list.";
+              } else {
+                document.getElementById("result").innerHTML =
+                  "ID and name do not match";
+                M.toast({ html: "ID and name do not match." });
+              }
+            } else
+              document.getElementById("result").innerHTML =
+                "Name not found. Names are taken from the EG list. If you are in group 2, your name is not in this list. If you are in group 1, you probably requested me to remove it.";
+          } else {
+            document.getElementById("result").innerHTML = "ID invalid.";
+            M.toast({ html: "ID is invalid." });
           }
-          else{
-              document.getElementById("result").innerHTML = "ID invalid.";
-          }
+        } else {
+          alert("Refresh the page to get correct results.");
+        }
       }
-      function findBranch(){
-          var patt = new RegExp("[AB][A(0-8)]");
-          var b = patt.exec(id);
-          console.log(b);
-          switch(b[0]){
-              case("A1"):branch="B.E. Chemical Engineering"; break;
-case("A2"):branch="B.E. CivilEngineering"; break;
-case("A3"):branch="B.E. Electrical and Electronics Engineering"; break;
-case("A4"):branch="B.E. Mechanical Engineering"; break;
-case("A5"):branch="B.Pharm"; break;
-case("A7"):branch="B.E. Computer Science Engineering"; break;
-case("A8"):branch="B.E. Electronics and Instrumentation Engineering"; break;
-case("AA"):branch="B.E. Electronics and Communication Engineering"; break;
-case("B1"):branch="M.Sc. Biological Sciences"; break;
-case("B2"):branch="M.Sc. Chemistry"; break;
-case("B3"):branch="M.Sc. Economics"; break;
-case("B4"):branch="M.Sc. Mathematics"; break;
-case("B5"):branch="M.Sc. Physics"; break;
-          }
+      function findBranch() {
+        var patt = new RegExp("[AB][A(0-8)]");
+        var b = patt.exec(id);
+        console.log(b);
+        switch (b[0]) {
+          case "A1":
+            branch = "B.E. Chemical Engineering";
+            break;
+          case "A2":
+            branch = "B.E. CivilEngineering";
+            break;
+          case "A3":
+            branch = "B.E. Electrical and Electronics Engineering";
+            break;
+          case "A4":
+            branch = "B.E. Mechanical Engineering";
+            break;
+          case "A5":
+            branch = "B.Pharm";
+            break;
+          case "A7":
+            branch = "B.E. Computer Science Engineering";
+            break;
+          case "A8":
+            branch = "B.E. Electronics and Instrumentation Engineering";
+            break;
+          case "AA":
+            branch = "B.E. Electronics and Communication Engineering";
+            break;
+          case "B1":
+            branch = "M.Sc. Biological Sciences";
+            break;
+          case "B2":
+            branch = "M.Sc. Chemistry";
+            break;
+          case "B3":
+            branch = "M.Sc. Economics";
+            break;
+          case "B4":
+            branch = "M.Sc. Mathematics";
+            break;
+          case "B5":
+            branch = "M.Sc. Physics";
+            break;
+        }
       }
-      function displayUserInfo(){
-          var theDiv = document.getElementById("result");
-          let p = "<div style=\"font-family:'Noto Serif SC',serif; color:black; text-align:center;\" ><h3><i class=\"far fa-user teal-text\"></i> " + name + "</h3><h4><i class=\"far fa-id-card teal-text\"></i> "+id+"</h4><h4><i class=\"fas fa-graduation-cap teal-text\"></i> "+ branch+"</h4></div><div class=\"scoreDiv\" id='scoresDiv'></div>";
+      function displayUserInfo() {
+        var theDiv = document.getElementById("result");
+        let p =
+          '<div style="font-family:\'Noto Serif SC\',serif; color:black; text-align:center;" ><h3><i class="far fa-user teal-text"></i> ' +
+          name +
+          '</h3><h4><i class="far fa-id-card teal-text"></i> ' +
+          id +
+          '</h4><h4><i class="fas fa-graduation-cap teal-text"></i> ' +
+          branch +
+          "</h4>";
+        p +=
+          '<h4><i class="fas fa-book-open teal-text"></i> Grand Total - Sem 2</h4></div><div class="scoreDiv" id=\'scoresDiv\'></div>';
         //   let p = "<div class=\"row\"><div class=\"col s12\"><div class=\"card teal\"><div class=\"card-content white-text\"><span class='card-title'>";
         //   p += "<i class=\"far fa-user white-text\"></i> Name: "+name+ "</span><br><span class='card-title'><i class=\"far fa-id-card white-text\"></i> ID: "+ id+"</span><br><span class='card-title'><i class=\"fas fa-graduation-cap\"></i>Branch: "+branch+"</span></div></div></div></div>";
-          theDiv.innerHTML = p;
+        theDiv.innerHTML = p;
       }
-      function findTotalScore(){
-          let numerator = 0, denominator = 0;
-          subjectInstances.forEach(function(item){
-                    numerator += item.grade * item.units;
-                    denominator += item.units;
-                });
-          let gpa = numerator/denominator;
-          document.getElementById("totalResult").scrollIntoView();
-          document.getElementById("totalResult").innerHTML = "<h2>GPA: <span class='teal-text'>"+gpa.toFixed(4)+"</span></h2>";
+      function findTotalScore() {
+        let numerator = 0,
+          denominator = 0;
+        subjectInstances.forEach(function (item) {
+          numerator += item.grade * item.units;
+          denominator += item.units;
+        });
+        let gpa = numerator / denominator;
+        document.getElementById("totalResult").scrollIntoView();
+        document.getElementById("totalResult").innerHTML =
+          "<h2>GPA: <span class='teal-text'>" + gpa.toFixed(4) + "</span></h2>";
       }
-    //   var egScore, csScore, name, id;
-    //   function findScore() {
-    //       if(document.getElementById("id").checkValidity()){
-    //       document.getElementById("result").scrollIntoView();
-    //     name = document.getElementById("name").value;
-    //     var i = userArray.indexOf(name);
-    //     if(i>0){
-    //          id = userArray[i+593];
-    //          if(id == document.getElementById("id").value){
-    //         console.log(id);
-    //         var i = EGarray.indexOf(id.trim());
-    //         egScore = EGarray[i+593];
-    //     //console.log(EGarray[i + 593]);
-    //       i = cSarray.indexOf(id);
-    //       csScore = cSarray[i+529];
-    //       //console.log(cSarray[i+ 529]);
-    //       findPercent();
-    //          }
-    //          else{
-    //              document.getElementById("result").innerHTML = "ID does not match with name.";
-    //          }
-    //     }
-    //     else{
-    //         document.getElementById("result").innerHTML = "Name not found.";
-    //     }
-    //   }
-    //   }
-    //   var CSdisplay, EGdisplay;
-    //   function findPercent(){
-    //       var csBelow = 0, egBelow = 0, temp = 0;
-    //       for (var i=529; i<1057; i++){
-    //           if(cSarray[i] < csScore){
-    //               csBelow++;
-    //           }
-    //           else if(cSarray[i] == csScore){
-    //               temp++;
-    //           }
-    //       }
-    //        CSdisplay = csBelow;
-    //       csBelow += Math.floor(temp/2);
-    //       ///////////////
-    //       temp = 0;
-    //       for (var i=593; i<1185; i++){
-    //           if(EGarray[i] < egScore){
-    //               egBelow++;
-    //           }
-    //           else if(EGarray[i] == egScore){
-    //               temp++;
-    //           }
-    //       }
-    //        EGdisplay = egBelow;
-    //       egBelow += Math.floor(temp/2);
-    //       eg = egBelow / 592 *100;
-    //       cs = csBelow / 528 *100;
-    //       console.log(egBelow);
-    //       console.log(csBelow);
-    //       displayResult(eg, cs);
-    //   }
-    //   function displayResult(eg, cs){
-    //       var theDiv = document.getElementById("result");
-    //       var put = "<h3>Score:</h3><div style='font-size:1.6em;'><i class=\"far fa-user blue-text\"></i> Name: "+name+ "<br><i class=\"far fa-id-card blue-text\"></i> ID: "+ id+"</div>"+getContent("CS", csScore, cs, CSdisplay);
-    //       put += getContent("EG", egScore, eg, EGdisplay);
-    //       theDiv.innerHTML = put;
+      //   var egScore, csScore, name, id;
+      //   function findScore() {
+      //       if(document.getElementById("id").checkValidity()){
+      //       document.getElementById("result").scrollIntoView();
+      //     name = document.getElementById("name").value;
+      //     var i = userArray.indexOf(name);
+      //     if(i>0){
+      //          id = userArray[i+593];
+      //          if(id == document.getElementById("id").value){
+      //         console.log(id);
+      //         var i = EGarray.indexOf(id.trim());
+      //         egScore = EGarray[i+593];
+      //     //console.log(EGarray[i + 593]);
+      //       i = cSarray.indexOf(id);
+      //       csScore = cSarray[i+529];
+      //       //console.log(cSarray[i+ 529]);
+      //       findPercent();
+      //          }
+      //          else{
+      //              document.getElementById("result").innerHTML = "ID does not match with name.";
+      //          }
+      //     }
+      //     else{
+      //         document.getElementById("result").innerHTML = "Name not found.";
+      //     }
+      //   }
+      //   }
+      //   var CSdisplay, EGdisplay;
+      //   function findPercent(){
+      //       var csBelow = 0, egBelow = 0, temp = 0;
+      //       for (var i=529; i<1057; i++){
+      //           if(cSarray[i] < csScore){
+      //               csBelow++;
+      //           }
+      //           else if(cSarray[i] == csScore){
+      //               temp++;
+      //           }
+      //       }
+      //        CSdisplay = csBelow;
+      //       csBelow += Math.floor(temp/2);
+      //       ///////////////
+      //       temp = 0;
+      //       for (var i=593; i<1185; i++){
+      //           if(EGarray[i] < egScore){
+      //               egBelow++;
+      //           }
+      //           else if(EGarray[i] == egScore){
+      //               temp++;
+      //           }
+      //       }
+      //        EGdisplay = egBelow;
+      //       egBelow += Math.floor(temp/2);
+      //       eg = egBelow / 592 *100;
+      //       cs = csBelow / 528 *100;
+      //       console.log(egBelow);
+      //       console.log(csBelow);
+      //       displayResult(eg, cs);
+      //   }
+      //   function displayResult(eg, cs){
+      //       var theDiv = document.getElementById("result");
+      //       var put = "<h3>Score:</h3><div style='font-size:1.6em;'><i class=\"far fa-user blue-text\"></i> Name: "+name+ "<br><i class=\"far fa-id-card blue-text\"></i> ID: "+ id+"</div>"+getContent("CS", csScore, cs, CSdisplay);
+      //       put += getContent("EG", egScore, eg, EGdisplay);
+      //       theDiv.innerHTML = put;
 
-    //   }
-    //   function getContent(subject, score,percent, below){
-    //       return "<h4>"+subject+"</h4><div class='flow-text'>Your score is " + score + ".<br>You have a percentile of <span class='green-text'>" + percent.toFixed(2) +"%</span> with <span class='red-text'>"+ below +"</span> students below you.</div>";
-    //   }
+      //   }
+      //   function getContent(subject, score,percent, below){
+      //       return "<h4>"+subject+"</h4><div class='flow-text'>Your score is " + score + ".<br>You have a percentile of <span class='green-text'>" + percent.toFixed(2) +"%</span> with <span class='red-text'>"+ below +"</span> students below you.</div>";
+      //   }
+    </script>
+
+    <!-- Modal Structure -->
+    <div id="termsModal" class="modal modal-fixed-footer">
+      <div class="modal-content">
+        <h4 class="teal-text">Terms and Conditions</h4>
+        <div class="divider"></div>
+        <div class="section">
+          <h5>You, the user</h5>
+          <p>
+            You are allowed to share this site, its screenshots, critisize the
+            content and design, appreciate the functionality with no
+            restrictions whatsoever.
+          </p>
+          <p>
+            This webpage is intended to be used by the students of BITS Pilani
+            Hyderabad Campus only.
+          </p>
+        </div>
+        <div class="divider"></div>
+        <div class="section">
+          <h5>Your data</h5>
+          <p>
+            Your scores are taken from the sheets shared by the course
+            instructor on their respective platforms. This webpage merely shows
+            all available scores together along with comparison to aid your
+            preparation and studies. In case you think I have encroached on any
+            of your "personal matters", I would like to remind you that anyone
+            can view anyone's scores, using this webpage or not.
+          </p>
+        </div>
+        <div class="divider"></div>
+        <div class="section">
+          <h5>What I collect</h5>
+          <p>
+            There is nothing for me to collect. I have everything I need to get
+            this service working. The name you enter is stored on your device
+            for faster access to your scores the next time you visit this page.
+          </p>
+        </div>
+        <div class="divider"></div>
+        <div class="section">
+          <h5>Privacy and security</h5>
+          <p>
+            Your scores are <strong>not</strong> secure and anyone can see your
+            total scores using this page provided they know a thing or two about
+            web dev. In case you want to remove your scores from the list on
+            this site, <a href="#!">click here</a> (option yet to be built) or
+            just message me.
+          </p>
+        </div>
+        <div class="divider"></div>
+        <div class="section">
+          <h5>What else?</h5>
+          <p>
+            I am not responsible for any damage arising from misinterpretation
+            of content, misuse of this service, or any unpleasant things caused
+            by the content generated by this page.
+          </p>
+          <p>
+            I cannot guarantee the correctness of the analysis provided by this
+            page - I only copy paste from the sources within reach. Any update
+            will be promptly done and dusted.
+          </p>
+        </div>
+        <div class="divider"></div>
+        <div class="section">
+          <h5>Lastly</h5>
+          <p>
+            This service will continue to exist the rest of this First Year,
+            whether you like it or not. If you want to receive notifications
+            whenever I add new scores,
+            <a href="https:///jeenius.ml/notify.php">click here</a> (only for
+            <strong> Chrome for Android</strong>) and submit your name after
+            allowing notifications.
+          </p>
+        </div>
+        <p>
+          <label for="termsAccepted">
+            <input type="checkbox" id="termsAccepted" onchange="setTerms()" />
+            <span>I have read and agreed to the Terms and Conditions.</span>
+          </label>
+        </p>
+      </div>
+      <div class="modal-footer">
+        <a
+          href="#!"
+          class="waves-effect waves-green btn-flat"
+          onclick="closeModal()"
+          >Close</a
+        >
+      </div>
+    </div>
+    <script>
+      function setTerms() {
+        checkBox = document.getElementById("termsAccepted");
+        if (checkBox.checked == true) {
+          localStorage.setItem("termsAccepted", true);
+        } else {
+          localStorage.setItem("termsAccepted", false);
+        }
+      }
+      function closeModal() {
+        checkBox = document.getElementById("termsAccepted");
+        if (checkBox.checked == true) {
+          instance_modal1.close();
+          localStorage.setItem("termsAccepted", true);
+        } else {
+          alert("You have not agreed to the Terms and Conditions");
+        }
+      }
+      var instance_modal1;
+      document.addEventListener("DOMContentLoaded", function () {
+        var elems = document.getElementById("termsModal");
+        instance_modal1 = M.Modal.init(elems, {
+          opacity: 0.6,
+          dismissible: false,
+        });
+        if (
+          localStorage.termsAccepted != undefined &&
+          localStorage.termsAccepted != null &&
+          localStorage.termsAccepted != false
+        ) {
+          //instance_modal1.open();
+
+          document.getElementById("termsAccepted").checked = true;
+        } else {
+          instance_modal1.open();
+        }
+      });
+      function getPDF() {
+        var pdf = new jsPDF("p", "pt", "letter");
+        // source can be HTML-formatted string, or a reference
+        // to an actual DOM element from which the text will be scraped.
+        source = $("#result")[0];
+
+        // we support special element handlers. Register them with jQuery-style
+        // ID selector for either ID or node name. ("#iAmID", "div", "span" etc.)
+        // There is no support for any other type of selectors
+        // (class, of compound) at this time.
+        specialElementHandlers = {
+          // // element with id of "bypass" - jQuery style selector
+          // '#bypassme': function (element, renderer) {
+          //     // true = "handled elsewhere, bypass text extraction"
+          //     return true
+          // }
+        };
+        margins = {
+          top: 80,
+          bottom: 60,
+          left: 40,
+          width: 522,
+        };
+        // all coords and widths are in jsPDF instance's declared units
+        // 'inches' in this case
+        pdf.fromHTML(
+          source, // HTML string or DOM elem ref.
+          margins.left, // x coord
+          margins.top,
+          {
+            // y coord
+            width: margins.width, // max width of content on PDF
+            //'elementHandlers': specialElementHandlers
+          },
+
+          function (dispose) {
+            // dispose: object with X, Y of the last line add to the PDF
+            //          this allow the insertion of new lines after html
+            console.log(dispose);
+            pdf.text(
+              dispose.x,
+              dispose.y + 40,
+              "GPA for the above subjects from percentiles: " +
+                returnTotalScore()
+            );
+            pdf.save(name + "'s scores.pdf");
+          },
+          margins
+        );
+        M.toast({
+          html: "PDF of your scores has been downloaded!",
+          displayLength: 5000,
+        });
+      }
+      function returnTotalScore() {
+        let numerator = 0,
+          denominator = 0;
+        subjectInstances.forEach(function (item) {
+          numerator += item.grade * item.units;
+          denominator += item.units;
+        });
+        let gpa = numerator / denominator;
+        return gpa.toFixed(5);
+      }
     </script>
   </body>
 </html>

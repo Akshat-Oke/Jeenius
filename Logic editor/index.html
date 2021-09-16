@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Logic proof editor</title>
+  <!-- UIkit CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/uikit@3.7.3/dist/css/uikit.min.css" />
+
+  <link rel="stylesheet" type="text/css" href="https://kraaden.github.io/autocomplete/autocomplete.css">
+  <style>
+    header {
+      margin: 20px 30px;
+      margin-bottom: 0;
+    }
+
+    footer {
+      text-align: center;
+    }
+
+    footer span {
+      color: rgb(231, 88, 231);
+    }
+
+    body {
+      padding-bottom: 20px;
+    }
+
+    main {
+      margin-bottom: 30px;
+    }
+
+    /* main {
+      width: 80vw;
+      margin: 30px auto;
+    } */
+    li {
+      display: flex;
+      flex-flow: row nowrap;
+    }
+
+    li input:first-child {
+      margin-right: 10px;
+    }
+
+    .subproof {
+      border: 1px solid rgba(0, 0, 0, 0.6);
+      border-radius: 5px;
+      /* width: 98%; */
+      margin: 8px;
+      padding: 8px;
+    }
+
+    div.proof ul {
+      list-style-type: none;
+      counter-reset: css-counter 0;
+      /* initializes counter to 0; use -1 for zero-based numbering */
+    }
+
+    ul li {
+      counter-increment: css-counter 1;
+      /* Increase the counter by 1. */
+      margin: 8px 0;
+    }
+
+    ul li:before {
+      content: counter(css-counter) ". " !important;
+      display: flex !important;
+      flex-direction: column;
+      justify-content: flex-end;
+      /* Apply counter before children's content. */
+    }
+
+    .subproof input:first-child {
+      margin-left: 5px;
+    }
+
+    .uk-alert-success {
+      padding: 10px 12px;
+      padding-bottom: 0px;
+    }
+
+    .uk-alert-success p {
+      padding-bottom: 12px;
+    }
+
+    .flex-div {
+      display: flex;
+    }
+
+    .flex-div div:first-child {
+      flex: 2 0.5;
+      margin-right: 0px;
+      padding-right: 20px;
+      border-right: 1px solid rgba(0, 0, 0, 0.5);
+    }
+
+    .flex-div div:last-child {
+      margin-left: 10px;
+      flex-basis: 227px;
+      flex-shrink: 3;
+      flex-grow: 0.24;
+    }
+
+    main.uk-container {
+      max-width: 1350px;
+    }
+
+    @media screen and (max-width: 1100px) {
+      .flex-div {
+        flex-direction: column;
+      }
+
+      .flex-div>div:first-child {
+        border: none;
+      }
+
+      main.uk-container {
+        padding-left: 40px;
+      }
+    }
+
+    #Test {
+      position: absolute;
+      visibility: hidden;
+      height: auto;
+      width: auto;
+      white-space: nowrap;
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <h1>Natural deduction proof editor</h1>
+  </header>
+  <main class="uk-container">
+    <div class="uk-alert-success" uk-alert>
+      <a class="uk-alert-close" uk-close></a>
+      <p>Generate proofs in plain text easily<br />
+        Use AND, OR, NOT to represent ∧, ∨, ¬ respectively (which will be auto replaced). For the full list, scroll
+        down.
+        <br />
+        Press <kbd>Enter</kbd> to insert a new line, and press <kbd>Ctrl+B</kbd> to create a box or sub-proof. Scroll
+        down for the full list of keyboard actions.
+      </p>
+    </div>
+    <div class="uk-margin">
+      <input class="uk-input" type="text" placeholder="Sequent Ex. p implies q, not q  then  not p" id="sequent">
+      <label for="sequent">Type your sequent here and press <kbd>Enter</kbd> to generate the premise statements</label>
+      <hr class="uk-divider-icon">
+    </div>
+    <div class="flex-div">
+      <div>
+        <h2 id="proof-header">Proof</h2>
+        <div id="proof">
+          <ul id="proof-list" class="uk-list">
+            <li>
+
+              <input class="uk-input" type="text" placeholder="Formula">
+              <input class="uk-input" type="text" placeholder="Justification">
+            </li>
+            <div class="subproof">
+              <li>
+
+                <input class="uk-input" type="text" placeholder="Formula">
+                <input class="uk-input" type="text" placeholder="Justification">
+              </li>
+              <div class="subproof">
+                <li>
+
+                  <input class="uk-input" type="text" placeholder="Formula">
+                  <input class="uk-input" type="text" placeholder="Justification">
+                </li>
+                <li>
+
+                  <input class="uk-input" type="text" placeholder="Formula">
+                  <input class="uk-input" type="text" placeholder="Justification">
+                </li>
+                <li>
+
+                  <input class="uk-input" type="text" placeholder="Formula">
+                  <input class="uk-input" type="text" placeholder="Justification">
+                </li>
+              </div>
+              <li>
+
+                <input class="uk-input" type="text" placeholder="Formula">
+                <input class="uk-input" type="text" placeholder="Justification">
+              </li>
+              <li>
+
+                <input class="uk-input" type="text" placeholder="Formula">
+                <input class="uk-input" type="text" placeholder="Justification">
+              </li>
+            </div>
+            <div class="subproof">
+              <li>
+
+                <input class="uk-input" type="text" placeholder="Formula">
+                <input class="uk-input" type="text" placeholder="Justification">
+              </li>
+              <div class="subproof">
+                <li>
+
+                  <input class="uk-input" type="text" placeholder="Formula">
+                  <input class="uk-input" type="text" placeholder="Justification">
+                </li>
+                <li>
+
+                  <input class="uk-input" type="text" placeholder="Formula">
+                  <input class="uk-input" type="text" placeholder="Justification">
+                </li>
+                <li>
+
+                  <input class="uk-input" type="text" placeholder="Formula">
+                  <input class="uk-input" type="text" placeholder="Justification">
+                </li>
+              </div>
+              <li>
+
+                <input class="uk-input" type="text" placeholder="Formula">
+                <input class="uk-input" type="text" placeholder="Justification">
+              </li>
+              <li>
+
+                <input class="uk-input" type="text" placeholder="Formula">
+                <input class="uk-input" type="text" placeholder="Justification">
+              </li>
+            </div>
+            <li>
+
+              <input class="uk-input" type="text" placeholder="Formula">
+              <input class="uk-input" type="text" placeholder="Justification">
+            </li>
+            <!-- <li>
+              <input class="uk-input" type="text" placeholder="Formula">
+              <input class="uk-input" type="text" placeholder="Justification">
+            </li>
+            <div class="subproof">
+              <li><input class="uk-input" type="text" placeholder="Formula">
+                <input class="uk-input" type="text" placeholder="Justification">
+              </li>
+              <div class="subproof">
+                <li><input class="uk-input" type="text" placeholder="Formula">
+                  <input class="uk-input" type="text" placeholder="Justification">
+                </li>
+              </div>
+            </div>
+            <li>
+              <input class="uk-input" type="text" placeholder="Formula">
+              <input class="uk-input" id="country" type="text" placeholder="Justification">
+            </li> -->
+          </ul>
+
+        </div>
+        <div>
+          <button class="uk-button" id="clear-all">Clear All</button>
+          <button class="uk-button uk-button-primary" id="export">Export to Text</button>
+        </div>
+        <textarea id="result" class="uk-textarea" rows="4"></textarea>
+      </div>
+      <div>
+        <h3>Instructions</h3>
+        <table class="uk-table uk-table-hover uk-table-divider">
+          <caption>Keyboard maneuvering</caption>
+          <thead>
+            <tr>
+              <th>Keys / Keys combinations (press simultaneously)</th>
+              <th> Action performed</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><kbd>Enter</kbd></td>
+              <td> Insert new statement (line) below</td>
+            </tr>
+            <tr>
+              <td><kbd>Ctrl + B</kbd></td>
+              <td> Start a sub-proof (box)</td>
+            </tr>
+            <tr>
+              <td><kbd>Esc</kbd></td>
+              <td> End a sub-proof (box) and insert a new line below</td>
+            </tr>
+            <tr>
+              <td><kbd>Arrow Keys</kbd></td>
+              <td> Move between input boxes</td>
+            </tr>
+            <tr>
+              <td><kbd>DEL</kbd></td>
+              <td>Delete current line (beware of leaving "hanging" boxes by deleting first line of a box)</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    </div>
+    <table class="uk-table uk-table-hover uk-table-divider">
+      <caption>Symbols</caption>
+      <thead>
+        <tr>
+          <th>Operator</th>
+          <th>Use any of these characters (or capital words)</th>
+          <th>For these symbols</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Negation</td>
+          <td>! ~ ∼ - − NOT</td>
+          <td>¬</td>
+        </tr>
+        <tr>
+          <td>Conjunction</td>
+          <td>^ & . * AND</td>
+          <td>∧</td>
+        </tr>
+        <tr>
+          <td>Disjunction </td>
+          <td>V v OR</td>
+          <td>∨</td>
+        </tr>
+        <tr>
+          <td>Conditional </td>
+          <td>-> > IMPLIES </td>
+          <td>→</td>
+        </tr>
+        <tr>
+          <td>Contradiction </td>
+          <td> XX # </td>
+          <td>⊥</td>
+        </tr>
+      </tbody>
+    </table>
+  </main>
+  <div id="Test"></div>
+  <footer>Made with <span>Logic</span> by <a href="https://jeenius.gq/more.html"> Akshat</a></footer>
+  <script src="app.js"></script>
+  <script src="autocompleteLib.js"></script>
+  <script src="autocomplete.js"></script>
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</body>
+
+</html>

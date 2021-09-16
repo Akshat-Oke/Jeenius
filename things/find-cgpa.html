@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CGPA Calculator</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css"
+    />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <link
+      href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet"
+    />
+    <style>
+      html {
+        scroll-behavior: smooth; /* Animates scrolling - "smooth" scrolling*/
+      }
+      #subjects-div {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-around;
+      }
+      .subject-card {
+        background: rgb(191, 226, 217);
+        border-radius: 5px;
+        max-width: 420px;
+        margin: 12px;
+      }
+      button {
+        margin: 5px 8px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1 style="text-align: center">CGPA Calculator</h1>
+    <div class="container" style="margin: auto">
+      <h4>Enter your existing CGPA and units</h4>
+      <div class="row">
+        <form class="col s12">
+          <div class="row">
+            <div class="input-field col m6 s8">
+              <input
+                id="exist_cgpa"
+                type="number"
+                class="validate"
+                max="10"
+                min="1"
+              />
+              <label for="exist_cgpa">Existing CGPA</label>
+            </div>
+            <div class="input-field col m6 s8">
+              <input id="exist_units" type="number" class="validate" />
+              <label for="exist_units">Total units till now</label>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div>
+        <h4>Add current subjects</h4>
+        <div id="subjects-div"></div>
+        <button class="btn waves-effect large rounded" onclick="addSubject();">
+          Add subject
+          <i class="material-icons left">add</i>
+        </button>
+        <br />
+        <button
+          id="g1"
+          class="btn waves-effect large black remove"
+          onclick="addGroup(1);"
+        >
+          Add First year group 1 subjects
+          <i class="material-icons left">add</i>
+        </button>
+        <button
+          id="g2"
+          class="btn waves-effect large black remove"
+          onclick="addGroup(2);"
+        >
+          Add First year group 2 subjects
+          <i class="material-icons left">add</i>
+        </button>
+      </div>
+      <div style="height: 30px"></div>
+      <div class="center-align">
+        <button class="btn-large blue waves-effect" onclick="findCGPA()">
+          Calculate
+        </button>
+      </div>
+      <div class="center-align">
+        <h3 id="result"></h3>
+      </div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <script>
+      const group1_sub = [
+        {
+          name: "CHEMISTRY LABORATORY",
+          units: 1,
+        },
+        {
+          name: "GENERAL CHEMISTRY",
+          units: 3,
+        },
+        {
+          name: "ELECTRICAL SCIENCES",
+          units: 3,
+        },
+        {
+          name: "MATHEMATICS II",
+          units: 3,
+        },
+        {
+          name: "PROBABILITY & STATISTICS",
+          units: 3,
+        },
+        {
+          name: "WORKSHOP PRACTICE",
+          units: 2,
+        },
+        {
+          name: "PHYSICS LABORATORY",
+          units: 1,
+        },
+        {
+          name: "MECH OSCILLATIONS & WAVE",
+          units: 3,
+        },
+      ];
+      const group2_sub = [
+        {
+          name: "BIOLOGY LABORATORY",
+          units: 1,
+        },
+        {
+          name: "GENERAL BIOLOGY",
+          units: 3,
+        },
+        {
+          name: "ENGINEERING GRAPHICS",
+          units: 3,
+        },
+        {
+          name: "THERMODYNAMICS",
+          units: 3,
+        },
+
+        {
+          name: "TECHNICAL REPORT WRITING",
+          units: 2,
+        },
+
+        {
+          name: "COMPUTER PROGRAMMING",
+          units: 4,
+        },
+        {
+          name: "MATHEMATICS I",
+          units: 3,
+        },
+      ];
+      Element.prototype.remove = function () {
+        this.parentElement.removeChild(this);
+      };
+      NodeList.prototype.remove = HTMLCollection.prototype.remove =
+        function () {
+          for (var i = this.length - 1; i >= 0; i--) {
+            if (this[i] && this[i].parentElement) {
+              this[i].parentElement.removeChild(this[i]);
+            }
+          }
+        };
+      function addGroup(grp_num) {
+        var thediv = document.getElementById("subjects-div");
+        let num = thediv.getElementsByClassName("card-panel").length;
+        let sub_array = grp_num === 1 ? group1_sub : group2_sub;
+        for (let i = 0; i < sub_array.length; i++) {
+          let sub = sub_array[i];
+          let card = `
+          <div class="subject-card card-panel col m6 s12">
+            <h5 contenteditable="true">${sub.name}</h5>
+          <form class="row">
+            <div class="input-field col m6 s10">
+              <select>
+                <option value="-1" disabled selected>Select a grade</option>
+                <option value="10">A</option>
+                <option value="9">A-</option>
+                <option value="8">B</option>
+                <option value="7">C</option>
+                <option value="6">D</option>
+                <option value="5">E</option>
+                <option value="4">F</option>
+                <option value="0">CLR</option>
+              </select>
+              <label>Your grade</label>
+            </div>
+            <div class="input-field col m6 s10 units-field">
+              <input id="units${
+                num + 1
+              }" type="number" class="validate sub-unit" value="${sub.units}"/>
+              <label for="units${num + 1}">Units</label>
+            </div>
+          </form>
+          <button class="btn-flat floating red" onclick="removeSub(${
+            num + i
+          })">Delete Subject</button>
+        </div>
+          `;
+          thediv.innerHTML += card;
+        }
+        M.updateTextFields();
+        $("select").formSelect();
+        document.getElementsByClassName("remove").remove();
+      }
+
+      function removeSub(i) {
+        document
+          .getElementById("subjects-div")
+          .getElementsByClassName("subject-card")
+          [i].remove();
+      }
+
+      function addSubject() {
+        var thediv = document.getElementById("subjects-div");
+        let num = thediv.getElementsByClassName("card-panel").length;
+        let card = `<div class="subject-card card-panel"><h5 contenteditable="true">Click to edit ${
+          num + 1
+        }</h5>
+          <form class="row">
+            <div class="input-field col m6 s10">
+              <select>
+                <option value="-1" disabled selected>Select a grade</option>
+                <option value="10">A</option>
+                <option value="9">A-</option>
+                <option value="8">B</option>
+                <option value="7">C</option>
+                <option value="6">D</option>
+                <option value="5">E</option>
+                <option value="4">F</option>
+                <option value="0">CLR</option>
+              </select>
+              <label>Your grade</label>
+            </div>
+            <div class="input-field col m6 s10 units-field">
+              <input id="units${
+                num + 1
+              }" type="number" class="validate sub-unit" />
+              <label for="units${num + 1}">Units</label>
+            </div>
+          </form>
+          <button class="btn-flat floating red" onclick="removeSub(${num})">Delete Subject</button>
+        </div>
+        `;
+        thediv.innerHTML += card;
+        $("select").formSelect();
+      }
+      function findCGPA() {
+        let numerator = Number(document.getElementById("exist_cgpa").value);
+        let denominator = Number(document.getElementById("exist_units").value);
+        if (!numerator || !denominator) {
+          M.toast({ html: "Enter your previous CGPA and units" });
+          document.getElementById("exist_cgpa").scrollIntoView();
+          document.getElementById("exist_cgpa").focus();
+
+          return;
+        }
+        numerator *= denominator; //initially multiply
+        console.log("Num=" + numerator);
+        console.log("Den=" + denominator);
+        var sub_div = document.getElementById("subjects-div");
+        let numberOfSub = sub_div.getElementsByClassName("card-panel").length;
+        if (numberOfSub == 0) {
+          M.toast({ html: "You have not entered any other subjects" });
+        }
+        for (let i = 0; i < numberOfSub; i++) {
+          let currentSubject =
+            sub_div.getElementsByClassName("subject-card")[i];
+          let currentScore = currentSubject
+            .getElementsByTagName("form")[0]
+            .getElementsByTagName("div")[0]
+            .getElementsByTagName("select")[0].value;
+          let currentUnits = currentSubject
+            .getElementsByTagName("form")[0]
+            .getElementsByClassName("units-field")[0]
+            .getElementsByTagName("input")[0].value;
+          console.log(currentScore);
+          console.log(currentUnits);
+          // Check CLR
+          if (currentScore <= 0 || currentUnits <= 0) {
+            continue;
+          } else {
+            denominator += Number(currentUnits);
+            numerator += currentScore * currentUnits;
+          }
+        }
+        document.getElementById("result").innerText = (
+          numerator / denominator
+        ).toFixed(2);
+        document.getElementById("result").scrollIntoView();
+      }
+    </script>
+  </body>
+</html>

@@ -35,6 +35,14 @@
     td {
       min-width: 120px;
     }
+    .range-field {
+      max-width: 70%;
+    }
+    @media screen and (max-width: 760px) {
+      .range-field {
+        max-width: 90%;
+      }
+    }
   </style>
   <body>
     <main>
@@ -43,7 +51,7 @@
         <div class="col center-align">Press <i>Enter</i> after each value</div>
         <div class="form">
           <div class="row">
-            <div class="col s6 m6">
+            <div class="col s12 m6">
               <div class="input-field col s12">
                 <textarea
                   id="x-values"
@@ -53,7 +61,7 @@
                 <label for="x-values">X values line by line</label>
               </div>
             </div>
-            <div class="col s6 m6">
+            <div class="col s12 m6">
               <div class="input-field col s12">
                 <textarea
                   id="y-values"
@@ -64,11 +72,32 @@
               </div>
             </div>
           </div>
-          <div class="row flow-text">
+          <div class="row" style="font-size: 18px">
             <div class="col">X count: <span id="x-count">0</span></div>
             <div class="col offset-s4">
               Y count: <span id="y-count">0</span>
             </div>
+          </div>
+          <div class="row">
+            <p class="col">
+              <label>
+                <input type="checkbox" class="filled-in" id="y-intercept" />
+                <span>Make Y-Intercept zero</span>
+              </label>
+            </p>
+          </div>
+          <div class="row">
+            <h5>Accuracy: <span id="acc">2</span></h5>
+            <p class="range-field">
+              <input
+                type="range"
+                id="accuracy"
+                min="0"
+                max="7"
+                value="2"
+                oninput="document.getElementById('acc').innerText =  this.value"
+              />
+            </p>
           </div>
           <div class="row center-align">
             <button class="btn-large waves-effect waves-purple">
@@ -81,8 +110,8 @@
             <th>X values</th>
             <th>Y values</th>
             <th>\(X_i - X\)</th>
-            <th>\(Y_i(X_i- \overline{X})\)</th>
-            <th>\(X_i - X^2\)</th>
+            <th id="xi_avg_yi">\(Y_i(X_i- \overline{X})\)</th>
+            <th id="xi_square">\(X_i - X^2\)</th>
           </tr>
         </table>
       </div>
@@ -107,12 +136,15 @@
           /\r\n|\r|\n/
         ).length;
       }
+      var solution = "";
+      var accuracy;
       var x_avg, y_avg;
       var x_array, y_array;
       var slope, intercept;
       var x_xi = [],
         xi_square = [],
         xi_avg_yi = [];
+      var yInterceptIsZero = false;
 
       document.querySelector("button").onclick = getValues;
 
@@ -121,6 +153,9 @@
           document.getElementById("x-values").checkValidity() &&
           document.getElementById("y-values").checkValidity()
         ) {
+          solution = "";
+          accuracy = document.getElementById("accuracy").value;
+          yInterceptIsZero = document.getElementById("y-intercept").checked;
           var str1 = document.getElementById("x-values").value;
           x_array = str1.replace(/\n/g, "!").split("!");
           var str2 = document.getElementById("y-values").value;
@@ -148,19 +183,30 @@
           sum += Number(val);
         });
         y_avg = sum / y_array.length;
-
+        solution +=
+          "\\(\\overline{X}=" +
+          x_avg.toFixed(accuracy) +
+          ", \\: \\: \\overline{Y} = " +
+          y_avg.toFixed(accuracy) +
+          "\\)<br>";
         getX_Xi();
       }
 
       function getX_Xi() {
         x_array.forEach(function (val, i) {
           x_xi[i] = Number(val) - Number(x_avg);
-          xi_avg_yi[i] = x_xi[i] * Number(y_array[i]);
+          xi_avg_yi[i] = yInterceptIsZero
+            ? Number(val) * Number(y_array[i])
+            : x_xi[i] * Number(y_array[i]);
         });
-
-        x_xi.forEach((val, i) => {
-          xi_square[i] = val * val;
-        });
+        if (yInterceptIsZero)
+          x_array.forEach((val, i) => {
+            xi_square[i] = val * val;
+          });
+        else
+          x_xi.forEach((val, i) => {
+            xi_square[i] = val * val;
+          });
         findSlope();
       }
 
@@ -170,56 +216,86 @@
           numerator += val;
         });
 
+        solution += yInterceptIsZero
+          ? "\\(\\sum X_i Y_i = "
+          : "\\(\\sum (X_i - \\overline{X}) Y_i = ";
+        solution += numerator.toFixed(accuracy) + "\\)<br>";
         var denominator = 0;
         xi_square.forEach((val) => {
           denominator += val;
         });
+
         slope = numerator / denominator;
 
+        solution += yInterceptIsZero
+          ? "<br> \\(\\sum X_i^2 = "
+          : "\\(\\sum (X_i - \\overline{X})^2 = ";
+        solution += denominator.toFixed(accuracy) + "\\)";
+        solution +=
+          "\\[\\text{Slope} =m= \\frac{" +
+          numerator.toFixed(accuracy) +
+          "}{" +
+          denominator.toFixed(accuracy) +
+          "} = " +
+          slope.toFixed(accuracy) +
+          "\\]";
         findIntercept();
       }
-
       function findIntercept() {
-        intercept = y_avg - slope * x_avg;
+        intercept = yInterceptIsZero ? 0 : y_avg - slope * x_avg;
 
+        solution +=
+          "\\[\\text{Y-intercept} = c = " + intercept.toFixed(accuracy) + "\\]";
         displayTable();
       }
 
       function displayTable() {
         document.getElementById("table").style.display = "block";
         var table = document.getElementById("table");
+        table.innerHTML =
+          '<tr>\
+            <th>X values</th>\
+            <th>Y values</th>\
+            <th>\\(X_i - X\\)</th>\
+            <th id="xi_avg_yi">\\(Y_i(X_i- \\overline{X})\\)</th>\
+            <th id="xi_square">\\(X_i - X^2\\)</th>\
+          </tr>';
+        if (yInterceptIsZero) {
+          document.getElementById("xi_square").innerHTML = "\\(X_i^2\\)";
+          document.getElementById("xi_avg_yi").innerHTML = "\\(X_iY_i\\)";
+        }
         var rowCount = 1;
 
         for (var i = 1; i <= x_array.length; i++) {
           var row = table.insertRow(i);
           ///X
           var p1 = row.insertCell(0);
-          p1.innerHTML = x_array[i - 1];
+          p1.innerHTML = Number(x_array[i - 1]).toFixed(accuracy);
           ///Y
           p1 = row.insertCell(1);
-          p1.innerHTML = y_array[i - 1];
+          p1.innerHTML = Number(y_array[i - 1]).toFixed(accuracy);
           ///Xi - X
           p1 = row.insertCell(2);
-          p1.innerHTML = x_xi[i - 1];
+          p1.innerHTML = Number(x_xi[i - 1]).toFixed(accuracy);
           ///Xi - X * Y
           p1 = row.insertCell(3);
-          p1.innerHTML = xi_avg_yi[i - 1];
+          p1.innerHTML = Number(xi_avg_yi[i - 1]).toFixed(accuracy);
           //Xi - X square
           p1 = row.insertCell(4);
-          p1.innerHTML = xi_square[i - 1];
+          p1.innerHTML = Number(xi_square[i - 1]).toFixed(accuracy);
         }
         result();
       }
 
       function result() {
         var p = document.getElementById("results");
-        var description = "\\(\\overline\{X}\ = " + x_avg + " \\)";
+        // var description = "\\(\\overline\{X}\ = " + x_avg + " \\)";
         var text =
-          description +
+          solution +
           "<h4>The equation is:</h4> <span class='green-text'>\\[ y = " +
-          slope.toFixed(3) +
+          slope.toFixed(accuracy) +
           "x + " +
-          intercept.toFixed(3) +
+          intercept.toFixed(accuracy) +
           "\\]</span>";
         p.innerHTML = text;
         MathJax.typeset();

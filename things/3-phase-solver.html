@@ -1,0 +1,1341 @@
+<?php
+    header("Cache-Control: no-cache, no-store, must-revalidate"); // HTTP 1.1.
+header("Pragma: no-cache"); // HTTP 1.0.
+header("Expires: 0"); // Proxies.
+?>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Circuits Solver</title>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/9.4.2/math.js"
+      integrity="sha512-QV5l+7LZRL8BykcphlyTPVvXqdhe64fq0ncYJ6BTmy75WcAbj07quapbRucuSBj3YTW6TSXkmjisOYmIyA8I6w=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+      integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css"
+      integrity="undefined"
+      crossorigin="anonymous"
+    />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <style>
+      body {
+        margin: 30px;
+        padding-bottom: 50px;
+      }
+      .for-img {
+        margin: auto;
+        width: 80%;
+        max-width: 400px;
+      }
+      .for-img img {
+        width: 100%;
+      }
+      .wrap {
+        max-width: 400px;
+        width: 90%;
+        margin: 20px auto;
+      }
+      .wrapper {
+        display: flex;
+        flex-wrap: wrap;
+      }
+      .col {
+        min-width: 280px !important;
+      }
+      .jumbotron {
+        height: min-content;
+        padding: 30px 20px;
+      }
+      .toast {
+        position: fixed;
+        height: min-content;
+        display: none;
+        bottom: 50px;
+        left: 30px;
+      }
+      #power-factor-error {
+        display: none;
+      }
+      @media screen and (max-width: 440px) {
+        li.nav-item a {
+          height: 64px !important;
+          display: flex !important;
+          justify-content: center;
+          align-items: center;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Circuits Solver</h1>
+    <div class="jumbotron">
+      You can use complex numbers of the form a+bi too! In second order you can
+      use expressions like 1/4 or 1/3 instead of 0.25 or 0.333.<br />For
+      learning purposes by Akshat Oke.
+    </div>
+    <div class="row mb-3">
+      <!-- Nav pills -->
+      <ul class="nav nav-pills nav-justified">
+        <li class="nav-item">
+          <a class="nav-link active" data-toggle="pill" href="#phase"
+            >3 Phase</a
+          >
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" data-toggle="pill" href="#ydelta">Y-Delta</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" data-toggle="pill" href="#rlc">Second Order</a>
+        </li>
+      </ul>
+    </div>
+    <div class="tab-content">
+      <div class="phase tab-pane container active" id="phase">
+        <h2>3 phase balanced system</h2>
+        <div class="row mb-3">
+          <div class="form-group col">
+            <label for="source-connection">Source connection</label>
+            <select id="source-connection" class="form-control">
+              <option value="star" selected>Star</option>
+              <option value="delta">Delta</option>
+            </select>
+          </div>
+          <div class="form-group col">
+            <label for="load-connection">load-connection</label>
+            <select id="load-connection" class="form-control">
+              <option value="star" selected>Star</option>
+              <option value="delta">Delta</option>
+            </select>
+          </div>
+        </div>
+        <div class="input-group row">
+          <div class="col form-group">
+            <label class="mr-sm-2" for="volt-type">Voltage is...</label>
+            <select class="form-control mr-sm-2" id="volt-type">
+              <option value="line" selected>Line</option>
+              <option value="phase">Phase</option>
+            </select>
+          </div>
+          <div class="col form-group input-group align-items-center">
+            <div class="input-group align-items-center">
+              <span class="input-group-text" htmlfor="voltage"
+                >Value in V(rms)</span
+              ><input
+                type="text"
+                class="form-control"
+                placeholder="-9i"
+                name="r5"
+                id="voltage"
+                tabindex="5"
+                onblur="voltConvert();"
+              />
+            </div>
+          </div>
+        </div>
+        <div class="input-group row mb-3">
+          <div class="col form-group">
+            <label class="mr-sm-2" for="current-type">Current is...</label>
+            <select class="form-control mr-sm-2" id="current-type">
+              <option value="line" selected>Line</option>
+              <option value="phase">Phase</option>
+            </select>
+          </div>
+          <div class="col form-group input-group align-items-center">
+            <div class="input-group align-items-center">
+              <span class="input-group-text" htmlfor="current"
+                >Value in A(rms)</span
+              ><input
+                type="text"
+                class="form-control"
+                placeholder="-9i"
+                name="r5"
+                id="current"
+                tabindex="5"
+                onblur="currentConvert()"
+              />
+            </div>
+          </div>
+        </div>
+        <!--  -->
+        <div class="input-group row">
+          <div class="col form-group input-group align-items-center">
+            <div class="input-group align-items-center">
+              <span class="input-group-text" htmlfor="active-power"
+                >Total Power (3VphIph cos θ)</span
+              ><input
+                type="text"
+                class="form-control"
+                placeholder="1500"
+                autocomplete="false"
+                id="active-power"
+                tabindex="5"
+                value=""
+              />
+            </div>
+          </div>
+          <div class="col form-group input-group align-items-center mb-4">
+            <div class="input-group align-items-center">
+              <span class="input-group-text" htmlfor="complex-power"
+                >Total Complex Power</span
+              ><input
+                type="text"
+                class="form-control"
+                placeholder="5-7i"
+                autocomplete="false"
+                id="complex-power"
+                tabindex="5"
+                value=""
+              />
+            </div>
+          </div>
+        </div>
+        <div class="input-group row">
+          <div class="col form-group input-group align-items-center mb-4">
+            <div class="row" style="width: 100%">
+              <div class="input-group align-items-center">
+                <span class="input-group-text" htmlfor="power-factor"
+                  >pf(cos θ)</span
+                ><input
+                  type="text"
+                  class="form-control"
+                  placeholder="Power factor"
+                  autocomplete="false"
+                  id="power-factor"
+                  tabindex="5"
+                  value=""
+                />
+              </div>
+              <div class="row">
+                <small id="power-factor-error" class="text-danger">
+                  Must be between -1 and 1.
+                </small>
+              </div>
+            </div>
+          </div>
+          <div class="col form-group input-group align-items-center mb-4">
+            <div class="input-group align-items-center">
+              <span class="input-group-text" htmlfor="impedance"
+                >Impedance (Z)</span
+              ><input
+                type="text"
+                class="form-control"
+                placeholder="5-7i"
+                autocomplete="false"
+                id="impedance"
+                tabindex="5"
+                value=""
+              />
+            </div>
+          </div>
+        </div>
+        <div style="text-align: center">
+          <div>
+            <button
+              class="btn btn-primary"
+              onclick="calculatePhase();"
+              id="calc-button"
+              disabled
+            >
+              Calculate
+            </button>
+            <button class="btn btn-dark" onclick="resetAll(); clearAll();">
+              Reset
+            </button>
+          </div>
+          <p id="info"></p>
+        </div>
+      </div>
+      <div class="tab-pane container fade" id="ydelta">
+        <div class="wrapper">
+          <div class="for-img">
+            <img
+              data-src="https://dwma4bz18k1bd.cloudfront.net/tools/Delta-Wye-Calculator-with-Equations.svg"
+              alt="Delta-Wye Calculator | CircuitBread"
+              class="lazyloaded"
+              src="https://dwma4bz18k1bd.cloudfront.net/tools/Delta-Wye-Calculator-with-Equations.svg"
+            />
+          </div>
+          <div class="wrap">
+            <div class="sf-elec-calc-main">
+              <h4>Delta</h4>
+              <div class="input-group d-flex first-r align-items-center">
+                <span class="input-group-text" htmlfor="r1">R<sub>a</sub></span
+                ><input
+                  type="text"
+                  class="form-control d"
+                  name="r1"
+                  id="r1"
+                  placeholder="2+2i"
+                  tabindex="1"
+                  value=""
+                />
+              </div>
+              <div class="input-group d-flex align-items-center">
+                <span class="input-group-text" htmlfor="r2">R<sub>b</sub></span
+                ><input
+                  type="text"
+                  class="form-control d"
+                  placeholder="3i"
+                  name="r2"
+                  id="r2"
+                  tabindex="2"
+                  value=""
+                />
+              </div>
+              <div class="input-group d-flex align-items-center">
+                <span class="input-group-text" htmlfor="r3">R<sub>c</sub></span
+                ><input
+                  type="text"
+                  class="form-control d"
+                  placeholder="5"
+                  name="r3"
+                  id="r3"
+                  tabindex="3"
+                  value=""
+                />
+              </div>
+              <h4 class="sf-tt">OR</h4>
+              <h4>Wye</h4>
+              <div class="input-group d-flex first-r align-items-center">
+                <span class="input-group-text" htmlfor="r4">R<sub>1</sub></span
+                ><input
+                  type="text"
+                  class="form-control y"
+                  name="r4"
+                  placeholder="2+2i"
+                  id="r4"
+                  tabindex="4"
+                  value=""
+                />
+              </div>
+              <div class="input-group d-flex align-items-center">
+                <span class="input-group-text" htmlfor="r5">R<sub>2</sub></span
+                ><input
+                  type="text"
+                  class="form-control y"
+                  placeholder="-9i"
+                  name="r5"
+                  id="r5"
+                  tabindex="5"
+                  value=""
+                />
+              </div>
+              <div class="input-group mb-2 d-flex align-items-center">
+                <span class="input-group-text" htmlfor="r6">R<sub>3</sub></span
+                ><input
+                  type="text"
+                  class="form-control y"
+                  name="r6"
+                  placeholder="-6-i"
+                  id="r6"
+                  tabindex="6"
+                  value=""
+                />
+              </div>
+              <div class="form-check mb-2" onclick="calculate(null)">
+                <input
+                  class="form-check-input"
+                  type="checkbox"
+                  value=""
+                  id="polar"
+                />
+                <label class="form-check-label" for="polar">
+                  Display in polar form
+                </label>
+              </div>
+              <!-- <div class="form-check" onclick="calculate(null)">
+              <input
+                class="form-check-input"
+                type="checkbox"
+                value=""
+                id="admittance"
+              />
+              <label class="form-check-label" for="admittance">
+                Use Admittances instead of impedances
+              </label>
+            </div> -->
+            </div>
+            <br />
+            <button type="button" class="btn btn-primary" onclick="reset()">
+              Reset
+            </button>
+          </div>
+        </div>
+        <script>
+          const all = document
+            .getElementById("ydelta")
+            .getElementsByTagName("input");
+          [...all].forEach((element) => {
+            element.addEventListener("keyup", (e) => {
+              console.log(e.srcElement.value + " is val");
+              console.log("S");
+              if (e.srcElement.classList.contains("d")) {
+                [
+                  ...document
+                    .getElementById("ydelta")
+                    .getElementsByClassName("y"),
+                ].forEach((e) => {
+                  e.disabled = true;
+                });
+              } else if (e.srcElement.classList.contains("y")) {
+                [
+                  ...document
+                    .getElementById("ydelta")
+                    .getElementsByClassName("d"),
+                ].forEach((e) => {
+                  e.disabled = true;
+                });
+              } else {
+                [
+                  ...document
+                    .getElementById("ydelta")
+                    .getElementsByClassName("y"),
+                ].forEach((e) => {
+                  e.disabled = false;
+                });
+                [
+                  ...document
+                    .getElementById("ydelta")
+                    .getElementsByClassName("d"),
+                ].forEach((e) => {
+                  e.disabled = false;
+                });
+              }
+              if (e.srcElement.classList.contains("d")) {
+                console.log("yes d");
+                let delta = 0;
+                [
+                  ...document
+                    .getElementById("ydelta")
+                    .getElementsByClassName("d"),
+                ].forEach((e) => {
+                  if (
+                    e.value &&
+                    e.value.match(
+                      /^ *\-? *(((\d+(\.\d{1,4})?))?i?|\d+) *((\+|\-) *(i(\d+(\.\d{1,4})?)?|(\d+(\.\d{1,4})?)i))* *$/g
+                    ) != null
+                  )
+                    delta++;
+                });
+                console.log(delta);
+                if (delta === 3) {
+                  calculate("y");
+                } else if (delta == 0) {
+                  [
+                    ...document
+                      .getElementById("ydelta")
+                      .getElementsByClassName("y"),
+                  ].forEach((e) => {
+                    e.disabled = false;
+                  });
+                  [
+                    ...document
+                      .getElementById("ydelta")
+                      .getElementsByClassName("d"),
+                  ].forEach((e) => {
+                    e.disabled = false;
+                  });
+                }
+              } else {
+                let delta = 0;
+                [
+                  ...document
+                    .getElementById("ydelta")
+                    .getElementsByClassName("y"),
+                ].forEach((e) => {
+                  if (
+                    e.value != "" &&
+                    e.value.match(
+                      /^ *\-? *(((\d+(\.\d{1,4})?))?i?|\d+) *((\+|\-) *(i(\d+(\.\d{1,4})?)?|(\d+(\.\d{1,4})?)i))* *$/g
+                    ) != null
+                  )
+                    delta++;
+                });
+                if (delta === 3) {
+                  calculate("d");
+                } else if (delta == 0) {
+                  [
+                    ...document
+                      .getElementsById("ydelta")
+                      .getElementsByClassName("y"),
+                  ].forEach((e) => {
+                    e.disabled = false;
+                  });
+                  [
+                    ...document
+                      .getElementById("ydelta")
+                      .getElementsByClassName("d"),
+                  ].forEach((e) => {
+                    e.disabled = false;
+                  });
+                }
+              }
+            });
+          });
+          var lastCalc = "y";
+          function calculate(str) {
+            if (str == null || str == undefined) {
+              str = lastCalc;
+            } else lastCalc = str;
+            try {
+              if (str == "y") {
+                const r1 = math.complex(
+                  document.getElementById("r1").value || "0"
+                );
+                const r2 = math.complex(
+                  document.getElementById("r2").value || "0"
+                );
+                const r3 = math.complex(
+                  document.getElementById("r3").value || "0"
+                );
+                findY(r1, r2, r3);
+              } else {
+                const r4 = math.complex(
+                  document.getElementById("r4").value || "0"
+                );
+                const r5 = math.complex(
+                  document.getElementById("r5").value || "0"
+                );
+                const r6 = math.complex(
+                  document.getElementById("r6").value || "0"
+                );
+                findD(r4, r5, r6);
+              }
+            } catch (error) {
+              console.log(error);
+              return;
+            }
+          }
+          function findD(r1, r2, r3) {
+            console.log("delta");
+            if (
+              math.Complex.compare(r1, math.complex(0, 0)) == 0 ||
+              math.Complex.compare(r2, math.complex(0, 0)) == 0 ||
+              math.Complex.compare(r3, math.complex(0, 0)) == 0
+            ) {
+              console.log("zero");
+              return;
+            }
+            try {
+              const ra = document.getElementById("r1");
+              const rb = document.getElementById("r2");
+              const rc = document.getElementById("r3");
+              ///////
+              const a = math.multiply(r1, r2);
+              const b = math.multiply(r1, r3);
+              const c = math.multiply(r3, r2);
+              const num = math.add(a, math.add(b, c));
+              if (document.getElementById("polar").checked == false) {
+                ra.value = num.div(r1).format(4);
+                rb.value = num.div(r2).format(4);
+                rc.value = num.div(r3).format(4);
+              } else {
+                let temp = num.div(r1).toPolar();
+                ra.value = temp.r.toFixed(3) + ", phi = " + temp.phi.toFixed(3);
+                temp = num.div(r2).toPolar();
+                rb.value = temp.r.toFixed(3) + ", phi = " + temp.phi.toFixed(3);
+                temp = num.div(r3).toPolar();
+                rc.value = temp.r.toFixed(3) + ", phi = " + temp.phi.toFixed(3);
+              }
+            } catch (e) {
+              console.log(e);
+            }
+          }
+          function findY(ra, rb, rc) {
+            try {
+              const r1 = document.getElementById("r4");
+              const r2 = document.getElementById("r5");
+              const r3 = document.getElementById("r6");
+              // r1.value = math.multiply(num, den.inverse());
+              let num = math.multiply(rb, rc);
+              const den = math.add(ra, math.add(rb, rc));
+              if (document.getElementById("polar").checked == false) {
+                r1.value = num.div(den).format(4);
+                ////
+                num = math.multiply(ra, rc);
+                r2.value = num.div(den).format(4);
+                ////
+                num = math.multiply(ra, rb);
+                r3.value = num.div(den).format(4);
+              } else {
+                let temp = num.div(den).toPolar();
+                r1.value = temp.r.toFixed(3) + ", phi = " + temp.phi.toFixed(3);
+                num = math.multiply(ra, rc);
+                temp = num.div(den).toPolar();
+                r2.value = temp.r.toFixed(3) + ", phi = " + temp.phi.toFixed(3);
+                num = math.multiply(ra, rb);
+                temp = num.div(den).toPolar();
+                r3.value = temp.r.toFixed(3) + ", phi = " + temp.phi.toFixed(3);
+              }
+            } catch (e) {
+              console.log(e);
+            }
+          }
+          function reset() {
+            [
+              ...document
+                .getElementById("ydelta")
+                .getElementsByTagName("input"),
+            ].forEach((e) => {
+              e.value = "";
+              e.disabled = false;
+            });
+          }
+        </script>
+      </div>
+      <div class="tab-pane container fade" id="rlc">
+        <div class="form-group">
+          <label for="circuit-type">Circuit is...</label>
+          <select class="custom-select" id="circuit-type">
+            <option value="unknown" selected>Unknown</option>
+            <option value="overdamped">Overdamped</option>
+            <option value="underdamped">Underdamped</option>
+            <option value="critical">Critically Damped</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="circuit-connection">RLC are in...</label>
+          <select class="custom-select" id="circuit-connection">
+            <option value="series" selected>Series</option>
+            <option value="parallel">Parallel</option>
+          </select>
+        </div>
+        <div class="form-group row">
+          <div class="input-group align-items-center col">
+            <span class="input-group-text" htmlfor="r">R(Ω)</span
+            ><input
+              type="text"
+              class="form-control rlc"
+              placeholder="12"
+              autocomplete="false"
+              id="r"
+              tabindex="5"
+            />
+          </div>
+          <div class="input-group align-items-center col">
+            <span class="input-group-text" htmlfor="l">L(H)</span
+            ><input
+              type="text"
+              class="form-control rlc"
+              placeholder="0.5"
+              autocomplete="false"
+              id="l"
+              tabindex="5"
+            />
+          </div>
+          <div class="input-group align-items-center col">
+            <span class="input-group-text" htmlfor="c">C(F)</span
+            ><input
+              type="text"
+              class="form-control rlc"
+              placeholder="0.5"
+              autocomplete="false"
+              id="c"
+              tabindex="5"
+            />
+          </div>
+        </div>
+        <!-- <div class="form-group row">
+          <div class="input-group align-items-center col">
+            <span class="input-group-text" htmlfor="v0">V(0)</span
+            ><input
+              type="text"
+              class="form-control initial"
+              placeholder="0.5"
+              name="r5"
+              id="v0"
+              tabindex="5"
+            />
+          </div>
+          <div class="input-group align-items-center col">
+            <span class="input-group-text" htmlfor="i0">I(0)</span
+            ><input
+              type="text"
+              class="form-control rlc"
+              placeholder="0.5"
+              name="r5"
+              id="i0"
+              tabindex="5"
+            />
+          </div>
+          <div class="input-group align-items-center col">
+            <span class="input-group-text" htmlfor="q0">Q(0)</span
+            ><input
+              type="text"
+              class="form-control rlc"
+              placeholder="0.5"
+              name="r5"
+              id="q0"
+              tabindex="5"
+            />
+          </div>
+        </div> -->
+        <div class="form-group" style="text-align: center">
+          <button class="btn btn-primary mr-1" onclick="solveRLC();">
+            Solve
+          </button>
+          <button class="btn btn-dark" onclick="rlcInputR();">Reset</button>
+          <script>
+            function rlcInputR() {
+              [
+                ...document.getElementById("rlc").getElementsByTagName("input"),
+              ].forEach((e) => {
+                e.value = "";
+              });
+              resetRLC();
+            }
+          </script>
+        </div>
+        <div id="rlc-result"></div>
+      </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/nerdamer@latest/nerdamer.core.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/nerdamer@latest/Algebra.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/nerdamer@latest/Calculus.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/nerdamer@latest/Solve.js"></script>
+    <script>
+      var resistance, inductance, capacitance, r0, l0, q0;
+      var series, circuit_type;
+      var parameter, solStr, otherSol;
+      function resetRLC() {
+        resistance =
+          inductance =
+          capacitance =
+          r0 =
+          l0 =
+          q0 =
+          series =
+          solStr =
+          circuit_type =
+          parameter =
+            null;
+      }
+      function rlcError() {}
+      function getRLC() {
+        [
+          ...document.getElementById("rlc").getElementsByClassName("rlc"),
+        ].forEach((element, index) => {
+          switch (index) {
+            case 0:
+              if (element.value) resistance = math.evaluate(element.value);
+              break;
+            case 1:
+              if (element.value) inductance = math.evaluate(element.value);
+              break;
+            case 2:
+              if (element.value) capacitance = math.evaluate(element.value);
+              break;
+          }
+        });
+        ////
+        [
+          ...document.getElementById("rlc").getElementsByClassName("initial"),
+        ].forEach((element, index) => {
+          switch (index) {
+            case 0:
+              if (element.value) v0 = math.evaluate(element.value);
+              break;
+            case 1:
+              if (element.value) i0 = math.evaluate(element.value);
+              break;
+            case 2:
+              if (element.value) q0 = math.evaluate(element.value);
+              break;
+          }
+        });
+      }
+      function solveRLC() {
+        resetRLC();
+        [...document.getElementsByClassName("rlc")].forEach((e) => {
+          e.classList.remove("is-invalid");
+        });
+        circuit_type = document.getElementById("circuit-type").value;
+        series =
+          document.getElementById("circuit-connection").value == "series";
+
+        getRLC();
+        if (series) {
+          parameter = "Vc";
+        } else {
+          parameter = "I_L";
+        }
+        if (circuit_type == "unknown") {
+          findCircuitTypeAndSolve();
+          findOthers();
+          showResultRLC();
+        } else {
+          findUnknownParams();
+          if (resistance != null)
+            document.getElementById("rlc-result").innerHTML =
+              "Nothing to solve. Did you mean to give the circuit type as unknown?";
+          else showResultRLC();
+        }
+      }
+      function findUnknownParams() {
+        if (circuit_type == "critical") {
+          if (resistance == null) {
+            solveResistance();
+          } else {
+            [...document.getElementsByClassName("rlc")].forEach((e) => {
+              e.classList.add("is-invalid");
+            });
+          }
+        }
+      }
+      function solveResistance() {
+        let wn = Math.sqrt(1 / (inductance * capacitance));
+        let exp =
+          (series ? `x/2*${inductance}` : `1 / (2*x*${capacitance})`) +
+          " = " +
+          wn;
+        let answer = nerdamer.solve(exp, "x");
+        parameter = "R";
+        solStr = answer;
+      }
+      function findOthers() {
+        if (series) {
+          let i = math.simplify(
+            capacitance + "*(" + math.derivative(solStr, "t") + ")"
+          );
+          let vL = math.derivative(i, "t");
+          vL = math.simplify(`${inductance}*(${vL})`);
+          otherSol = `i(t) = ${i} <br>V<sub>L</sub>(t) = ${vL}`;
+        } else {
+          let v = math.derivative(solStr, "t");
+          v = math.simplify(`${inductance} * (${v})`);
+          let iC = math.derivative(v, "t");
+          iC = math.simplify(`${capacitance}*(${iC})`);
+          otherSol = `V(t) = ${v} <br>I<sub>C</sub> = ${iC}`;
+        }
+      }
+      function showResultRLC() {
+        document.getElementById("rlc-result").innerHTML =
+          parameter + "(t) = " + solStr + "<br>" + otherSol;
+      }
+      function alpha() {
+        if (series) {
+          return resistance / (2 * inductance);
+        } else {
+          return 1 / (2 * resistance * capacitance);
+        }
+      }
+      function findCircuitTypeAndSolve() {
+        let a = alpha();
+        let a2 = a * a;
+        let wn2 = 1 / (inductance * capacitance);
+        if (a2 > wn2) {
+          circuit_type = "overdamped";
+          solveOverdamped(a, wn2);
+        } else if (a2 < wn2) {
+          circuit_type = "underdamped";
+          solveUnder(a, wn2);
+        } else {
+          circuit_type = "critical";
+          solveCritical(a);
+        }
+        ///
+        let sel = document.getElementById("circuit-type");
+        for (var opt, j = 0; (opt = sel.options[j]); j++) {
+          if (opt.value == circuit_type) {
+            sel.selectedIndex = j;
+            break;
+          }
+        }
+      }
+      function solveCritical(alpha) {
+        solStr = `(A t + B) e^(-${alpha}t)`;
+      }
+      function solveUnder(alpha, wn2) {
+        let wd = Math.sqrt(wn2 - alpha * alpha);
+        solStr = `e^(-${alpha}t) (A cos(${wd.toFixed(3)}t) + B sin(${wd.toFixed(
+          3
+        )}t))`;
+      }
+      function solveOverdamped(alpha, wn2) {
+        let sol = solveQuad(1, 2 * alpha, wn2);
+        solStr = `a*e^(${sol[0]}t) + b*e^(${sol[1]}t)`;
+      }
+      function solveQuad(a, b, c) {
+        var result = (-1 * b + Math.sqrt(Math.pow(b, 2) - 4 * a * c)) / (2 * a);
+        var result2 =
+          (-1 * b - Math.sqrt(Math.pow(b, 2) - 4 * a * c)) / (2 * a);
+        return [result, result2];
+      }
+    </script>
+
+    <script>
+      document.getElementById("power-factor").addEventListener("input", (e) => {
+        if (Math.abs(Number(e.srcElement.value)) > 1) {
+          e.srcElement.classList.add("is-invalid");
+          document.getElementById("power-factor-error").style.display = "block";
+        } else {
+          e.srcElement.classList.remove("is-invalid");
+          document.getElementById("power-factor-error").style.display = "none";
+        }
+      });
+      ////////
+      function showInfo(show, message = null) {
+        document.getElementById("calc-button").disabled = show;
+
+        if (show)
+          document.getElementById("info").innerText =
+            message ?? "Cannot calculate with current information";
+        else document.getElementById("info").innerText = "Ready to solve!";
+      }
+      ////////
+      [
+        ...document.getElementById("phase").getElementsByTagName("input"),
+      ].forEach((element) => {
+        element.addEventListener("keyup", (e) => {
+          let inputs = 0,
+            arr = [];
+          [
+            ...document.getElementById("phase").getElementsByTagName("input"),
+          ].forEach((ele) => {
+            if (
+              document.getElementById("power-factor-error").style.display ==
+              "none"
+            ) {
+              ele.classList.remove("is-invalid");
+            } else if (ele.id != "power-factor") {
+              ele.classList.remove("is-invalid");
+            }
+            if (ele.value != "") {
+              inputs++;
+              arr.push(ele);
+            }
+          });
+          if (inputs < 2) {
+            showInfo(true);
+            return;
+          }
+          if (inputs == 2) {
+            if (document.getElementById("impedance").value.trim() != "") {
+              if (
+                document.getElementById("voltage").value ||
+                document.getElementById("current").value
+              ) {
+                showInfo(false);
+                arr.forEach((e) => {
+                  e.classList.remove("is-invalid");
+                });
+              } else if (document.getElementById("power-factor").value) {
+                showInfo(
+                  true,
+                  "Redundant information with power factor. Remove one."
+                );
+                arr.forEach((e) => {
+                  e.classList.add("is-invalid");
+                });
+              }
+            }
+            // else if(document.getElementById("voltage").value &&
+            //   document.getElementById("current").value){
+            //     showInfo(false);
+            //     arr.forEach((e) => {
+            //       e.classList.remove("is-invalid");
+            //     });
+            // }
+            else {
+              showInfo(true);
+            }
+          } else if (inputs == 3) {
+            if (
+              document.getElementById("power-factor").value &&
+              (document.getElementById("complex-power").value ||
+                document.getElementById("impedance").value)
+            ) {
+              showInfo(
+                true,
+                "Redundant information with power factor. Remove one."
+              );
+              arr.forEach((e) => {
+                e.classList.add("is-invalid");
+              });
+            }
+            // else if (
+            //   document.getElementById("voltage").value &&
+            //   document.getElementById("current").value
+            // ) {
+            //   showInfo(
+            //     true,
+            //     "Redundant information with impedance. Remove one."
+            //   );
+            //   arr.forEach((e) => {
+            //     e.classList.add("is-invalid");
+            //   });
+            // }
+            else {
+              showInfo(false);
+              arr.forEach((e) => {
+                e.classList.remove("is-invalid");
+              });
+            }
+            // if (
+            //   (document.getElementById("active-power").value.trim() != "" ) &&
+            //   (document.getElementById("voltage").value != "" ||
+            //     document.getElementById("current").value != "")
+            // ) {
+            //   showInfo(false);
+            // } else if(
+            //     document.getElementById("power-factor").value.trim() != ""){
+            //   showInfo(true);
+            // }
+          } else if (inputs > 3) {
+            document.getElementById("number-of-inputs").innerText = inputs;
+            document.getElementById("inputs-to-remove").innerText = inputs - 3;
+            arr.forEach((e) => {
+              e.classList.add("is-invalid");
+            });
+            let err = `Cannot solve as given ${inputs} inputs which is greater than required. Remove atleast ${
+              inputs - 3
+            } of them.`;
+            showInfo(true, err);
+          }
+        });
+      });
+      var line_voltage,
+        phase_voltage,
+        line_current,
+        phase_current,
+        complex_power,
+        active_power,
+        impedance,
+        power_factor,
+        source_star,
+        load_star;
+      function voltConvert() {
+        var temp_volt = document.getElementById("voltage").value;
+        if (temp_volt == null || temp_volt == undefined || temp_volt == "")
+          return;
+        if (document.getElementById("source-connection").value == "star") {
+          if (document.getElementById("volt-type").value == "line") {
+            line_voltage = math.complex(temp_volt);
+            phase_voltage = line_voltage.div(math.complex(1.732, 0));
+          } else {
+            phase_voltage = math.complex(temp_volt);
+            line_voltage = math.multiply(phase_voltage, math.complex(1.732, 0));
+          }
+        } else {
+          if (document.getElementById("volt-type").value == "line") {
+            line_voltage = math.complex(temp_volt);
+            phase_voltage = line_voltage;
+          } else {
+            phase_voltage = math.complex(temp_volt);
+            line_voltage = phase_voltage;
+          }
+        }
+      }
+
+      function currentConvert() {
+        var temp_volt = document.getElementById("current").value;
+        if (temp_volt == null || temp_volt == undefined || temp_volt == "")
+          return;
+        if (document.getElementById("source-connection").value == "star") {
+          line_current = math.complex(temp_volt);
+          phase_current = line_current;
+        } else {
+          if (document.getElementById("current-type").value == "line") {
+            line_current = math.complex(temp_volt);
+            phase_current = line_current.div(math.complex(1.732, 0));
+          } else {
+            phase_current = math.complex(temp_volt);
+            line_current = math.multiply(phase_current, math.complex(1.732, 0));
+          }
+        }
+      }
+
+      function clearAll() {
+        [
+          ...document.getElementById("phase").getElementsByTagName("input"),
+        ].forEach((ele) => {
+          ele.value = "";
+          ele.classList.remove("is-invalid");
+        });
+      }
+
+      function resetAll() {
+        line_voltage =
+          phase_voltage =
+          line_current =
+          phase_current =
+          complex_power =
+          active_power =
+          impedance =
+          power_factor =
+          source_star =
+          load_star =
+            null;
+      }
+
+      function calculatePhase() {
+        resetAll();
+        if (
+          document.getElementById("power-factor").value &&
+          Math.abs(Number(document.getElementById("power-factor").value)) > 1
+        ) {
+          document.getElementById("power-factor").value += "is invalid";
+          document.getElementById("power-factor").style.color = "red";
+          return;
+        } else {
+          document.getElementById("power-factor").style.color = "initial";
+        }
+        source_star =
+          document.getElementById("source-connection").value == "star";
+        load_star = document.getElementById("load-connection").value == "star";
+        voltConvert();
+        currentConvert();
+        impedance = document.getElementById("impedance").value;
+        if (impedance == "") impedance = null;
+        else {
+          impedance = math.complex(impedance);
+        }
+        // power_factor = document.getElementById("power-factor").value;
+        active_power = document.getElementById("active-power").value != "";
+        ///////
+        if (line_current == null || line_current == "") {
+          findCurrents();
+        }
+        //////
+        // if(power_factor == null){
+        //   findPowerFactor();
+        // }
+        ////
+        if (line_voltage == null) {
+          findVoltage();
+        }
+        ////
+        findPowerFactor();
+        findPower();
+        //////
+        if (impedance == null) {
+          findImpedance();
+        }
+        ////
+
+        // if (active_power == false) {
+        //   findPower();
+        // } else {
+        //   active_power = math.complex(active_power);
+
+        // }
+        if (impedance != null && power_factor == null) {
+          power_factor = Math.cos(impedance.toPolar().phi);
+        }
+        ////
+        displayAll();
+      }
+      function findImpedance() {
+        if (power_factor == false) findPowerFactor();
+        if (load_star) {
+          // if (document.getElementById("power-factor").value != "")
+          //   power_factor = Number(
+          //     document.getElementById("power-factor").value
+          //   );
+          impedance = math.complex({
+            r: phase_voltage.div(phase_current).re,
+            phi: Math.acos(power_factor),
+          });
+        } else {
+          impedance = math.complex({
+            r: line_voltage.div(line_current.div(math.complex(1.732, 0))).re,
+            phi: Math.acos(power_factor),
+          });
+        }
+      }
+      function findPower() {
+        console.log("In power: impedance is " + impedance);
+        if (document.getElementById("complex-power").value != "") {
+          complex_power = math.complex(
+            document.getElementById("complex-power").value
+          );
+          active_power = complex_power.re;
+          power_factor = Math.cos(complex_power.toPolar().phi);
+        } else if (document.getElementById("active-power").value != "") {
+          active_power = Number(document.getElementById("active-power").value);
+          if (document.getElementById("power-factor").value != "") {
+            power_factor = Number(
+              document.getElementById("power-factor").value
+            );
+            let angle = Math.acos(power_factor);
+            complex_power = math.complex({
+              r:
+                Number(document.getElementById("active-power").value) /
+                power_factor,
+              phi: angle,
+            });
+            return;
+          } else findPowerFactor();
+        } else {
+          complex_power = math.complex({
+            r: math
+              .multiply(
+                math.complex(3, 0),
+                math.multiply(phase_voltage, phase_current)
+              )
+              .toPolar().r,
+            phi: impedance.toPolar().phi,
+          });
+          active_power = complex_power.re;
+          power_factor = Math.cos(complex_power.toPolar().phi);
+          console.log(complex_power);
+        }
+      }
+      function findPowerFactor() {
+        if (document.getElementById("power-factor").value) {
+          power_factor = document.getElementById("power-factor").value;
+          return;
+        }
+        if (active_power == null) findPower();
+        // active_power = Number(document.getElementById("active-power").value);
+        power_factor = active_power / (3 * phase_voltage.re * phase_current.re);
+        complex_power = math.complex({
+          r: active_power / power_factor,
+          phi: Math.acos(power_factor),
+        });
+      }
+      function findVoltage() {
+        if (load_star) {
+          if (impedance == null) {
+            findPower();
+            let den = math.multiply(
+              math.complex(Math.cos(power_factor), 0),
+              phase_current
+            );
+            phase_voltage = math.complex(
+              active_power / math.multiply(3, den).toPolar().r,
+              0
+            );
+            if (source_star)
+              line_voltage = math.multiply(
+                phase_voltage,
+                math.complex(1.732, 0)
+              );
+            else line_voltage = phase_voltage;
+          } else
+            phase_voltage = math.multiply(phase_current, impedance.toPolar().r);
+          line_voltage = math.multiply(phase_voltage, math.complex(1.732, 0));
+        } else {
+          if (impedance == null) {
+            findPower();
+            let den = math.multiply(
+              math.complex(Math.cos(power_factor), 0),
+              phase_current
+            );
+            phase_voltage = math.complex(
+              active_power / math.multiply(3, den).toPolar().r,
+              0
+            );
+            line_voltage = math.multiply(phase_voltage, math.complex(1.732, 0));
+          }
+          line_voltage = math.multiply(
+            math.multiply(phase_current, math.complex(1.732, 0)),
+            impedance.toPolar().r
+          );
+          phase_voltage = line_voltage.div(math.complex(1.732, 0));
+        }
+      }
+      function findCurrents() {
+        if (impedance == null) {
+          findPower();
+          let den = math.multiply(math.complex(power_factor, 0), phase_voltage);
+          phase_current = math.complex(
+            active_power / math.multiply(3, den).toPolar().r,
+            0
+          );
+          if (source_star) line_current = phase_current;
+          else {
+            line_current = math.multiply(phase_current, math.complex(1.732, 0));
+          }
+        } else {
+          if (load_star) {
+            line_current = phase_voltage.div(impedance.toPolar().r);
+            if (source_star) phase_current = line_current;
+            else {
+              line_current = line_current.div(math.complex(1.732, 0));
+              phase_current = line_current.div(math.complex(1.732, 0));
+            }
+          } else {
+            line_current = line_voltage.div(impedance.toPolar().r);
+            line_current = math.multiply(line_current, math.complex(1.732, 0));
+            if (source_star) phase_current = line_current;
+            else phase_current = line_current.div(math.complex(1.732, 0));
+          }
+        }
+      }
+      function displayAll() {
+        document.getElementById("volt-type").selectedIndex = 0;
+        document.getElementById("current-type").selectedIndex = 0;
+
+        document.getElementById("current").value = line_current.format(4);
+
+        document.getElementById("voltage").value = line_voltage.format(4);
+        document.getElementById("complex-power").value =
+          complex_power.format(4);
+        document.getElementById("active-power").value = active_power;
+        document.getElementById("power-factor").value =
+          power_factor.toPrecision(4);
+        document.getElementById("impedance").value = impedance.format(4);
+      }
+      [...document.getElementsByTagName("select")].forEach((ele) => {
+        ele.addEventListener("change", changeVoltCurrent);
+      });
+      function changeVoltCurrent() {
+        // voltConvert();
+        // currentConvert();
+        if (
+          document.getElementById("volt-type").value == "line" &&
+          line_voltage
+        ) {
+          document.getElementById("voltage").value = line_voltage.format(4);
+        } else if (line_voltage) {
+          document.getElementById("voltage").value = phase_voltage.format(4);
+        }
+        if (
+          document.getElementById("current-type").value == "line" &&
+          line_current
+        ) {
+          document.getElementById("current").value = line_current.format(4);
+        } else if (line_current) {
+          document.getElementById("current").value = phase_current.format(4);
+        }
+      }
+    </script>
+
+    <div
+      class="toast"
+      id="many-inputs"
+      style="position: absolute; top: 0; right: 0"
+    >
+      <div class="toast-header">Warning</div>
+      <div class="toast-body">
+        You have put
+        <span class="text-danger" id="number-of-inputs"></span> inputs, which
+        are more than required. Remove
+        <span class="text-warning" id="inputs-to-remove"></span> inputs for
+        correct results.
+      </div>
+    </div>
+
+    <!-- <div class="toast" id="invalid-combo">
+      <div class="toast-header">Error</div>
+      <div class="toast-body">
+        That input combination can contradict. Remove one.
+      </div>
+    </div> -->
+  </body>
+</html>

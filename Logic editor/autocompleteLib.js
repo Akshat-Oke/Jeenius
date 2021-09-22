@@ -29,7 +29,7 @@
     var keyUpEventName = mobileFirefox ? "input" : "keyup";
     var items = [];
     var inputValue = "";
-    var minLen = 0; //changed from 2 to 0 by me
+    var minLen = 2;
     var showOnFocus = settings.showOnFocus;
     var selected;
     var keypressCounter = 0;

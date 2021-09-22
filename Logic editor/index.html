@@ -1,3 +1,10 @@
+<?php
+    if(!isset($_GET["me"])){
+    $file = fopen("log.txt", "a");
+    fwrite($file, "N");
+    fclose($file);
+    }
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -25,7 +32,11 @@
     }
 
     body {
-      padding-bottom: 20px;
+      padding: 20px 0;
+    }
+
+    * {
+      transition: .3s;
     }
 
     main {
@@ -116,10 +127,6 @@
       .flex-div>div:first-child {
         border: none;
       }
-
-      main.uk-container {
-        padding-left: 40px;
-      }
     }
 
     #Test {
@@ -129,12 +136,90 @@
       width: auto;
       white-space: nowrap;
     }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 0;
+      margin-bottom: 20px;
+    }
+
+    header h1 {
+      margin-bottom: 0;
+    }
+
+    #dark {
+      display: block;
+      margin-right: 20px;
+      border: 1px solid rgba(0, 0, 0, 0.5);
+      padding: 7px 10px;
+      transition: 0.4s;
+      border-radius: 5px;
+    }
+
+    #dark.dark {
+      border: 1px solid #dfdfdf;
+    }
+
+    #dark:hover,
+    #dark.dark {
+      background-color: rgba(0, 0, 0, 0.9);
+      color: #dfdfdf;
+      cursor: pointer;
+    }
+
+    #dark.dark:hover {
+      background-color: #dfdfdf;
+      color: rgba(0, 0, 0, 0.6);
+    }
+
+    body.uk-light .uk-alert {
+      background-color: #333;
+      color: rgba(255, 255, 255, .7);
+    }
+
+    body.uk-light kbd {
+      color: #f0506e;
+    }
+
+    body.uk-light button {
+      background: #222;
+      color: #bdbdbd;
+      border: 1px solid;
+    }
+
+    body.uk-light .uk-button-primary {
+      color: #1e87f0;
+      background: #2a2a2a;
+      /* border: 1px solid; */
+    }
+
+    body.uk-light #proof-list div.subproof {
+      border-color: #bdbdbd;
+    }
+
+    body.uk-light .autocomplete div {
+      background: #2d2d2d;
+    }
+
+    body.uk-light .autocomplete div.selected {
+      background: #12a761;
+    }
+
+    body.uk-light .uk-modal-dialog,
+    body.uk-light .uk-modal-dialog div,
+    body.uk-light .uk-modal-dialog p {
+      background: #2f2f2f;
+
+    }
   </style>
 </head>
 
 <body>
   <header>
     <h1>Natural deduction proof editor</h1>
+    <div id="dark">Dark Mode</div>
   </header>
   <main class="uk-container">
     <div class="uk-alert-success" uk-alert>
@@ -145,6 +230,8 @@
         <br />
         Press <kbd>Enter</kbd> to insert a new line, and press <kbd>Ctrl+B</kbd> to create a box or sub-proof. Scroll
         down for the full list of keyboard actions.
+        <Br><Br>
+        *This also includes a very handy <strong>auto-suggest</strong> feature! (which might be wrong)
       </p>
     </div>
     <div class="uk-margin">
@@ -157,85 +244,8 @@
         <h2 id="proof-header">Proof</h2>
         <div id="proof">
           <ul id="proof-list" class="uk-list">
+
             <li>
-
-              <input class="uk-input" type="text" placeholder="Formula">
-              <input class="uk-input" type="text" placeholder="Justification">
-            </li>
-            <div class="subproof">
-              <li>
-
-                <input class="uk-input" type="text" placeholder="Formula">
-                <input class="uk-input" type="text" placeholder="Justification">
-              </li>
-              <div class="subproof">
-                <li>
-
-                  <input class="uk-input" type="text" placeholder="Formula">
-                  <input class="uk-input" type="text" placeholder="Justification">
-                </li>
-                <li>
-
-                  <input class="uk-input" type="text" placeholder="Formula">
-                  <input class="uk-input" type="text" placeholder="Justification">
-                </li>
-                <li>
-
-                  <input class="uk-input" type="text" placeholder="Formula">
-                  <input class="uk-input" type="text" placeholder="Justification">
-                </li>
-              </div>
-              <li>
-
-                <input class="uk-input" type="text" placeholder="Formula">
-                <input class="uk-input" type="text" placeholder="Justification">
-              </li>
-              <li>
-
-                <input class="uk-input" type="text" placeholder="Formula">
-                <input class="uk-input" type="text" placeholder="Justification">
-              </li>
-            </div>
-            <div class="subproof">
-              <li>
-
-                <input class="uk-input" type="text" placeholder="Formula">
-                <input class="uk-input" type="text" placeholder="Justification">
-              </li>
-              <div class="subproof">
-                <li>
-
-                  <input class="uk-input" type="text" placeholder="Formula">
-                  <input class="uk-input" type="text" placeholder="Justification">
-                </li>
-                <li>
-
-                  <input class="uk-input" type="text" placeholder="Formula">
-                  <input class="uk-input" type="text" placeholder="Justification">
-                </li>
-                <li>
-
-                  <input class="uk-input" type="text" placeholder="Formula">
-                  <input class="uk-input" type="text" placeholder="Justification">
-                </li>
-              </div>
-              <li>
-
-                <input class="uk-input" type="text" placeholder="Formula">
-                <input class="uk-input" type="text" placeholder="Justification">
-              </li>
-              <li>
-
-                <input class="uk-input" type="text" placeholder="Formula">
-                <input class="uk-input" type="text" placeholder="Justification">
-              </li>
-            </div>
-            <li>
-
-              <input class="uk-input" type="text" placeholder="Formula">
-              <input class="uk-input" type="text" placeholder="Justification">
-            </li>
-            <!-- <li>
               <input class="uk-input" type="text" placeholder="Formula">
               <input class="uk-input" type="text" placeholder="Justification">
             </li>
@@ -252,11 +262,11 @@
             <li>
               <input class="uk-input" type="text" placeholder="Formula">
               <input class="uk-input" id="country" type="text" placeholder="Justification">
-            </li> -->
+            </li>
           </ul>
 
         </div>
-        <div>
+        <div style="margin-bottom: 10px;">
           <button class="uk-button" id="clear-all">Clear All</button>
           <button class="uk-button uk-button-primary" id="export">Export to Text</button>
         </div>
@@ -320,7 +330,7 @@
         </tr>
         <tr>
           <td>Disjunction </td>
-          <td>V v OR</td>
+          <td>vv OR</td>
           <td>∨</td>
         </tr>
         <tr>
@@ -338,6 +348,55 @@
   </main>
   <div id="Test"></div>
   <footer>Made with <span>Logic</span> by <a href="https://jeenius.gq/more.html"> Akshat</a></footer>
+  <!-- This is the modal -->
+  <div id="modal" uk-modal bg-close="false">
+    <div class="uk-modal-dialog uk-modal-body">
+      <h2 class="uk-modal-title">Hey there</h2>
+      <p>It seems you are using a mobile device (or a tab). This website might not work properly on such devices, so I
+        recommend you access this on a PC instead.<br>Thanks for using the editor!</p>
+      <p class="uk-text-right">
+        <button class="uk-button uk-button-default uk-modal-close" type="button">All right</button>
+      </p>
+    </div>
+  </div>
+  <div id="welcome-modal" uk-modal bg-close="false">
+    <div class="uk-modal-dialog uk-modal-body uk-background-secondary uk-light">
+      <h2 class="uk-modal-title">Welcome!</h2>
+      <p>Type proofs like a boss with no efforts!<br>Includes auto-complete and auto-fill in statements after boxes for
+        a seamless typing experience. Export to text (so you can copy paste) in one click!</p>
+      <p>I made this editor to type proofs faster in the tutorial class, so if you think it is useless, well... there's
+        no use for it in other cases as I know.</p>
+      <p>P.S. You can switch to Dark Mode from the top right corner!</p>
+      <p class="uk-text-right">
+        <button class="uk-button uk-button-default uk-modal-close" type="button">Awesome!</button>
+      </p>
+    </div>
+  </div>
+  <!-- UIkit JS -->
+  <script src="https://cdn.jsdelivr.net/npm/uikit@3.7.3/dist/js/uikit.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/uikit@3.7.3/dist/js/uikit-icons.min.js"></script>
+  <script>
+    window.mobileAndTabletCheck = function () {
+      let check = false;
+      (function (a) { if (/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|compal|elaine|fennec|hiptop|iemobile|ip(hone|od)|iris|kindle|lge |maemo|midp|mmp|mobile.+firefox|netfront|opera m(ob|in)i|palm( os)?|phone|p(ixi|re)\/|plucker|pocket|psp|series(4|6)0|symbian|treo|up\.(browser|link)|vodafone|wap|windows ce|xda|xiino|android|ipad|playbook|silk/i.test(a) || /1207|6310|6590|3gso|4thp|50[1-6]i|770s|802s|a wa|abac|ac(er|oo|s\-)|ai(ko|rn)|al(av|ca|co)|amoi|an(ex|ny|yw)|aptu|ar(ch|go)|as(te|us)|attw|au(di|\-m|r |s )|avan|be(ck|ll|nq)|bi(lb|rd)|bl(ac|az)|br(e|v)w|bumb|bw\-(n|u)|c55\/|capi|ccwa|cdm\-|cell|chtm|cldc|cmd\-|co(mp|nd)|craw|da(it|ll|ng)|dbte|dc\-s|devi|dica|dmob|do(c|p)o|ds(12|\-d)|el(49|ai)|em(l2|ul)|er(ic|k0)|esl8|ez([4-7]0|os|wa|ze)|fetc|fly(\-|_)|g1 u|g560|gene|gf\-5|g\-mo|go(\.w|od)|gr(ad|un)|haie|hcit|hd\-(m|p|t)|hei\-|hi(pt|ta)|hp( i|ip)|hs\-c|ht(c(\-| |_|a|g|p|s|t)|tp)|hu(aw|tc)|i\-(20|go|ma)|i230|iac( |\-|\/)|ibro|idea|ig01|ikom|im1k|inno|ipaq|iris|ja(t|v)a|jbro|jemu|jigs|kddi|keji|kgt( |\/)|klon|kpt |kwc\-|kyo(c|k)|le(no|xi)|lg( g|\/(k|l|u)|50|54|\-[a-w])|libw|lynx|m1\-w|m3ga|m50\/|ma(te|ui|xo)|mc(01|21|ca)|m\-cr|me(rc|ri)|mi(o8|oa|ts)|mmef|mo(01|02|bi|de|do|t(\-| |o|v)|zz)|mt(50|p1|v )|mwbp|mywa|n10[0-2]|n20[2-3]|n30(0|2)|n50(0|2|5)|n7(0(0|1)|10)|ne((c|m)\-|on|tf|wf|wg|wt)|nok(6|i)|nzph|o2im|op(ti|wv)|oran|owg1|p800|pan(a|d|t)|pdxg|pg(13|\-([1-8]|c))|phil|pire|pl(ay|uc)|pn\-2|po(ck|rt|se)|prox|psio|pt\-g|qa\-a|qc(07|12|21|32|60|\-[2-7]|i\-)|qtek|r380|r600|raks|rim9|ro(ve|zo)|s55\/|sa(ge|ma|mm|ms|ny|va)|sc(01|h\-|oo|p\-)|sdk\/|se(c(\-|0|1)|47|mc|nd|ri)|sgh\-|shar|sie(\-|m)|sk\-0|sl(45|id)|sm(al|ar|b3|it|t5)|so(ft|ny)|sp(01|h\-|v\-|v )|sy(01|mb)|t2(18|50)|t6(00|10|18)|ta(gt|lk)|tcl\-|tdg\-|tel(i|m)|tim\-|t\-mo|to(pl|sh)|ts(70|m\-|m3|m5)|tx\-9|up(\.b|g1|si)|utst|v400|v750|veri|vi(rg|te)|vk(40|5[0-3]|\-v)|vm40|voda|vulc|vx(52|53|60|61|70|80|81|83|85|98)|w3c(\-| )|webc|whit|wi(g |nc|nw)|wmlb|wonu|x700|yas\-|your|zeto|zte\-/i.test(a.substr(0, 4))) check = true; })(navigator.userAgent || navigator.vendor || window.opera);
+      return check;
+    };
+    if (mobileAndTabletCheck()) {
+      UIkit.modal(document.getElementById("modal")).show();
+    }
+    document.getElementById("dark").addEventListener("click", e => {
+      document.body.classList.toggle("uk-background-secondary");
+      document.body.classList.toggle("uk-light");
+      e.target.innerText = e.target.innerText.includes("Dark") ? "Light mode" : "Dark mode";
+      e.target.classList.toggle("dark");
+    })
+    if (localStorage.visitedProofEditor) {
+
+    } else {
+      UIkit.modal(document.getElementById("welcome-modal")).show();
+      localStorage.setItem("visitedProofEditor", "true");
+    }
+  </script>
   <script src="app.js"></script>
   <script src="autocompleteLib.js"></script>
   <script src="autocomplete.js"></script>

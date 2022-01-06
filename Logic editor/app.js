@@ -1,3 +1,8 @@
+const MODE = { NORMAL: "NORMAL", PREDICATE: "PREDICATE" };
+var mode = MODE.NORMAL;
+document.getElementById("mode").addEventListener("change", (e) => {
+  window.mode = e.currentTarget.checked == true ? MODE.PREDICATE : MODE.NORMAL;
+});
 //// Part 1: Add new inputs on Enter
 
 //.appendAfter(element) Prototype
@@ -15,10 +20,18 @@ function insertAfter(referenceNode, newNode) {
   );
 }
 document.getElementById("clear-all").addEventListener("click", (e) => {
-  document.getElementById("proof-list").innerHTML =
-    "<li>" +
-    document.getElementById("proof-list").firstElementChild.innerHTML +
-    "</li>";
+  UIkit.modal.confirm("Do you want to clear all?").then(
+    function () {
+      statements = [];
+      document.getElementById("proof-list").innerHTML =
+        "<li>" +
+        document.getElementById("proof-list").firstElementChild.innerHTML +
+        "</li>";
+    },
+    function () {
+      console.log("Rejected.");
+    }
+  );
 });
 
 const newInputRow = `
@@ -47,13 +60,16 @@ document.getElementById("proof").addEventListener("keydown", (e) => {
   if (!lastKeysDown.includes(e.key)) lastKeysDown.push(e.key);
   // console.log(e.key);
 });
+document.getElementById("proof").addEventListener("input", (e) => {
+  e.target.setAttribute("data-set", "false");
+});
 
 document.getElementById("proof").addEventListener("keyup", (e) => {
   // console.log(lastKeysDown);
   e.target.value = e.target.value.format();
   if (lastKeysDown.length > 1) {
     const newBoxCommand = checkCombination("Control", "b");
-    if (newBoxCommand) {
+    if (newBoxCommand || checkCombination("Control", "a")) {
       newBox(e);
     }
     lastKeysDown = [];
@@ -66,8 +82,12 @@ document.getElementById("proof").addEventListener("keyup", (e) => {
     case "Enter":
       insertNewLine(e);
       break;
+    case "Tab":
+      handleTabNav(e);
+      break;
     case "Delete":
       deleteLine(e);
+      break;
     default:
       break;
   }
@@ -92,17 +112,38 @@ document.getElementById("proof").addEventListener("keyup", (e) => {
   }
   lastKeysDown = [];
 });
+
+function handleTabNav(e) {
+  // console.log(e);
+  // const inputs = [...document.querySelectorAll("#proof-list input")];
+  // let element = inputs.at(-2);
+  // if (element == e.srcElement) {
+  //   console.log("Asd");
+  //   e.preventDefault();
+  //   insertNewLine(e);
+  // }
+}
 function newBox(e) {
   const p = e.target.parentNode;
   addNewBox(p);
+  console.log(e.target.parentElement.parentElement);
+  if (e.target.value.trim() != "") return;
+  if (
+    p.parentElement.id == "proof-list" &&
+    e.target.parentElement ==
+    e.target.parentElement.parentElement.firstElementChild
+  ) {
+    deleteLine(e, false, true);
+    return;
+  }
   if (
     e.target.value.trim() == "" &&
     e.target.parentElement !=
-      e.target.parentElement.parentElement.firstElementChild
+    e.target.parentElement.parentElement.firstElementChild
   )
     deleteLine(e, false);
 }
-function deleteLine(e, moveUp = true) {
+function deleteLine(e, moveUp = true, forcedDelete = false) {
   const text = e.target.value;
   if (moveUp) switchFocus("up", e.target, true);
   // Handle deleting first statement of a subproof
@@ -110,7 +151,12 @@ function deleteLine(e, moveUp = true) {
   const parentDiv = li.parentNode;
   // the first input row cannot be deleted, so check for that
   console.log(parentDiv);
-  if (li == parentDiv.firstElementChild && parentDiv.id == "proof-list") return;
+  if (
+    li == parentDiv.firstElementChild &&
+    parentDiv.id == "proof-list" &&
+    !forcedDelete
+  )
+    return;
   // if it is a sub proof with just one statement, delete the whole
   // subproof div instead
   if (li.parentNode.childElementCount == 1) {
@@ -128,6 +174,18 @@ function closeBoxAndInsertLine(e) {
     return;
   }
   const suggestion = primarySuggestion(e.target, true);
+  try {
+    // check if it was on OR elimination box(a box immediately after an OR expression)
+    // if (
+    //   e.target.parentNode.parentNode.previousElementSibling.firstElementChild.value.includes(
+    //     "∨"
+    //   )
+    // ) {
+    //   insertNewLine(e, ["", ""], true);
+    //   // if it was, do not auto suggest (because it forms an implication suggestion)
+    //   return;
+    // }
+  } catch (e) { }
   insertNewLine(e, suggestion, true);
 }
 function insertNewLine(e, suggestion = ["", ""], closeBox = false) {
@@ -140,14 +198,23 @@ function insertNewLine(e, suggestion = ["", ""], closeBox = false) {
   el.getElementsByTagName("input")[0].value = suggestion[0];
   el.getElementsByTagName("input")[1].value = suggestion[1];
   el.getElementsByTagName("input")[0].focus();
+  if (closeBox) {
+    el.getElementsByTagName("input")[0].setAttribute("data-set", "true");
+  }
   dropdownSuggestions(el.lastElementChild);
 }
 function addNewBox(inputParentNode) {
   const el = document.createElement("div");
   el.classList.add("subproof");
+  el.style.borderColor = "#000000".replace(/0/g, function () {
+    return (~~(Math.random() * 16)).toString(16);
+  });
   el.innerHTML = `<li>${newInputRow}</li>`;
   inputParentNode.insertAdjacentElement("afterend", el);
   el.getElementsByTagName("li")[0].getElementsByTagName("input")[0].focus();
+  el.getElementsByTagName("li")[0]
+    .getElementsByTagName("input")[0]
+    .setAttribute("data-set", "true");
   el.getElementsByTagName("li")[0].getElementsByTagName("input")[1].value =
     "Assumption";
 }
@@ -244,16 +311,25 @@ function handleSubProof(
   boxBorderInit = null,
   initialText = null
 ) {
+  console.log("handling ", div);
   //TODO let boxBorder = boxBorderInit ?? " |".repeat(mostRecentDepth);
+  const padA = ".A".repeat(mostRecentDepth);
+  const padSeparatorLine = "_".customPadEnd(
+    maxWidth + maxJWidth,
+    "_",
+    mostRecentDepth * 2,
+    numberOfSubProofs
+  );
   let boxBorder = boxBorderInit ?? " ".repeat(mostRecentDepth);
   initialText =
     initialText ??
-    `${boxBorder}+${"—".customPadEnd(
-      maxWidth + maxJWidth,
-      "—",
-      mostRecentDepth * 2,
-      numberOfSubProofs
-    )}+${boxBorder}\n`;
+    // `${boxBorder}+${"—".customPadEnd(
+    //   maxWidth + maxJWidth,
+    //   "—",
+    //   mostRecentDepth * 2,
+    //   numberOfSubProofs
+    // )}+${boxBorder}\n`;
+    `\\/A${padA}${padSeparatorLine}\n`;
   if (boxBorderInit == null) {
     mostRecentDepth++;
     // const currentDepth = mostRecentDepth; //local var so that it is not overwritten
@@ -271,7 +347,8 @@ function handleSubProof(
     }
   });
   // console.log(boxBorder);
-  text += initialText;
+  // text += initialText;
+  if (div.tagName != "UL") text += `/\\A${padA}${padSeparatorLine}\n`;
   mostRecentDepth--;
   return text;
 }
@@ -292,19 +369,19 @@ String.prototype.customPadEnd = function (
   add = 0,
   calc = " |"
 ) {
-  console.log(this);
+  // console.log(this);
   let text = this; //.padEnd(min, filler);
   let width = widthOf(text);
   const fillerWidth = widthOf(filler);
   min += (add - subtract) * widthOf(calc); //to account for nesting of blocks
-  console.log("filler", filler, min);
-  console.log("Original width: ", width);
+  // console.log("filler", filler, min);
+  // console.log("Original width: ", width);
   if (width >= min) return text;
-  while (Math.abs(width - min) > fillerWidth || Math.abs(width - min) > 5) {
+  while (Math.abs(width - min) > (fillerWidth > 10 ? fillerWidth : 10)) {
     text += filler;
     width += fillerWidth;
   }
-  console.log("final width: ", width);
+  // console.log("final width: ", width);
   return text;
 };
 function widthOf(text) {
@@ -349,16 +426,30 @@ const kTypes = {
   NOT: "NOT",
   IMPLIES: "IMPLIES",
   BOTTOM: "BOTTOM",
-  BOX: "BOX", //not exactly a type but is used in `requirements` of justification suggestions
+  BOX: "BOX", //not exactly a type but is used in `requirements` of justification suggestions,
+  FORALL: "FORALL",
+  THEREEXISTS: "EXISTS",
 };
 // for replacing and categorizing statements types
 const symbols = [
-  { r: /!|~|∼|\-|\−|NOT|¬/gi, sym: "¬", type: kTypes.NOT },
-  { r: /\^|&|\.|\*|AND|∧/gi, sym: "∧", type: kTypes.AND },
-  { r: /V|v|OR|∨/gi, sym: "∨", type: kTypes.OR },
-  { r: /\->|>|IMPLIES|→/gi, sym: "→", type: kTypes.IMPLIES },
-  { r: /XX|#|⊥/gi, sym: "⊥", type: kTypes.BOTTOM },
-  { r: /then|prove|⊢|yield/i, sym: "⊢" },
+  { r: /!|~|∼|\−|NOT|¬/gi, sym: "¬", latex: "\\neg", type: kTypes.NOT },
+  { r: /\^|&|\.|\*|AND|∧/gi, sym: "∧", latex: "\\wedge", type: kTypes.AND },
+  { r: /\bOR\b|∨|\|/gi, sym: "∨", latex: "\\lor", type: kTypes.OR },
+  {
+    r: /\->|>|IMPLIES|→/gi,
+    sym: "→",
+    latex: "\\rightarrow",
+    type: kTypes.IMPLIES,
+  },
+  { r: /XX|#|⊥|BOTTOM/gi, sym: "⊥", latex: "\\bot", type: kTypes.BOTTOM },
+  { r: /then|prove|⊢|yield/i, sym: "⊢", latex: "\\vdash" },
+  { r: /ee|te|∃/i, sym: "∃", latex: "\\exists", type: kTypes.THEREEXISTS },
+  { r: /forall|vv|∀/i, sym: "∀", latex: "\\forall", type: kTypes.FORALL },
+  { r: /phi|φ/i, sym: "φ", latex: "\\phi" },
+  { r: /psi|ψ/i, sym: "ψ", latex: "\\psi" },
+  { r: /chi|χ/i, sym: "χ", latex: "\\chi" },
+  { r: /([a-z])_?0/i, sym: "$1₀", latex: "_0" },
+  { r: /([a-z])_?1/i, sym: "$1₁", latex: "_1" },
 ];
 //format
 document.getElementById("proof").addEventListener("focusout", (e) => {
@@ -370,7 +461,14 @@ document.getElementById("proof").addEventListener("focusout", (e) => {
   // //remove extra spaces
   // t = t.replace(/\s+/g, " ");
   e.target.value = t;
+  // if(window.mode == MODE.PREDICATE){
+  //   additionalFormat(e);
+  // }
+  addStatement(e.target);
 });
+function additionalFormat(e) {
+  let t = e.target.value;
+}
 String.prototype.format = function (r, sym) {
   let t = this;
   symbols.forEach((symbol) => {
@@ -383,7 +481,11 @@ String.prototype.format = function (r, sym) {
 document.getElementById("sequent").addEventListener("keyup", (e) => {
   if (e.key == "Enter") {
     document.getElementById("proof-list").innerHTML = "";
-    let p = e.target.value.split(/then|prove|⊢|yield/i)[0].split(",");
+    const parts = e.target.value.split(/then|prove|⊢|yield/i);
+    //premises
+    const premisesString = parts[0];
+    let p = premisesString.split(",");
+    statements = p;
     p.forEach((premise) => {
       const el = getNewInputRow();
       // @ts-ignore
@@ -399,6 +501,18 @@ document.getElementById("sequent").addEventListener("keyup", (e) => {
       .getElementById("proof-list")
       .insertAdjacentElement("beforeend", el);
     el.getElementsByTagName("input")[0].focus();
+    dropdownSuggestions(el.lastElementChild);
+    //conclusion
+    const conclusion = parts[1];
+    if (conclusion) {
+      const el = getNewInputRow();
+      // @ts-ignore
+      document
+        .getElementById("proof-list")
+        .insertAdjacentElement("beforeend", el);
+      el.getElementsByTagName("input")[0].value = conclusion.format();
+      dropdownSuggestions(el.lastElementChild);
+    }
   }
   e.target.value = e.target.value.format();
 });

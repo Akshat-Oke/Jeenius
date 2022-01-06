@@ -1,7 +1,7 @@
 <?php
     if(!isset($_GET["me"])){
     $file = fopen("log.txt", "a");
-    fwrite($file, "N");
+    fwrite($file, "W\n");
     fclose($file);
     }
 ?>
@@ -195,6 +195,12 @@
       /* border: 1px solid; */
     }
 
+    body.uk-light .uk-button-secondary {
+      color: #eceff1;
+      background: #16504b;
+      /* border: 1px solid; */
+    }
+
     body.uk-light #proof-list div.subproof {
       border-color: #bdbdbd;
     }
@@ -211,7 +217,10 @@
     body.uk-light .uk-modal-dialog div,
     body.uk-light .uk-modal-dialog p {
       background: #2f2f2f;
+    }
 
+    #share-div {
+      display: none;
     }
   </style>
 </head>
@@ -221,6 +230,9 @@
     <h1>Natural deduction proof editor</h1>
     <div id="dark">Dark Mode</div>
   </header>
+  <p style="margin-left: 33px; transform: translateY(-10px);font-size: 15px;">If you liked this, you might like my <a
+      href="https://parse-tree-generator.netlify.app">parse tree
+      generator</a> too!</p>
   <main class="uk-container">
     <div class="uk-alert-success" uk-alert>
       <a class="uk-alert-close" uk-close></a>
@@ -237,6 +249,13 @@
     <div class="uk-margin">
       <input class="uk-input" type="text" placeholder="Sequent Ex. p implies q, not q  then  not p" id="sequent">
       <label for="sequent">Type your sequent here and press <kbd>Enter</kbd> to generate the premise statements</label>
+      <div class="uk-margin">
+        <label><input class="uk-checkbox" id="mode" type="checkbox"><span style="color:rgb(161, 54, 161)">
+            Enable Predicate Logic Mode
+          </span>
+        </label>
+        Predicate mode will suggest justifications from predicate rules instead of propositional.
+      </div>
       <hr class="uk-divider-icon">
     </div>
     <div class="flex-div">
@@ -244,7 +263,14 @@
         <h2 id="proof-header">Proof</h2>
         <div id="proof">
           <ul id="proof-list" class="uk-list">
-
+<?php
+if(isset($_REQUEST['proof'])){
+    $filename = "Saved/".$_REQUEST['proof'].".txt";
+    if(file_exists($filename))
+    echo file_get_contents($filename);
+    else echo "Proof ".$_REQUEST['proof']." doesn't exist! Click on \"Clear All\" or go to the sequent textbox and press <kbd>Enter</kbd>";
+} else{
+?>
             <li>
               <input class="uk-input" type="text" placeholder="Formula">
               <input class="uk-input" type="text" placeholder="Justification">
@@ -263,14 +289,33 @@
               <input class="uk-input" type="text" placeholder="Formula">
               <input class="uk-input" id="country" type="text" placeholder="Justification">
             </li>
+            <?php
+        }
+?>
           </ul>
 
         </div>
         <div style="margin-bottom: 10px;">
           <button class="uk-button" id="clear-all">Clear All</button>
-          <button class="uk-button uk-button-primary" id="export">Export to Text</button>
+          <button class="uk-button uk-button-danger" id="share-button">Share</button>
+          <div id="share-div" class="uk-alert-primary" uk-alert>
+            <h4>Share Proof</h4>
+            <div id="share-loading" uk-spinner></div>
+            <p><a id="share-link">https:/asdasd</a></p>
+            <p>Opening the link above will open your proof</p>
+          </div>
+          <br />
+          <h3 style="margin-top: 15px;">Export To</h3>
+          <button class="uk-button uk-button-primary" id="export">Text</button>
+          <button class="uk-button uk-button-secondary" id="convert">LaTeX</button>
+          <button class="uk-button uk-button-danger" id="json">JSON</button>
         </div>
-        <textarea id="result" class="uk-textarea" rows="4"></textarea>
+        <form action="https://www.overleaf.com/docs" method="POST" target="_blank">
+          <textarea id="result" class="uk-textarea" rows="4" name="snip"></textarea>
+          <button class="uk-button uk-button-primary" type="submit">Open in OverLeaf</button>
+
+        </form>
+        <p>Include <code>\usepackage{logicproof}</code> for LaTeX</p>
       </div>
       <div>
         <h3>Instructions</h3>
@@ -288,7 +333,7 @@
               <td> Insert new statement (line) below</td>
             </tr>
             <tr>
-              <td><kbd>Ctrl + B</kbd></td>
+              <td><kbd>Ctrl + B</kbd> or <kbd>Ctrl + A</kbd></td>
               <td> Start a sub-proof (box)</td>
             </tr>
             <tr>
@@ -313,7 +358,7 @@
       <thead>
         <tr>
           <th>Operator</th>
-          <th>Use any of these characters (or capital words)</th>
+          <th>Use any of these characters (or words, case insensitive)</th>
           <th>For these symbols</th>
         </tr>
       </thead>
@@ -330,7 +375,7 @@
         </tr>
         <tr>
           <td>Disjunction </td>
-          <td>vv OR</td>
+          <td>vv OR |</td>
           <td>∨</td>
         </tr>
         <tr>
@@ -342,6 +387,31 @@
           <td>Contradiction </td>
           <td> XX # </td>
           <td>⊥</td>
+        </tr>
+        <tr>
+          <td>Sequent </td>
+          <td>THEN PROVE YIELD </td>
+          <td>⊢</td>
+        </tr>
+        <tr>
+          <td>For all </td>
+          <td>forall vv </td>
+          <td>∀</td>
+        </tr>
+        <tr>
+          <td>There exists </td>
+          <td>te EE </td>
+          <td>∃</td>
+        </tr>
+        <tr>
+          <td>Greek </td>
+          <td>phi, psi, chi </td>
+          <td>φ ψ χ</td>
+        </tr>
+        <tr>
+          <td>Subscript </td>
+          <td>0 or 1 after a letter (x0, x1, y0 etc) </td>
+          <td>x₀ x₁ y₀ etc</td>
         </tr>
       </tbody>
     </table>
@@ -362,7 +432,9 @@
   <div id="welcome-modal" uk-modal bg-close="false">
     <div class="uk-modal-dialog uk-modal-body uk-background-secondary uk-light">
       <h2 class="uk-modal-title">Welcome!</h2>
-      <p>Type proofs like a boss with no efforts!<br>Includes auto-complete and auto-fill in statements after boxes for
+      <p><b>New!</b> More export options: Text, LaTeX and JSON!</p>
+      <p>Also, a small <strong>Predicate mode!</strong> Enable using the checkbox below.</p>
+      <p>Type proofs like a boss with no efforts😎<br>Includes auto-complete and auto-fill in statements after boxes for
         a seamless typing experience. Export to text (so you can copy paste) in one click!</p>
       <p>I made this editor to type proofs faster in the tutorial class, so if you think it is useless, well... there's
         no use for it in other cases as I know.</p>
@@ -390,11 +462,11 @@
       e.target.innerText = e.target.innerText.includes("Dark") ? "Light mode" : "Dark mode";
       e.target.classList.toggle("dark");
     })
-    if (localStorage.visitedProofEditor) {
+    if (localStorage.visitedProofEditor1) {
 
     } else {
       UIkit.modal(document.getElementById("welcome-modal")).show();
-      localStorage.setItem("visitedProofEditor", "true");
+      localStorage.setItem("visitedProofEditor1", "true");
     }
   </script>
   <script src="app.js"></script>
@@ -402,6 +474,200 @@
   <script src="autocomplete.js"></script>
   <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
   <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <script>
+    ///Export to LaTeX and JSON here
+    (function () {
+      //IIFE
+      //Statements of proof are represented as an array of objects.
+      let proof = [];
+      let line = 0;
+      let forLatex = false;
+      document.getElementById("convert").addEventListener("click", () => convert("latex"));
+      document.getElementById("json").addEventListener("click", () => convert("json"));
+      const convert = (format) => {
+        forLatex = format == "latex";
+        //clear the array
+        proof.length = 0;
+        //line is zero
+        line = 0;
+        const ul = document.getElementById("proof-list");
+        let latex = `\\documentclass{article}
+\\usepackage{logicproof}
+\\begin{document}
+\\begin{logicproof}{2}\n`;
+        Array.from(ul.children).forEach(ele => {
+          if (ele.tagName == "LI") {
+            const t = visitStatement(ele);
+            latex += t.text;
+            proof.push(t.json)
+          }
+          else if (ele.tagName == "DIV") {
+            const t = visitSubProof(ele);
+            latex += t.text;
+            proof.push(t.json)
+          }
+        })
+        latex = latex.replace(/\\\\ *\n *$/, "\n");
+        latex += "\\end{logicproof}\n\\end{document}";
+        if (format == "latex") {
+          document.getElementById("result").value = latex;
+          document.getElementById("result").rows = line + 3;
+        }
+        else if (format == "json") {
+          document.getElementById("result").value = JSON.stringify({ proof }, null, 2);
+          document.getElementById("result").rows = line * 2;
+        }
+      }
+      function visitStatement(li) {
+        line++;
+        const formula = li.getElementsByTagName("input")[0].value.latexify(forLatex);
+        const justification = li.getElementsByTagName("input")[1].value.latexifyJustification(forLatex);
+        return { text: formula + " & " + justification + "\\\\ \n", json: { formula, justification } };
+      }
+      function visitSubProof(div) {
+        line += 2;
+        let text = "\\begin{subproof}\n";
+        const json = [];
+        Array.from(div.children).forEach(ele => {
+          if (ele.tagName == "LI") {
+            const t = visitStatement(ele);
+            text += t.text;
+            json.push(t.json);
+          }
+          else if (ele.tagName == "DIV") {
+            const t = visitSubProof(ele); text += t.text;
+            json.push(t.json);
+          }
+        })
+        console.log(text);
+        text = text.replace(/\\\\ *\n *$/, "\n");
+        text += "\\end{subproof}\n";
+        return { text, json };
+      }
+    })()
+    String.prototype.latexify = function (forLatex) {
+      if (!forLatex) return this;
+      let t = this;
+      symbols.forEach((symbol) => {
+        t = t.replace(symbol.r, symbol.latex + " ");
+      });
+      return t;
+    }
+    String.prototype.latexifyJustification = function (forLatex) {
+      if (!forLatex) return this;
+      let t = this;
+      let subscriptNext = false;
+      for (let i = 0; i < t.length; i++) {
+        if (subscriptNext) {
+          if (/[0-9]/.test(t[i]))
+            t = t.substring(0, i) + "_" + t.substring(i);
+          break;
+        }
+        subscriptNext = /[a-z]/i.test(t[i]);
+      }
+      t = t.replace(/\s/g, "\\: ");
+      t = t.replace(/[a-z]+/ig, "\\mathrm{$&}");
+      t = t.latexify(forLatex);
+      return "$" + t + "$";
+    }
+  </script>
+  <script>
+    async function postData(url = '', data = {}) {
+      document.getElementById("share-div").style.display = "block";
+      document.getElementById("share-loading").style.display = "block";
+      document.getElementById("share-link").innerHTML = "";
+      // Default options are marked with *
+      const response = await fetch(url, {
+        method: 'POST', // *GET, POST, PUT, DELETE, etc.
+        mode: 'cors', // no-cors, *cors, same-origin
+        cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+        credentials: 'same-origin', // include, *same-origin, omit
+        headers: {
+        //   'Content-Type': 'text/plain'
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        redirect: 'follow', // manual, *follow, error
+        referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+        body: data//JSON.stringify(data) // body data type must match "Content-Type" header
+      });
+      return response.json(); // parses JSON response into native JavaScript objects
+    }
+    document.getElementById("share-button").addEventListener("click", (e) => {
+      //check if this link is a shared one
+      const urlParams = new URLSearchParams(window.location.search);
+      const myParam = urlParams.get('proof');
+      if (myParam) {
+        UIkit.modal.confirm("This proof has been already shared! Do you want to create a copy?").then(e=>{
+            initiateShare();
+        }, ele=>{})
+        return;
+      }
+      initiateShare();
+    });
+    function initiateShare(){
+         if (localStorage.userShareCode) {
+             UIkit.modal.confirm('If you have saved a proof as user "'+localStorage.userShareCode+"\", a new proof will be saved with name\"" + localStorage.userShareCode+ "1\". Do you want to continue?").then(()=>{
+                saveProof(localStorage.userShareCode);
+            }, ()=>{});
+      } else {
+        UIkit.modal.prompt('Name:', "user" + Math.floor(Math.random() * (99999 - 11111) + 11111)).then(function (name) {
+            if(name){
+          localStorage.setItem("userShareCode", name);
+          saveProof(name);}
+        });
+        user = name;
+      }
+    }
+    async function saveProof(user) {
+        [...document.getElementById("proof-list").getElementsByTagName("input")].forEach(ele => {
+            ele.setAttribute("value", ele.value);
+        });
+      let res = await postData("save.php?user=" + user, (document.getElementById("proof-list").innerHTML));
+      document.getElementById("share-loading").style.display = "none";
+      document.getElementById("share-link").style.display = "block";
+      if (res.link != "error")
+        document.getElementById("share-link").innerHTML = res.link;
+      document.getElementById("share-link").setAttribute("href", res.link);
+      if (res.link != "error")
+        copyTextToClipboard(res.link);
+    }
+  </script>
+  <script>
+    function fallbackCopyTextToClipboard(text) {
+      var textArea = document.createElement("textarea");
+      textArea.value = text;
+
+      // Avoid scrolling to bottom
+      textArea.style.top = "0";
+      textArea.style.left = "0";
+      textArea.style.position = "fixed";
+
+      document.body.appendChild(textArea);
+      textArea.focus();
+      textArea.select();
+
+      try {
+        var successful = document.execCommand('copy');
+        var msg = successful ? 'successful' : 'unsuccessful';
+        console.log('Fallback: Copying text command was ' + msg);
+      } catch (err) {
+        console.error('Fallback: Oops, unable to copy', err);
+      }
+
+      document.body.removeChild(textArea);
+    }
+    function copyTextToClipboard(text) {
+      if (!navigator.clipboard) {
+        fallbackCopyTextToClipboard(text);
+        return;
+      }
+      navigator.clipboard.writeText(text).then(function () {
+        UIkit.modal.alert('Share link copied to clipboard!' + text);
+      }, function (err) {
+        console.error('Async: Could not copy text: ', err);
+      });
+    }
+  </script>
 </body>
 
 </html>

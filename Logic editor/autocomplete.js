@@ -63,6 +63,8 @@ function numberOfCommonElements(a, b) {
  * @returns An array with the formula and justification to be auto filled
  */
 function primarySuggestion(element, isAfterBox = false) {
+  if (window.mode == MODE.PREDICATE)
+    return predicateSuggestion(element, isAfterBox);
   const li = element.parentElement;
   const text = li.getElementsByTagName("input")[0].value;
   const types = getStatementTypes(text);
@@ -90,14 +92,14 @@ function primarySuggestion(element, isAfterBox = false) {
       return [
         stmt2,
         "∨e " +
-          ([...document.querySelectorAll("#proof-list li")].indexOf(
-            box.previousElementSibling.previousElementSibling
-          ) +
-            1) +
-          "," +
-          getBoxCoordinates(box.previousElementSibling) +
-          "," +
-          boxCoordinates,
+        ([...document.querySelectorAll("#proof-list li")].indexOf(
+          box.previousElementSibling.previousElementSibling
+        ) +
+          1) +
+        "," +
+        getBoxCoordinates(box.previousElementSibling) +
+        "," +
+        boxCoordinates,
       ];
     return [stmt1 + " → " + stmt2, "→i" + boxCoordinates];
   }
@@ -113,6 +115,59 @@ function handleNotABoxSuggestion(text, types) {
     const tokens = text.split(/\^|&|\.|\*|AND|∧/i);
     return { statements: tokens, justifications: ["∧e1", "∧e2"] };
   }
+}
+function predicateSuggestion(element, isAfterBox) {
+  const li = element.parentElement;
+  const text = li.getElementsByTagName("input")[0].value;
+  const types = getStatementTypes(text);
+  if (isAfterBox) {
+    const box = li.parentElement;
+    const stmt1 = box.firstElementChild.firstElementChild.value;
+    const stmt2 = box.lastElementChild.firstElementChild.value;
+    if (stmt1 == "" || stmt2 == "") return ["", ""];
+    const t1 = getStatementTypes(stmt1);
+    const t2 = getStatementTypes(stmt2);
+    const boxCoordinates = getBoxCoordinates(box);
+    // same as normal mode
+    if (t2.includes(kTypes.BOTTOM)) {
+      if (t1.includes(kTypes.NOT)) {
+        return [
+          stmt1.replace(/!|~|∼|\-|\−|NOT|¬/i, ""),
+          "PBC" + boxCoordinates,
+        ];
+      }
+      return ["~" + stmt1, "¬i" + boxCoordinates];
+    } else {
+      if (/^.{0,2}(₀|₁).{0,2}$/.test(stmt1)) {
+        const regex = /([a-z])(₀|₁).{0,3}/i;
+        const match = regex.exec(stmt1);
+        if (/\[.+\/.+\]/.test(stmt2)) {
+          if (match) {
+            return [
+              `∀${match[1]}(${stmt1})`,
+              "∀" + match[1] + " i" + boxCoordinates,
+            ];
+          } else return ["∀x(" + stmt1 + ")", "∀x i " + boxCoordinates];
+        } else {
+          //the same there exists case as in the next `else` consition below
+          const regex = /^.+([a-z])(₀|₁)/i;
+          const match = regex.exec(stmt1);
+          if (match) {
+            return [stmt2, "∃" + match[1] + " e " + boxCoordinates];
+          }
+          return [stmt2, "∃x e" + boxCoordinates];
+        }
+      } else {
+        const regex = /^.+([a-z])(₀|₁)/i;
+        const match = regex.exec(stmt1);
+        if (match) {
+          return [stmt2, "∃" + match[1] + " e " + boxCoordinates];
+        }
+        return [stmt2, "∃x e" + boxCoordinates];
+      }
+    }
+  }
+  return ["", ""];
 }
 
 function getBoxCoordinates(box) {
@@ -131,11 +186,14 @@ document.getElementById("proof-list").addEventListener("focusin", (e) => {
   //get the previous formula for this justification
   try {
     const stmtElement = e.target.previousElementSibling;
-    
+
     const current = e.target.value;
-    if (stmtElement.getAttribute("data-set") == "true" || current == "Assumption"){
-        insertNewLine(e);
-        return;
+    if (
+      stmtElement.getAttribute("data-set") == "true" ||
+      current == "Assumption"
+    ) {
+      if (window.mode != MODE.PREDICATE) insertNewLine(e);
+      return;
     }
     //get the previous statement
     const stmt = stmtElement.value;
@@ -147,7 +205,7 @@ document.getElementById("proof-list").addEventListener("focusin", (e) => {
         e.target.value = "⊥e " + findLineNumber(stmtElement);
         return;
       }
-    } catch (error) {}
+    } catch (error) { }
     if (/((\w+?) *∨ *¬ *\1)|(¬(\w+?) *∨ *\1)/gi.test(stmt)) {
       e.target.value = "LEM";
     } else if (/¬ ?¬.+/gi.test(stmt)) {
@@ -196,7 +254,7 @@ function dropdownSuggestions(input) {
       input.parentElement.previousElementSibling.tagName == "DIV"
         ? rules
         : rules.slice(4);
-  } catch (e) {}
+  } catch (e) { }
 
   // types.push(kTypes.BOX);
   // const localRules = rules.filter(
